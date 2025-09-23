@@ -3,6 +3,7 @@ import { Reward } from '../../interfaces/reward';
 import { rewardsDb } from '../../database/rewardsDb';
 import { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function Rewards() {
   const [rewards, setRewards] = useState<Reward[]>([]);
@@ -32,6 +33,9 @@ export default function Rewards() {
             </Link>
           )}
         />
+        <Link href="/create/reward">
+          <FontAwesome6 name="add" size={24} color="black" />
+        </Link>
       </View>
     );
 }
