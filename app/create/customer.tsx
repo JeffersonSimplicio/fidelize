@@ -9,7 +9,7 @@ import {
   Button,
 } from "react-native";
 import { customersDb } from "../../database/customersDb";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
 export default function NewCustomerScreen() {
   const router = useRouter();
@@ -44,36 +44,43 @@ export default function NewCustomerScreen() {
   }
 
   return (
-    <View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <View>
-          <Text>Cadastro Novo Cliente</Text>
-        </View>
-        <View>
-          <Text>Nome:</Text>
-          <TextInput
-            placeholder="Digite o nome do cliente"
-            value={name}
-            onChangeText={setName}
+    <>
+      <Stack.Screen
+        options={{
+          title: "Cadastrar Cliente",
+        }}
+      />
+      <View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <View>
+            <Text>Cadastro Novo Cliente</Text>
+          </View>
+          <View>
+            <Text>Nome:</Text>
+            <TextInput
+              placeholder="Digite o nome do cliente"
+              value={name}
+              onChangeText={setName}
+            />
+          </View>
+          <View>
+            <Text>Telefone:</Text>
+            <TextInput
+              placeholder="Digite o telefone"
+              keyboardType="phone-pad"
+              value={phone}
+              onChangeText={setPhone}
+            />
+          </View>
+          <Button
+            onPress={handleAddCustomer}
+            disabled={loading}
+            title={loading ? "Cadastrando..." : "Cadastrar"}
           />
-        </View>
-        <View>
-          <Text>Telefone:</Text>
-          <TextInput
-            placeholder="Digite o telefone"
-            keyboardType="phone-pad"
-            value={phone}
-            onChangeText={setPhone}
-          />
-        </View>
-        <Button
-          onPress={handleAddCustomer}
-          disabled={loading}
-          title={loading ? "Cadastrando..." : "Cadastrar"}
-        />
-      </KeyboardAvoidingView>
-    </View>
+        </KeyboardAvoidingView>
+      </View>
+    </>
   );
 }
