@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
-import { Customer } from "../../interfaces/customers";
-import { customersDb } from "../../database/customersDb";
+import { Customer } from "../../../interfaces/customers";
+import { customersDb } from "../../../database/customersDb";
 import { useState, useEffect } from "react";
 
 export default function Details() {
