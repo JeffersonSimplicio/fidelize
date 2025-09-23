@@ -28,7 +28,6 @@ export default function NewCustomerScreen() {
         name,
         phone,
       });
-      console.log("New customer added with ID:", newCustomer.id);
       Alert.alert("Sucesso", "Cliente cadastrado com sucesso!", [
         {
           text: "OK",
