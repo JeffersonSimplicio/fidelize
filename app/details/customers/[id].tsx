@@ -4,7 +4,7 @@ import { Customer } from "../../../interfaces/customers";
 import { customersDb } from "../../../database/customersDb";
 import { useState, useEffect } from "react";
 
-export default function Details() {
+export default function CustomerDetails() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const { id } = useLocalSearchParams();
 
