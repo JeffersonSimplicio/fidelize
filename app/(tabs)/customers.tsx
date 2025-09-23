@@ -25,7 +25,7 @@ export default function Customers() {
         data={customers}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Link href={`/details/customers/${item.id}`}>
+          <Link href={`/details/customer/${item.id}`}>
             <Text>
               {item.name} - {item.points} pontos
             </Text>
