@@ -28,9 +28,14 @@ export const customersDb = {
     return customers.find(c => c.id === id);
   },
 
-  async add(customer: Omit<Customer, "id">): Promise<Customer> {
+  async add(customer: Pick<Customer, "name" | "phone">): Promise<Customer> {
     await delay();
-    const newCustomer: Customer = { ...customer, id: Date.now() }; // id fake
+    const newCustomer: Customer = {
+      ...customer,
+      id: Date.now(),
+      points: 0,
+      lastVisitAt: new Date().toISOString().split('T')[0]
+    };
     customers.push(newCustomer);
     return newCustomer;
   },

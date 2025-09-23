@@ -27,8 +27,6 @@ export default function NewCustomerScreen() {
       const newCustomer = await customersDb.add({
         name,
         phone,
-        points: 0,
-        lastVisitAt: "2025-09-23",
       });
       console.log("New customer added with ID:", newCustomer.id);
       Alert.alert("Sucesso", "Cliente cadastrado com sucesso!", [
@@ -39,7 +37,10 @@ export default function NewCustomerScreen() {
       ]);
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : String(e);
-      Alert.alert("Erro", `Não foi possível cadastrar o cliente.\n ${errorMessage}`);
+      Alert.alert(
+        "Erro",
+        `Não foi possível cadastrar o cliente.\n ${errorMessage}`
+      );
     }
   }
 
