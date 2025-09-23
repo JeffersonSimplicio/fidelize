@@ -12,9 +12,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="users"
+        options={{
+          title: 'Usuários',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="users" color={color} />,
+        }}
+      />
+      <Tabs.Screen 
         name="settings"
         options={{
-          title: 'Settings',
+          title: 'Configurações',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
         }}
       />
