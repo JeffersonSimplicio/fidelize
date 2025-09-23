@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import { Customer } from "../../interfaces/customers";
 import { customersDb } from "../../database/customersDb";
+import { Link } from "expo-router";
 
 export default function Customers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -24,9 +25,11 @@ export default function Customers() {
         data={customers}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Text>
-            {item.name} - {item.points} pontos
-          </Text>
+          <Link href={`/details/${item.id}`}>
+            <Text>
+              {item.name} - {item.points} pontos
+            </Text>
+          </Link>
         )}
       />
     </View>
