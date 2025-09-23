@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function Users() {
+export default function Customers() {
   return (
     <View style={styles.container}>
-      <Text>Users</Text>
+      <Text>Clientes</Text>
     </View>
   );
 }

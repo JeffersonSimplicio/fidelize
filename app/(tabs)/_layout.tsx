@@ -12,10 +12,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="users"
+        name="customers"
         options={{
-          title: 'Usuários',
+          title: 'Clientes',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="users" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="rewards"
+        options={{
+          title: 'Prêmios',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="trophy" color={color} />,
         }}
       />
       <Tabs.Screen 

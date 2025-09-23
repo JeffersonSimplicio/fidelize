@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function Settings() {
+export default function Rewards() {
   return (
     <View style={styles.container}>
-      <Text>Configurações</Text>
+      <Text>Prêmios</Text>
     </View>
   );
 }
