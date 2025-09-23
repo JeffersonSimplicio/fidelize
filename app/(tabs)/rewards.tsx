@@ -1,17 +1,37 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
+import { Reward } from '../../interfaces/reward';
+import { rewardsDb } from '../../database/rewardsDb';
+import { useEffect, useState } from 'react';
+import { Link } from 'expo-router';
 
 export default function Rewards() {
-  return (
-    <View style={styles.container}>
-      <Text>Prêmios</Text>
-    </View>
-  );
-}
+  const [rewards, setRewards] = useState<Reward[]>([]);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+  useEffect(() => {
+    const fetchRewards = async () => {
+      const rewards = await rewardsDb.getAll();
+      setRewards(rewards);
+    };
+
+    fetchRewards();
+  }, []);
+
+  return (
+      <View style={{ flex: 1, padding: 16 }}>
+        <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+          Lista de Recompensas
+        </Text>
+        <FlatList
+          data={rewards}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Link href={`/details/reward/${item.id}`}>
+              <Text>
+                {item.name} - {item.pointsRequired} pontos necessários
+              </Text>
+            </Link>
+          )}
+        />
+      </View>
+    );
+}
