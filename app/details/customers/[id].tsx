@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useLocalSearchParams, Stack } from "expo-router";
-import { Customer } from "../../../interfaces/customers";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { customersDb } from "../../../database/customersDb";
-import { useState, useEffect } from "react";
+import { Customer } from "../../../interfaces/customer";
 
 export default function CustomerDetails() {
   const [customer, setCustomer] = useState<Customer | null>(null);

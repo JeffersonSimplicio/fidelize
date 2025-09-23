@@ -1,4 +1,4 @@
-import { Customer } from "../interfaces/customers";
+import { Customer } from "../interfaces/customer";
 
 // Nosso "mock" inicial
 let customers: Customer[] = [

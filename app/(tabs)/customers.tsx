@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
-import { Customer } from "../../interfaces/customers";
-import { customersDb } from "../../database/customersDb";
 import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import { FlatList, Text, View } from "react-native";
+import { customersDb } from "../../database/customersDb";
+import { Customer } from "../../interfaces/customer";
 
 export default function Customers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
