@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text>Home</Text>
-      <Button title="Go to Details" onPress={() => router.push('./details/1')} />
     </View>
   );
 }
