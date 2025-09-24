@@ -31,7 +31,7 @@ export default function NewCustomerScreen() {
       Alert.alert("Sucesso", "Cliente cadastrado com sucesso!", [
         {
           text: "OK",
-          onPress: () => router.replace(`/details/customer/${newCustomer.id}`),
+          onPress: () => router.replace(`/customers/${newCustomer.id}`),
         },
       ]);
     } catch (e) {

@@ -33,7 +33,7 @@ export default function CustomersScreen() {
         data={customers}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Link href={`/details/customer/${item.id}`}>
+          <Link href={`/customers/${item.id}`}>
             <Text>
               {item.name} - {item.points} pontos
             </Text>
@@ -43,7 +43,7 @@ export default function CustomersScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <Link href={"/create/customer"}>
+      <Link href={"/customers/create"}>
         <AntDesign name="user-add" size={24} color="black" />
       </Link>
     </View>
