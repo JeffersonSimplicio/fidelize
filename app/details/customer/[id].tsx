@@ -1,12 +1,21 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { customersDb } from "../../../database/customersDb";
 import { Customer } from "../../../interfaces/customer";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import DeleteButton from "../../../components/delete-button";
 
 export default function CustomerDetailsScreen() {
   const [customer, setCustomer] = useState<Customer | null>(null);
+  const route = useRouter();
   const { id } = useLocalSearchParams();
+
+  const handleDelete = () => {
+    customersDb.remove(parseInt(id as string, 10));
+    Alert.alert("Cliente deletado com sucesso!");
+    route.back();
+  };
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -48,6 +57,8 @@ export default function CustomerDetailsScreen() {
         <Text>Points: {customer.points}</Text>
         <Text>Last Visit: {customer.lastVisitAt}</Text>
       </View>
+      <DeleteButton onDelete={handleDelete} />
+      <FontAwesome name="edit" size={30} color="black" />
     </>
   );
 }
