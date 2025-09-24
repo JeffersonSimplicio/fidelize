@@ -4,6 +4,8 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { rewardsDb } from "@/database/rewardsDb";
 import { Reward } from "@/interfaces/reward";
 import DeleteButton from "@/components/delete-button";
+import { FontAwesome } from "@expo/vector-icons";
+import { AppButton } from "@/components/app-button";
 
 export default function RewardDetailsScreen() {
   const [reward, setReward] = useState<Reward | null>(null);
@@ -54,6 +56,9 @@ export default function RewardDetailsScreen() {
         <Text>Points Required: {reward.pointsRequired}</Text>
       </View>
       <DeleteButton onDelete={handleDelete} />
+      <AppButton onPress={() => route.push(`/rewards/${reward.id}/edit`)}>
+        <FontAwesome name="edit" size={30} color="black" />
+      </AppButton>
     </>
   );
 }
