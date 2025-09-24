@@ -1,8 +1,8 @@
 import { Link } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { customersDb } from "../../database/customersDb";
-import { Customer } from "../../interfaces/customer";
+import { customersDb } from "@/database/customersDb";
+import { Customer } from "@/interfaces/customer";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function CustomersScreen() {

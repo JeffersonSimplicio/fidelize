@@ -8,7 +8,7 @@ import {
   Alert,
   Button,
 } from "react-native";
-import { customersDb } from "../../database/customersDb";
+import { customersDb } from "@/database/customersDb";
 import { Stack, useRouter } from "expo-router";
 
 export default function NewCustomerScreen() {

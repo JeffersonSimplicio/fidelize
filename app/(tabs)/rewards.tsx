@@ -1,6 +1,6 @@
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { Reward } from "../../interfaces/reward";
-import { rewardsDb } from "../../database/rewardsDb";
+import { Reward } from "@/interfaces/reward";
+import { rewardsDb } from "@/database/rewardsDb";
 import { useEffect, useState } from "react";
 import { Link } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";

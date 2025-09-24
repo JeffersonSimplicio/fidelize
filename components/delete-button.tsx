@@ -1,6 +1,6 @@
 import { Alert, GestureResponderEvent } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { AppButton } from "./app-button";
+import { AppButton } from "@/components/app-button";
 
 type Props = {
   onDelete: () => Promise<void> | void;
