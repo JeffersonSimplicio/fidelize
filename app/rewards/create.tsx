@@ -37,7 +37,7 @@ export default function NewRewardScreen() {
       Alert.alert("Sucesso", "Recompensa cadastrada com sucesso!", [
         {
           text: "OK",
-          onPress: () => router.replace(`/details/reward/${newReward.id}`),
+          onPress: () => router.replace(`/rewards/${newReward.id}`),
         },
       ]);
     } catch (e) {

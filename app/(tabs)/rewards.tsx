@@ -33,7 +33,7 @@ export default function RewardsScreen() {
         data={rewards}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Link href={`/details/reward/${item.id}`}>
+          <Link href={`/rewards/${item.id}`}>
             <Text>
               {item.name} - {item.pointsRequired} pontos necessários
             </Text>
@@ -43,7 +43,7 @@ export default function RewardsScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
-      <Link href="/create/reward">
+      <Link href="/rewards/create">
         <FontAwesome6 name="add" size={24} color="black" />
       </Link>
     </View>
