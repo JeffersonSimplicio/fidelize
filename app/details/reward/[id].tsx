@@ -4,15 +4,13 @@ import { StyleSheet, Text, View } from "react-native";
 import { rewardsDb } from "../../../database/rewardsDb";
 import { Reward } from "../../../interfaces/reward";
 
-export default function RewardDetails() {
+export default function RewardDetailsScreen() {
   const [reward, setReward] = useState<Reward | null>(null);
   const { id } = useLocalSearchParams();
 
   useEffect(() => {
     const fetchReward = async () => {
-      const fetchedReward = await rewardsDb.getById(
-        parseInt(id as string, 10)
-      );
+      const fetchedReward = await rewardsDb.getById(parseInt(id as string, 10));
       setReward(fetchedReward ?? null);
     };
 
@@ -24,14 +22,13 @@ export default function RewardDetails() {
       <>
         <Stack.Screen
           options={{
-            title: 'Detalhes',
+            title: "Detalhes",
           }}
         />
         <View style={styles.container}>
           <Text>Reward not found</Text>
         </View>
       </>
-      
     );
   }
 

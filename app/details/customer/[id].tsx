@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { customersDb } from "../../../database/customersDb";
 import { Customer } from "../../../interfaces/customer";
 
-export default function CustomerDetails() {
+export default function CustomerDetailsScreen() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const { id } = useLocalSearchParams();
 
@@ -24,14 +24,13 @@ export default function CustomerDetails() {
       <>
         <Stack.Screen
           options={{
-            title: 'Detalhes',
+            title: "Detalhes",
           }}
         />
         <View style={styles.container}>
           <Text>User not found</Text>
         </View>
       </>
-      
     );
   }
 

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function Settings() {
+export default function SettingsScreen() {
   return (
     <View style={styles.container}>
       <Text>Configurações</Text>

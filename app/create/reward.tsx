@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 
-export default function Home() {
+export default function NewRewardScreen() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [pointsRequired, setPointsRequired] = useState("");

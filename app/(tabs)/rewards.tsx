@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-export default function Rewards() {
+export default function RewardsScreen() {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
