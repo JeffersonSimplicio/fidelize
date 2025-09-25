@@ -5,3 +5,5 @@ import * as schema from "./schema";
 const expoDb = openDatabaseSync("db.db", { enableChangeListener: true });
 
 export const db = drizzle(expoDb, { schema });
+
+export type drizzleClient = typeof db;
