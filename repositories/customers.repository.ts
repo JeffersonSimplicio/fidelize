@@ -37,4 +37,12 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
 
     return mapDbCustomerToDomain(dbCustomer);
   }
+
+  async findAll(): Promise<Customer[]> {
+    const dbCustomers = await this.db
+      .select()
+      .from(customers);
+
+    return dbCustomers.map(mapDbCustomerToDomain);
+  }
 }
