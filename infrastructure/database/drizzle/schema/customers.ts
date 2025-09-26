@@ -8,5 +8,3 @@ export const customers = sqliteTable('customers', {
   lastVisitAt: integer('last_visit_at', { mode: 'timestamp' }).notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
-
-export type DbCustomer = typeof customers.$inferSelect;

@@ -1,20 +1,23 @@
-import { drizzleClient } from "@/database/db";
-import { customers } from '@/database/schema'
-import { Customer } from "@/domain/customers/customer.entity";
 import { ICustomerRepository } from "@/domain/customers/customer.repository";
 import { CreateCustomerDto } from "@/domain/customers/dtos/create-customer.dto";
-import { mapDbCustomerToDomain } from "@/repositories/mappers/customerMapper";
+import { Customer } from "@/domain/customers/customer.entity";
 import { eq } from "drizzle-orm";
+import { mapDbCustomerToDomain } from "@/infrastructure/mappers/customerMapper";
+import { drizzleClient } from "@/infrastructure/database/drizzle/db";
+import { CustomerTable } from '@/infrastructure/database/drizzle/types';
 
 
 export class CustomerRepositoryDrizzle implements ICustomerRepository {
-  constructor(private readonly db: drizzleClient) { }
+  constructor(
+    private readonly db: drizzleClient,
+    private readonly table: CustomerTable
+  ) { }
 
   async create(data: CreateCustomerDto): Promise<Customer> {
     const now = new Date();
 
     const [inserted] = await this.db
-      .insert(customers)
+      .insert(this.table)
       .values({
         name: data.name,
         phone: data.phone,
@@ -28,13 +31,13 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
   }
 
   private async findByField<T extends string | number>(
-    field: keyof typeof customers.$inferSelect,
+    field: keyof typeof this.table.$inferSelect,
     value: T
   ): Promise<Customer | null> {
     const [dbCustomer] = await this.db
       .select()
-      .from(customers)
-      .where(eq(customers[field], value));
+      .from(this.table)
+      .where(eq(this.table[field], value));
 
     if (!dbCustomer) return null;
     return mapDbCustomerToDomain(dbCustomer);
@@ -55,7 +58,7 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
   async findAll(): Promise<Customer[]> {
     const dbCustomers = await this.db
       .select()
-      .from(customers);
+      .from(this.table);
 
     return dbCustomers.map(mapDbCustomerToDomain);
   }

@@ -7,5 +7,3 @@ export const rewards = sqliteTable('rewards', {
   description: text('description').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
-
-export type Reward = typeof rewards.$inferSelect;

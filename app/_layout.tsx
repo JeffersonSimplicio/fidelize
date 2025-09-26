@@ -1,5 +1,5 @@
-import { db } from "@/database/db";
 import migrations from "@/drizzle/migrations";
+import { db } from "@/infrastructure/database/drizzle/db";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { Text, View } from "react-native";
