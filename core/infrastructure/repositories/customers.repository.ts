@@ -53,4 +53,12 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
 
     return dbCustomers.map(mapDbCustomerToDomain);
   }
+
+  async delete(id: number): Promise<boolean> {
+    const result = await this.db
+      .delete(this.table)
+      .where(eq(this.table.id, id));
+
+    return (result.changes > 0);
+  }
 }

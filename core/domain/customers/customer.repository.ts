@@ -7,5 +7,5 @@ export interface ICustomerRepository {
   findByPhone(phone: string): Promise<Customer | null>;
   findAll(): Promise<Customer[]>;
   // update(id: number, data: CustomerUpdateProps): Promise<Customer | null>;
-  // delete(id: number): Promise<boolean>;
-}
+  delete(id: number): Promise<boolean>;
+} 
