@@ -6,6 +6,6 @@ export class ListCustomersUseCase implements IListCustomers {
   constructor(private readonly repo: ICustomerRepository) { }
 
   async execute(): Promise<Customer[]> {
-    return this.repo.findAll();
+    return await this.repo.findAll();
   }
 }
