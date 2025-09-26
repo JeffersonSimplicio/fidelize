@@ -1,5 +1,5 @@
-import { AppButton } from "@/components/app-button";
-import { customersDb } from "@/database/customersDb";
+import { AppButton } from "@/ui/components/app-button";
+import { customersDb } from "@/database_old/customersDb";
 import { Customer } from "@/interfaces/customer";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";

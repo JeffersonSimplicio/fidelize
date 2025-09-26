@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { customersDb } from "@/database/customersDb";
+import { customersDb } from "@/database_old/customersDb";
 import { Customer } from "@/interfaces/customer";
 import AntDesign from "@expo/vector-icons/AntDesign";
 

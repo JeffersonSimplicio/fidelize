@@ -1,9 +1,9 @@
-import { ICustomerRepository } from "@/domain/customers/customer.repository";
-import { Customer, CustomerCreateProps } from "@/domain/customers/customer.entity";
+import { Customer, CustomerCreateProps } from "@/core/domain/customers/customer.entity";
+import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
+import { CustomerTable } from '@/core/infrastructure/database/drizzle/types';
+import { mapDbCustomerToDomain } from "@/core/infrastructure/mappers/customerMapper";
 import { eq } from "drizzle-orm";
-import { mapDbCustomerToDomain } from "@/infrastructure/mappers/customerMapper";
-import { drizzleClient } from "@/infrastructure/database/drizzle/db";
-import { CustomerTable } from '@/infrastructure/database/drizzle/types';
 
 
 export class CustomerRepositoryDrizzle implements ICustomerRepository {

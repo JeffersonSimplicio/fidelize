@@ -1,8 +1,8 @@
-import { CreateCustomerDto } from "@/application/dtos/create-customer.dto";
-import { IRegisterCustomer } from "@/application/interfaces/customers/register-customer.";
-import { Customer } from "@/domain/customers/customer.entity";
-import { ClientAlreadyExistsError } from "@/domain/customers/errors/client-already-exists.error";
-import { ICustomerRepository } from "@/domain/customers/customer.repository";
+import { CreateCustomerDto } from "@/core/application/dtos/create-customer.dto";
+import { IRegisterCustomer } from "@/core/application/interfaces/customers/register-customer.";
+import { Customer } from "@/core/domain/customers/customer.entity";
+import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { ClientAlreadyExistsError } from "@/core/domain/customers/errors/client-already-exists.error"
 
 export class RegisterCustomerUseCase implements IRegisterCustomer {
   constructor(private readonly repo: ICustomerRepository) { }

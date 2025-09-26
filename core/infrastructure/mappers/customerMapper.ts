@@ -1,5 +1,5 @@
-import { Customer as DomainCustomer } from '@/domain/customers/customer.entity';
-import { CustomerSelect } from '@/infrastructure/database/drizzle/types';
+import { Customer as DomainCustomer } from '@/core/domain/customers/customer.entity';
+import { CustomerSelect } from '@/core/infrastructure/database/drizzle/types';
 
 export function mapDbCustomerToDomain(dbCustomer: CustomerSelect): DomainCustomer {
   return {

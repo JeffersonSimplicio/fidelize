@@ -1,4 +1,4 @@
-import { customers } from '../schema';
+import { customers } from '@/core/infrastructure/database/drizzle/schema';
 
 export type CustomerTable = typeof customers;
 

@@ -1,5 +1,5 @@
-import { AppButton } from "@/components/app-button";
-import { rewardsDb } from "@/database/rewardsDb";
+import { AppButton } from "@/ui/components/app-button";
+import { rewardsDb } from "@/database_old/rewardsDb";
 import { Reward } from "@/interfaces/reward";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";

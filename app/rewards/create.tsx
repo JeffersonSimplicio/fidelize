@@ -1,4 +1,4 @@
-import { rewardsDb } from "@/database/rewardsDb";
+import { rewardsDb } from "@/database_old/rewardsDb";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import {

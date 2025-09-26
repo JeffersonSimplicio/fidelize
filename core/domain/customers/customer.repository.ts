@@ -1,4 +1,4 @@
-import { Customer, CustomerCreateProps } from './customer.entity';
+import { Customer, CustomerCreateProps } from '@/core/domain/customers/customer.entity';
 
 export interface ICustomerRepository {
   create(data: CustomerCreateProps): Promise<Customer>;

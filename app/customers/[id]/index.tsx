@@ -1,10 +1,10 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { customersDb } from "@/database/customersDb";
+import { customersDb } from "@/database_old/customersDb";
 import { Customer } from "@/interfaces/customer";
-import DeleteButton from "@/components/delete-button";
-import { AppButton } from "@/components/app-button";
+import DeleteButton from "@/ui/components/delete-button";
+import { AppButton } from "@/ui/components/app-button";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function CustomerDetailsScreen() {

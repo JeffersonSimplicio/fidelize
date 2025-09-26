@@ -1,4 +1,4 @@
-import { AlreadyExistsError } from "@/domain/shared/errors/already-exists.error";
+import { AlreadyExistsError } from "@/core/domain/shared/errors/already-exists.error";
 
 export class ClientAlreadyExistsError extends AlreadyExistsError {
   constructor(identifier?: string) {

@@ -1,11 +1,11 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { rewardsDb } from "@/database/rewardsDb";
+import { rewardsDb } from "@/database_old/rewardsDb";
 import { Reward } from "@/interfaces/reward";
-import DeleteButton from "@/components/delete-button";
+import DeleteButton from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
-import { AppButton } from "@/components/app-button";
+import { AppButton } from "@/ui/components/app-button";
 
 export default function RewardDetailsScreen() {
   const [reward, setReward] = useState<Reward | null>(null);
