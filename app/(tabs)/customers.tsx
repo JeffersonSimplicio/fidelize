@@ -1,16 +1,16 @@
 import { Link } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { customersDb } from "@/database_old/customersDb";
-import { Customer } from "@/interfaces/customer";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { listCustomers } from "@/core/composition/customers/list-customers";
+import { Customer } from "@/core/domain/customers/customer.entity";
 
 export default function CustomersScreen() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchCustomers = useCallback(async () => {
-    const customers = await customersDb.getAll();
+    const customers = await listCustomers.execute();
     setCustomers(customers);
   }, []);
 
