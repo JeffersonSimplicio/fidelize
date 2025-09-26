@@ -8,4 +8,4 @@ export interface ICustomerRepository {
   findAll(): Promise<Customer[]>;
   // update(id: number, data: CustomerUpdateProps): Promise<Customer | null>;
   // delete(id: number): Promise<boolean>;
-} 
+}
