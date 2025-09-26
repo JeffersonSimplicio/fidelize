@@ -1,6 +1,5 @@
 import { ICustomerRepository } from "@/domain/customers/customer.repository";
-import { CreateCustomerDto } from "@/domain/customers/dtos/create-customer.dto";
-import { Customer } from "@/domain/customers/customer.entity";
+import { Customer, CustomerCreateProps } from "@/domain/customers/customer.entity";
 import { eq } from "drizzle-orm";
 import { mapDbCustomerToDomain } from "@/infrastructure/mappers/customerMapper";
 import { drizzleClient } from "@/infrastructure/database/drizzle/db";
@@ -13,18 +12,10 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
     private readonly table: CustomerTable
   ) { }
 
-  async create(data: CreateCustomerDto): Promise<Customer> {
-    const now = new Date();
-
+  async create(data: CustomerCreateProps): Promise<Customer> {
     const [inserted] = await this.db
       .insert(this.table)
-      .values({
-        name: data.name,
-        phone: data.phone,
-        points: 0,
-        lastVisitAt: now,
-        createdAt: now,
-      })
+      .values(data)
       .returning();
 
     return mapDbCustomerToDomain(inserted);

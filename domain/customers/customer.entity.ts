@@ -6,3 +6,7 @@ export type Customer = {
   lastVisitAt: Date;
   createdAt: Date;
 }
+
+export type CustomerCreateProps = Omit<Customer, 'id'>;
+
+export type CustomerUpdateProps = Partial<Omit<Customer, 'id' | 'createdAt'>>;
