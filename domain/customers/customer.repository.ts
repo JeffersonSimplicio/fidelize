@@ -5,6 +5,8 @@ import { CreateCustomerDto,  } from './dtos/create-customer.dto';
 export interface ICustomerRepository {
   create(data: CreateCustomerDto): Promise<Customer>;
   findById(id: number): Promise<Customer | null>;
+  findByName(name: string): Promise<Customer | null>;
+  findByPhone(phone: string): Promise<Customer | null>;
   findAll(): Promise<Customer[]>;
   // update(id: number, data: UpdateCustomerDto): Promise<Customer | null>;
   // delete(id: number): Promise<boolean>;

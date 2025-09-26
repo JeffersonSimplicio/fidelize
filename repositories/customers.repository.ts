@@ -27,15 +27,29 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
     return mapDbCustomerToDomain(inserted);
   }
 
-  async findById(id: number): Promise<Customer | null> {
+  private async findByField<T extends string | number>(
+    field: keyof typeof customers.$inferSelect,
+    value: T
+  ): Promise<Customer | null> {
     const [dbCustomer] = await this.db
       .select()
       .from(customers)
-      .where(eq(customers.id, id));
+      .where(eq(customers[field], value));
 
     if (!dbCustomer) return null;
-
     return mapDbCustomerToDomain(dbCustomer);
+  }
+
+  async findById(id: number): Promise<Customer | null> {
+    return this.findByField('id', id);
+  }
+
+  async findByName(name: string): Promise<Customer | null> {
+    return this.findByField('name', name);
+  }
+
+  async findByPhone(phone: string): Promise<Customer | null> {
+    return this.findByField('phone', phone);
   }
 
   async findAll(): Promise<Customer[]> {
