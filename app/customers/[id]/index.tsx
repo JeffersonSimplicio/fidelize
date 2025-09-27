@@ -1,5 +1,10 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import {
+  Stack,
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import DeleteButton from "@/ui/components/delete-button";
@@ -9,7 +14,7 @@ import { deleteCustomer } from "@/core/composition/customers/delete-customer";
 import { Customer } from "@/core/domain/customers/customer.entity";
 
 const formatPhone = (phone: string): string => {
-  return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
 };
 
 export default function CustomerDetailsScreen() {
@@ -23,16 +28,18 @@ export default function CustomerDetailsScreen() {
     route.back();
   };
 
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      const fetchedCustomer = await getCustomerDetail.execute(
-        parseInt(id as string, 10)
-      );
-      setCustomer(fetchedCustomer ?? null);
-    };
-
-    fetchCustomers();
+  const fetchCustomers = useCallback(async () => {
+    const fetchedCustomer = await getCustomerDetail.execute(
+      parseInt(id as string, 10)
+    );
+    setCustomer(fetchedCustomer ?? null);
   }, [id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCustomers();
+    }, [fetchCustomers])
+  );
 
   if (!customer) {
     return (
