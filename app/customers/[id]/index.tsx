@@ -1,26 +1,31 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { customersDb } from "@/database_old/customersDb";
-import { Customer } from "@/interfaces/customer";
+import { FontAwesome } from "@expo/vector-icons";
 import DeleteButton from "@/ui/components/delete-button";
 import { AppButton } from "@/ui/components/app-button";
-import { FontAwesome } from "@expo/vector-icons";
+import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
+import { deleteCustomer } from "@/core/composition/customers/delete-customer";
+import { Customer } from "@/core/domain/customers/customer.entity";
+
+const formatPhone = (phone: string): string => {
+  return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+};
 
 export default function CustomerDetailsScreen() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const route = useRouter();
   const { id } = useLocalSearchParams();
 
-  const handleDelete = () => {
-    customersDb.remove(parseInt(id as string, 10));
+  const handleDelete = async () => {
+    await deleteCustomer.execute(parseInt(id as string, 10));
     Alert.alert("Cliente deletado com sucesso!");
     route.back();
   };
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const fetchedCustomer = await customersDb.getById(
+      const fetchedCustomer = await getCustomerDetail.execute(
         parseInt(id as string, 10)
       );
       setCustomer(fetchedCustomer ?? null);
@@ -54,9 +59,11 @@ export default function CustomerDetailsScreen() {
       <View style={styles.container}>
         <Text>Client</Text>
         <Text>Name: {customer.name}</Text>
-        <Text>Phone: {customer.phone}</Text>
+        <Text>Phone: {formatPhone(customer.phone)}</Text>
         <Text>Points: {customer.points}</Text>
-        <Text>Last Visit: {customer.lastVisitAt}</Text>
+        <Text>
+          Last Visit: {customer.lastVisitAt.toLocaleDateString("pt-BR")}
+        </Text>
 
         <View>
           <DeleteButton onDelete={handleDelete} size={30} />
