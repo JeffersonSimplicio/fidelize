@@ -42,6 +42,11 @@ export default function CustomersScreen() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <Text>Nenhum cliente cadastrado.</Text>
+          </View>
+        )}
       />
       <Link href={"/customers/create"}>
         <AntDesign name="user-add" size={24} color="black" />
