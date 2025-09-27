@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { listCustomers } from "@/core/composition/customers/list-customers";
@@ -14,9 +14,11 @@ export default function CustomersScreen() {
     setCustomers(customers);
   }, []);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchCustomers();
+    }, [fetchCustomers])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
