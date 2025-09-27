@@ -1,7 +1,7 @@
-import { Customer, CustomerCreateProps } from "@/core/domain/customers/customer.entity";
+import { Customer, CustomerCreateProps, CustomerUpdateProps } from "@/core/domain/customers/customer.entity";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
-import { CustomerTable } from '@/core/infrastructure/database/drizzle/types';
+import { CustomerTable, CustomerSelect } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbCustomerToDomain } from "@/core/infrastructure/mappers/customerMapper";
 import { eq } from "drizzle-orm";
 
@@ -52,6 +52,25 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
       .from(this.table);
 
     return dbCustomers.map(mapDbCustomerToDomain);
+  }
+
+  async update(id: number, data: CustomerUpdateProps): Promise<Customer | null> {
+    const updateData: Partial<CustomerSelect> = {};
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.phone !== undefined) updateData.phone = data.phone;
+    if (data.points !== undefined) updateData.points = data.points;
+    if (data.lastVisitAt !== undefined) updateData.lastVisitAt = data.lastVisitAt;
+
+    if (Object.keys(updateData).length === 0) {
+      return this.findById(id);
+    }
+
+    await this.db
+      .update(this.table)
+      .set(updateData)
+      .where(eq(this.table.id, id));
+
+    return this.findById(id);
   }
 
   async delete(id: number): Promise<boolean> {
