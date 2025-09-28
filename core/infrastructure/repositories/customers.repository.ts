@@ -65,12 +65,13 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
       return this.findById(id);
     }
 
-    await this.db
+    const [updatedCustomer ] = await this.db
       .update(this.table)
       .set(updateData)
-      .where(eq(this.table.id, id));
+      .where(eq(this.table.id, id))
+      .returning();
 
-    return this.findById(id);
+    return mapDbCustomerToDomain(updatedCustomer );
   }
 
   async delete(id: number): Promise<boolean> {
