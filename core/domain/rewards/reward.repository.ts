@@ -4,7 +4,7 @@ export interface IRewardRepository {
   create(data: RewardCreateProps): Promise<Reward>;
   findById(id: number): Promise<Reward | null>;
   // findByName(name: string): Promise<Reward | null>;
-  // findAll(): Promise<Reward[]>;
+  findAll(): Promise<Reward[]>;
   // update(id: number, data: RewardUpdateProps): Promise<Reward | null>;
   // delete(id: number): Promise<boolean>;
 } 

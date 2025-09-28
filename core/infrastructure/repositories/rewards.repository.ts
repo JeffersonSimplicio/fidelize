@@ -29,4 +29,12 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
     if (!reward) return null;
     return mapDbRewardToDomain(reward);
   }
+
+  async findAll(): Promise<Reward[]> {
+    const dbRewards = await this.db
+      .select()
+      .from(this.table);
+
+    return dbRewards.map(mapDbRewardToDomain);
+  }
 }
