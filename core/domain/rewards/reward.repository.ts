@@ -2,9 +2,9 @@ import { Reward, RewardCreateProps, RewardUpdateProps } from '@/core/domain/rewa
 
 export interface IRewardRepository {
   create(data: RewardCreateProps): Promise<Reward>;
-  findById(id: number): Promise<Reward | null>;
-  findByName(name: string): Promise<Reward | null>;
-  findAll(): Promise<Reward[]>;
-  update(id: number, data: RewardUpdateProps): Promise<Reward | null>;
-  delete(id: number): Promise<boolean>;
+  // findById(id: number): Promise<Reward | null>;
+  // findByName(name: string): Promise<Reward | null>;
+  // findAll(): Promise<Reward[]>;
+  // update(id: number, data: RewardUpdateProps): Promise<Reward | null>;
+  // delete(id: number): Promise<boolean>;
 } 
