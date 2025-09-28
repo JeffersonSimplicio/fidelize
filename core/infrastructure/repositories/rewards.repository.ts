@@ -1,7 +1,7 @@
-import { RewardCreateProps, Reward } from "@/core/domain/rewards/reward.entity";
+import { Reward, RewardCreateProps, RewardUpdateProps } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
-import { RewardTable } from '@/core/infrastructure/database/drizzle/types';
+import { RewardTable, RewardSelect } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbRewardToDomain } from "@/core/infrastructure/mappers/rewardMapper";
 import { eq } from "drizzle-orm";
 
@@ -36,5 +36,24 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
       .from(this.table);
 
     return dbRewards.map(mapDbRewardToDomain);
+  }
+
+  async update(id: number, data: RewardUpdateProps): Promise<Reward | null> {
+    const updateData: Partial<RewardSelect> = {};
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.pointsRequired !== undefined) updateData.pointsRequired = data.pointsRequired;
+    if (data.description !== undefined) updateData.description = data.description;
+
+    if (Object.keys(updateData).length === 0) {
+      return this.findById(id);
+    }
+
+    const [updatedReward] = await this.db
+      .update(this.table)
+      .set(updateData)
+      .where(eq(this.table.id, id))
+      .returning();
+
+    return mapDbRewardToDomain(updatedReward);
   }
 }
