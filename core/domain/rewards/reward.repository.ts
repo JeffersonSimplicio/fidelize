@@ -6,5 +6,5 @@ export interface IRewardRepository {
   // findByName(name: string): Promise<Reward | null>;
   findAll(): Promise<Reward[]>;
   update(id: number, data: RewardUpdateProps): Promise<Reward | null>;
-  // delete(id: number): Promise<boolean>;
+  delete(id: number): Promise<boolean>;
 } 

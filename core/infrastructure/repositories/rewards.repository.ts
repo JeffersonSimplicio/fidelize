@@ -56,4 +56,12 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
 
     return mapDbRewardToDomain(updatedReward);
   }
+
+  async delete(id: number): Promise<boolean> {
+    const result = await this.db
+      .delete(this.table)
+      .where(eq(this.table.id, id));
+
+    return (result.changes > 0);
+  }
 }
