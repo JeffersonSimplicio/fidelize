@@ -1,5 +1,10 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import {
+  Stack,
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import DeleteButton from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
@@ -19,16 +24,18 @@ export default function RewardDetailsScreen() {
     route.back();
   };
 
-  useEffect(() => {
-    const fetchReward = async () => {
-      const fetchedReward = await getRewardDetail.execute(
-        parseInt(id as string, 10)
-      );
-      setReward(fetchedReward ?? null);
-    };
-
-    fetchReward();
+  const fetchReward = useCallback(async () => {
+    const fetchedReward = await getRewardDetail.execute(
+      parseInt(id as string, 10)
+    );
+    setReward(fetchedReward ?? null);
   }, [id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchReward();
+    }, [fetchReward])
+  );
 
   if (!reward) {
     return (

@@ -1,6 +1,6 @@
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { useEffect, useState } from "react";
-import { Link } from "expo-router";
+import { useCallback, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { listRewards } from "@/core/composition/rewards/list-rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
@@ -9,14 +9,16 @@ export default function RewardsScreen() {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchRewards = async () => {
+  const fetchRewards = useCallback(async () => {
     const rewards = await listRewards.execute();
     setRewards(rewards);
-  };
-
-  useEffect(() => {
-    fetchRewards();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRewards();
+    }, [fetchRewards])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
