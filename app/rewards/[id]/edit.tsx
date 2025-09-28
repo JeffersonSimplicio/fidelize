@@ -1,6 +1,6 @@
 import { AppButton } from "@/ui/components/app-button";
-import { rewardsDb } from "@/database_old/rewardsDb";
-import { Reward } from "@/interfaces/reward";
+// import { rewardsDb } from "@/database_old/rewardsDb";
+// import { Reward } from "@/interfaces/reward";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -12,6 +12,9 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
+import { editRewardDetail } from "@/core/composition/rewards/edit-reward-detail";
+import { Reward } from "@/core/domain/rewards/reward.entity";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -23,7 +26,9 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const fetchRewards = async () => {
-      const fetchedReward = await rewardsDb.getById(parseInt(id as string, 10));
+      const fetchedReward = await getRewardDetail.execute(
+        parseInt(id as string, 10)
+      );
       if (fetchedReward) {
         setReward(fetchedReward);
         setName(fetchedReward.name);
@@ -51,7 +56,7 @@ export default function HomeScreen() {
   const handleSave = async () => {
     if (!reward) return;
     const updatedReward = { name, description, pointsRequired };
-    await rewardsDb.update(parseInt(id as string, 10), updatedReward);
+    await editRewardDetail.execute(parseInt(id as string, 10), updatedReward);
     Alert.alert("Dados atualizados com sucesso!");
     router.back();
   };

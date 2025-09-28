@@ -1,4 +1,4 @@
-import { rewardsDb } from "@/database_old/rewardsDb";
+// import { rewardsDb } from "@/database_old/rewardsDb";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -10,6 +10,7 @@ import {
   Button,
   Alert,
 } from "react-native";
+import { registerReward } from "@/core/composition/rewards/register-reward";
 
 export default function NewRewardScreen() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function NewRewardScreen() {
     }
     try {
       setLoading(true);
-      const newReward = await rewardsDb.add({
+      const newReward = await registerReward.execute({
         name: title,
         pointsRequired: Number(pointsRequired),
         description: description,

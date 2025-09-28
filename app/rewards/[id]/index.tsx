@@ -1,11 +1,12 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { rewardsDb } from "@/database_old/rewardsDb";
-import { Reward } from "@/interfaces/reward";
 import DeleteButton from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
+import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
+import { deleteReward } from "@/core/composition/rewards/delete-reward";
+import { Reward } from "@/core/domain/rewards/reward.entity";
 
 export default function RewardDetailsScreen() {
   const [reward, setReward] = useState<Reward | null>(null);
@@ -13,14 +14,16 @@ export default function RewardDetailsScreen() {
   const { id } = useLocalSearchParams();
 
   const handleDelete = () => {
-    rewardsDb.remove(parseInt(id as string, 10));
+    deleteReward.execute(parseInt(id as string, 10));
     Alert.alert("Recompensa deletada com sucesso!");
     route.back();
   };
 
   useEffect(() => {
     const fetchReward = async () => {
-      const fetchedReward = await rewardsDb.getById(parseInt(id as string, 10));
+      const fetchedReward = await getRewardDetail.execute(
+        parseInt(id as string, 10)
+      );
       setReward(fetchedReward ?? null);
     };
 

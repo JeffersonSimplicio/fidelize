@@ -4,4 +4,4 @@ import { rewards } from '@/core/infrastructure/database/drizzle/schema';
 import { GetRewardDetailUseCase } from "@/core/application/use-cases/rewards/get-reward-detail.use-case";
 
 const rewardRepository = new RewardRepositoryDrizzle(db, rewards);
-export const rewardDetail = new GetRewardDetailUseCase(rewardRepository);
+export const getRewardDetail = new GetRewardDetailUseCase(rewardRepository);
