@@ -4,7 +4,7 @@ import { IEditRewardDetail } from "@/core/application/interfaces/rewards/edit-re
 import { UpdateRewardDto } from "@/core/application/dtos/rewards/update-reward.dto";
 
 
-export class UpdateRewardUseCase implements IEditRewardDetail {
+export class EditRewardDetailUseCase implements IEditRewardDetail {
   constructor(private readonly repo: IRewardRepository) { }
 
   async execute(id: number, data: UpdateRewardDto): Promise<Reward | null> {
