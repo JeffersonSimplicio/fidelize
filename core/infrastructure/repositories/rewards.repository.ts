@@ -3,6 +3,7 @@ import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { RewardTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbRewardToDomain } from "@/core/infrastructure/mappers/rewardMapper";
+import { eq } from "drizzle-orm";
 
 export class RewardRepositoryDrizzle implements IRewardRepository {
   constructor(
@@ -17,5 +18,15 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
       .returning();
 
     return mapDbRewardToDomain(inserted);
+  }
+
+  async findById(id: number): Promise<Reward | null> {
+    const [reward] = await this.db
+      .select()
+      .from(this.table)
+      .where(eq(this.table.id, id));
+
+    if (!reward) return null;
+    return mapDbRewardToDomain(reward);
   }
 }
