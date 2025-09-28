@@ -1,6 +1,4 @@
 import { AppButton } from "@/ui/components/app-button";
-import { customersDb } from "@/database_old/customersDb";
-import { Customer } from "@/interfaces/customer";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -12,6 +10,11 @@ import {
   Text,
   Alert,
 } from "react-native";
+// import { customersDb } from "@/database_old/customersDb";
+// import { Customer } from "@/interfaces/customer";
+import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
+import { editCustomerDetail } from "@/core/composition/customers/edit-customer-detail";
+import { Customer } from "@/core/domain/customers/customer.entity";
 
 export default function CustomerEditScreen() {
   const router = useRouter();
@@ -23,7 +26,7 @@ export default function CustomerEditScreen() {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const fetchedCustomer = await customersDb.getById(
+      const fetchedCustomer = await getCustomerDetail.execute(
         parseInt(id as string, 10)
       );
       if (fetchedCustomer) {
@@ -52,7 +55,10 @@ export default function CustomerEditScreen() {
   const handleSave = async () => {
     if (!customer) return;
     const updatedCustomer = { ...customer, name, phone, points };
-    await customersDb.update(parseInt(id as string, 10), updatedCustomer);
+    await editCustomerDetail.execute(
+      parseInt(id as string, 10),
+      updatedCustomer
+    );
     Alert.alert("Dados atualizados com sucesso!");
     router.back();
   };
