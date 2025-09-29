@@ -47,6 +47,8 @@ export default function NewRewardScreen() {
         "Erro",
         `Não foi possível cadastrar a recompensa.\n ${errorMessage}`
       );
+    } finally {
+      setLoading(false);
     }
   }
 

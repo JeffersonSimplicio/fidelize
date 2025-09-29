@@ -37,6 +37,8 @@ export default function NewCustomerScreen() {
         "Erro",
         `Não foi possível cadastrar o cliente.\n ${errorMessage}`
       );
+    } finally {
+      setLoading(false);
     }
   }
 
