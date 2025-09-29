@@ -8,15 +8,13 @@ export class RegisterRewardUseCase implements IRegisterReward {
   constructor(private readonly repo: IRewardRepository) { }
 
   async execute(data: CreateRewardDto): Promise<Reward> {
-    const now = new Date();
-    const RewardCreate = {
+    const rewardCreate = new Reward({
       name: data.name,
-      pointsRequired: data.pointsRequired,
       description: data.description,
-      createdAt: now,
-    }
+      pointsRequired: 0,
+    })
 
-    const reward = await this.repo.create(RewardCreate);
+    const reward = await this.repo.create(rewardCreate);
 
     return reward;
   }

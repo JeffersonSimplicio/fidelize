@@ -1,9 +1,9 @@
-import { Reward, RewardCreateProps, RewardUpdateProps } from "@/core/domain/rewards/reward.entity";
+import { Reward } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
-import { RewardTable, RewardSelect } from '@/core/infrastructure/database/drizzle/types';
+import { RewardTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbRewardToDomain } from "@/core/infrastructure/mappers/rewardMapper";
-import { eq } from "drizzle-orm";
+import { eq, like } from "drizzle-orm";
 
 export class RewardRepositoryDrizzle implements IRewardRepository {
   constructor(
@@ -11,10 +11,10 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
     private readonly table: RewardTable
   ) { }
 
-  async create(data: RewardCreateProps): Promise<Reward> {
+  async create(reward: Reward): Promise<Reward> {
     const [inserted] = await this.db
       .insert(this.table)
-      .values(data)
+      .values(reward.toPersistence())
       .returning();
 
     return mapDbRewardToDomain(inserted);
@@ -30,6 +30,15 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
     return mapDbRewardToDomain(reward);
   }
 
+  async findByName(name: string): Promise<Reward[]> {
+    const dbCustomers = await this.db
+      .select()
+      .from(this.table)
+      .where(like(this.table.name, `%${name}%`));
+
+    return dbCustomers.map(mapDbRewardToDomain);
+  }
+
   async findAll(): Promise<Reward[]> {
     const dbRewards = await this.db
       .select()
@@ -38,23 +47,25 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
     return dbRewards.map(mapDbRewardToDomain);
   }
 
-  async update(id: number, data: RewardUpdateProps): Promise<Reward | null> {
-    const updateData: Partial<RewardSelect> = {};
-    if (data.name !== undefined) updateData.name = data.name;
-    if (data.pointsRequired !== undefined) updateData.pointsRequired = data.pointsRequired;
-    if (data.description !== undefined) updateData.description = data.description;
-
-    if (Object.keys(updateData).length === 0) {
-      return this.findById(id);
+  async update(reward: Reward): Promise<Reward | null> {
+    if (!reward.id) {
+      throw new Error("Não é possível atualizar uma recompensa sem ID.");
     }
 
-    const [updatedReward] = await this.db
+    const [updated] = await this.db
       .update(this.table)
-      .set(updateData)
-      .where(eq(this.table.id, id))
+      .set({
+        name: reward.name,
+        pointsRequired: reward.pointsRequired,
+        description: reward.description,
+        createdAt: reward.createdAt,
+      })
+      .where(eq(this.table.id, reward.id))
       .returning();
 
-    return mapDbRewardToDomain(updatedReward);
+    if (!updated) return null;
+
+    return mapDbRewardToDomain(updated);
   }
 
   async delete(id: number): Promise<boolean> {

@@ -8,14 +8,15 @@ export class EditRewardDetailUseCase implements IEditRewardDetail {
   constructor(private readonly repo: IRewardRepository) { }
 
   async execute(id: number, data: UpdateRewardDto): Promise<Reward | null> {
-    const customer = await this.repo.findById(id);
+    const reward = await this.repo.findById(id);
+    if (!reward) return null;
+ 
+    if (data.name !== undefined) reward.name = data.name;
+    if (data.description !== undefined) reward.description = data.description;
+    if (data.pointsRequired !== undefined) reward.pointsRequired = data.pointsRequired;
 
-    if (!customer) return null;
+    const updateReward = await this.repo.update(reward);
 
-    const updateData: UpdateRewardDto = { ...data };
-
-    const reward = await this.repo.update(id, updateData);
-
-    return reward;
+    return updateReward;
   }
 }

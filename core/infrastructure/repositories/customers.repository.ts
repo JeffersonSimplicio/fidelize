@@ -5,17 +5,16 @@ import { CustomerTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbCustomerToDomain } from "@/core/infrastructure/mappers/customerMapper";
 import { eq, like } from "drizzle-orm";
 
-
 export class CustomerRepositoryDrizzle implements ICustomerRepository {
   constructor(
     private readonly db: drizzleClient,
     private readonly table: CustomerTable
   ) { }
 
-  async create(data: Customer): Promise<Customer> {
+  async create(customer: Customer): Promise<Customer> {
     const [inserted] = await this.db
       .insert(this.table)
-      .values(data.toPersistence())
+      .values(customer.toPersistence())
       .returning();
 
     return mapDbCustomerToDomain(inserted);
