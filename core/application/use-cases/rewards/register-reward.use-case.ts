@@ -11,7 +11,7 @@ export class RegisterRewardUseCase implements IRegisterReward {
     const rewardCreate = new Reward({
       name: data.name,
       description: data.description,
-      pointsRequired: 0,
+      pointsRequired: data.pointsRequired,
     })
 
     const reward = await this.repo.create(rewardCreate);
