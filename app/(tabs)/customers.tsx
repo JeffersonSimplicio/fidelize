@@ -33,7 +33,7 @@ export default function CustomersScreen() {
       </Text>
       <FlatList
         data={customers}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
           <Link href={`/customers/${item.id}`}>
             <Text>

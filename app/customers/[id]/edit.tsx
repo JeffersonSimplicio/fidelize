@@ -10,8 +10,6 @@ import {
   Text,
   Alert,
 } from "react-native";
-// import { customersDb } from "@/database_old/customersDb";
-// import { Customer } from "@/interfaces/customer";
 import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
 import { editCustomerDetail } from "@/core/composition/customers/edit-customer-detail";
 import { Customer } from "@/core/domain/customers/customer.entity";

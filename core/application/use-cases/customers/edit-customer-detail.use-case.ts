@@ -8,32 +8,26 @@ export class EditCustomerDetailUseCase implements IEditCustomerDetail {
 
   async execute(id: number, data: UpdateCustomerDto): Promise<Customer | null> {
     const customer = await this.repo.findById(id);
-
     if (!customer) return null;
 
-    const updateData: UpdateCustomerDto = { ...data };
+    const previousPoints = customer.points;
 
-    const now = new Date();
-    // Se pontos aumentaram e não veio lastVisitAt, define como now
+    if (data.name !== undefined) customer.name = data.name;
+    if (data.phone !== undefined) customer.phone = data.phone;
+    if (data.points !== undefined) customer.points = data.points;
+
     if (
-      updateData.points !== undefined &&
-      updateData.points > customer.points &&
-      !updateData.lastVisitAt
+      data.points !== undefined &&
+      data.points > previousPoints &&
+      data.lastVisitAt === undefined
     ) {
-      updateData.lastVisitAt = now;
+      customer.lastVisitAt = new Date();
+    } else if (data.lastVisitAt !== undefined) {
+      customer.lastVisitAt = data.lastVisitAt;
     }
 
-    if (updateData.lastVisitAt) {
-      // Se lastVisitAt for anterior à criação do cliente, usa a data de criação
-      if (updateData.lastVisitAt < customer.createdAt) {
-        updateData.lastVisitAt = customer.createdAt;
-      }
-      // Se lastVisitAt for no futuro, usa a data atual
-      else if (updateData.lastVisitAt > now) {
-        updateData.lastVisitAt = now;
-      }
-    }
+    const updatedCustomer = await this.repo.update(customer);
 
-    return await this.repo.update(id, updateData);
+    return updatedCustomer;
   }
 }

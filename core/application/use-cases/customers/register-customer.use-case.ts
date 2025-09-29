@@ -13,14 +13,14 @@ export class RegisterCustomerUseCase implements IRegisterCustomer {
       throw new ClientAlreadyExistsError(data.phone);
     }
 
-    const now = new Date();
-    const CustomerCreate = {
+    const CustomerCreate = new Customer({
       name: data.name,
       phone: data.phone,
       points: 0,
-      lastVisitAt: now,
-      createdAt: now,
-    }
+    })
+
+    console.log("No use case: ", CustomerCreate);
+    
 
     const customer = await this.repo.create(CustomerCreate);
 
