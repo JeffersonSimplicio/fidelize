@@ -1,3 +1,13 @@
+import {
+  CreationDateInFutureError,
+  EmptyNameError,
+  EmptyPhoneError,
+  IdAlreadyDefinedError,
+  LastVisitBeforeCreationError,
+  LastVisitInFutureError,
+  NegativePointsError
+} from "@/core/domain/customers/errors"
+
 export class Customer {
   private _id?: number; // It will be defined by the database
   private _name!: string;
@@ -49,25 +59,25 @@ export class Customer {
 
   // --- Setters com validação ---
   set name(value: string) {
-    if (!value.trim()) throw new Error("Nome não pode ser vazio.");
+    if (!value.trim()) throw new EmptyNameError();
     this._name = value;
   }
 
   set phone(value: string) {
-    if (!value.trim()) throw new Error("Telefone não pode ser vazio.");
+    if (!value.trim()) throw new EmptyPhoneError();
     this._phone = value;
   }
 
   set points(value: number) {
     if (value < Customer.MIN_POINTS)
-      throw new Error("Pontos não podem ser menores que 0.");
+      throw new NegativePointsError();
     this._points = value;
   }
 
   set createdAt(value: Date) {
     const now = new Date();
     if (value.getTime() > now.getTime()) {
-      throw new Error("Data de criação não pode estar no futuro.");
+      throw new CreationDateInFutureError();
     }
     this._createdAt = value;
   }
@@ -75,17 +85,17 @@ export class Customer {
   set lastVisitAt(value: Date) {
     const now = new Date();
     if (this._createdAt && value.getTime() < this._createdAt.getTime()) {
-      throw new Error("Última visita não pode ser antes da criação.");
+      throw new LastVisitBeforeCreationError();
     }
     if (value.getTime() > now.getTime()) {
-      throw new Error("Última visita não pode estar no futuro.");
+      throw new LastVisitInFutureError();
     }
     this._lastVisitAt = value;
   }
 
   setId(id: number) {
     if (this._id !== undefined) {
-      throw new Error('Id já está definido');
+      throw new IdAlreadyDefinedError();
     }
     this._id = id;
   }
