@@ -17,10 +17,7 @@ export class RegisterCustomerUseCase implements IRegisterCustomer {
       name: data.name,
       phone: data.phone,
       points: 0,
-    })
-
-    console.log("No use case: ", CustomerCreate);
-    
+    })    
 
     const customer = await this.repo.create(CustomerCreate);
 

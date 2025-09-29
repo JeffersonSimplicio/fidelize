@@ -13,7 +13,6 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
   ) { }
 
   async create(data: Customer): Promise<Customer> {
-    console.log("No repository: ", data);
     const [inserted] = await this.db
       .insert(this.table)
       .values(data.toPersistence())
