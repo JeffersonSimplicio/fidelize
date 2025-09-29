@@ -1,12 +1,14 @@
 import {
-  CreationDateInFutureError,
-  EmptyNameError,
   EmptyPhoneError,
-  IdAlreadyDefinedError,
   LastVisitBeforeCreationError,
   LastVisitInFutureError,
   NegativePointsError
 } from "@/core/domain/customers/errors"
+import {
+  EmptyNameError,
+  CreationDateInFutureError,
+  IdAlreadyDefinedError
+} from "@/core/domain/shared/errors"
 
 export class Customer {
   private _id?: number; // It will be defined by the database
@@ -57,7 +59,7 @@ export class Customer {
     return this._lastVisitAt;
   }
 
-  // --- Setters com validação ---
+  // --- Setters with validation ---
   set name(value: string) {
     if (!value.trim()) throw new EmptyNameError();
     this._name = value;
