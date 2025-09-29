@@ -89,4 +89,15 @@ export class Customer {
     }
     this._id = id;
   }
+
+  toPersistence() {
+    return {
+      id: this._id,
+      name: this._name,
+      phone: this._phone,
+      points: this._points,
+      lastVisitAt: this._lastVisitAt,
+      createdAt: this._createdAt,
+    };
+  }
 }
