@@ -33,7 +33,7 @@ export default function RewardsScreen() {
       </Text>
       <FlatList
         data={rewards}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
           <Link href={`/rewards/${item.id}`}>
             <Text>
@@ -44,6 +44,11 @@ export default function RewardsScreen() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <Text>Nenhuma recompensa cadastrada.</Text>
+          </View>
+        )}
       />
       <Link href="/rewards/create">
         <FontAwesome6 name="add" size={24} color="black" />
