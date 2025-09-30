@@ -17,8 +17,10 @@ export class Reward {
     createdAt?: Date;
   }) {
     this._name = params.name;
-    this.setPoints(params.pointsRequired);
     this._description = params.description;
+
+    this.setPoints(params.pointsRequired);
+
     this._createdAt = params.createdAt ?? new Date();
     this.ensureDatesNotInFuture()
   }
