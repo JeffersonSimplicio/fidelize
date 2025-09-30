@@ -1,22 +1,17 @@
 import {
-  EmptyPhoneError,
-  LastVisitBeforeCreationError,
-  LastVisitInFutureError,
-  NegativePointsError
-} from "@/core/domain/customers/errors"
-import {
-  EmptyNameError,
-  CreationDateInFutureError,
-  IdAlreadyDefinedError
-} from "@/core/domain/shared/errors"
+  ensureLastVisitAfterCreation,
+  ensureDatesNotInFuture,
+  ensureNonNegativePoint,
+  ensureIdNotSet
+} from "@/core/domain/customers/rules"
 
 export class Customer {
-  private _id?: number; // It will be defined by the database
-  private _name!: string;
-  private _phone!: string;
+  private _id?: number;
+  private _name: string;
+  private _phone: string;
   private _points!: number;
-  private _lastVisitAt!: Date;
-  private _createdAt!: Date;
+  private _createdAt: Date;
+  private _lastVisitAt: Date;
 
   private static MIN_POINTS = 0;
 
@@ -27,79 +22,61 @@ export class Customer {
     createdAt?: Date;
     lastVisitAt?: Date;
   }) {
-    this.name = params.name;
-    this.phone = params.phone;
-    this.points = params.points;
-    this.createdAt = params.createdAt ?? new Date();
-    this.lastVisitAt = params.lastVisitAt ?? new Date();
+    this._name = params.name;
+    this._phone = params.phone;
+
+    this.setPoints(params.points);
+
+    const now = new Date();
+    this._createdAt = params.createdAt ?? now;
+    this._lastVisitAt = params.lastVisitAt ?? now;
+
+    this.ensureValidTimeline();
   }
 
   // --- Getters ---
-  get id() {
-    return this._id;
+  get id() { return this._id; }
+  get name() { return this._name; }
+  get phone() { return this._phone; }
+  get points() { return this._points; }
+  get createdAt() { return this._createdAt; }
+  get lastVisitAt() { return this._lastVisitAt; }
+
+  // --- Business rules ---
+  setId(id: number) {
+    ensureIdNotSet(this._id)
+    this._id = id;
   }
 
-  get name() {
-    return this._name;
-  }
-
-  get phone() {
-    return this._phone;
-  }
-
-  get points() {
-    return this._points;
-  }
-
-  get createdAt() {
-    return this._createdAt;
-  }
-
-  get lastVisitAt() {
-    return this._lastVisitAt;
-  }
-
-  // --- Setters with validation ---
-  set name(value: string) {
-    if (!value.trim()) throw new EmptyNameError();
-    this._name = value;
-  }
-
-  set phone(value: string) {
-    if (!value.trim()) throw new EmptyPhoneError();
-    this._phone = value;
-  }
-
-  set points(value: number) {
-    if (value < Customer.MIN_POINTS)
-      throw new NegativePointsError();
+  setPoints(value: number) {
+    ensureNonNegativePoint(value, Customer.MIN_POINTS)
     this._points = value;
   }
 
-  set createdAt(value: Date) {
-    const now = new Date();
-    if (value.getTime() > now.getTime()) {
-      throw new CreationDateInFutureError();
-    }
-    this._createdAt = value;
+  updateLastVisit(date: Date) {
+    this._lastVisitAt = date;
+    this.ensureValidTimeline();
   }
 
-  set lastVisitAt(value: Date) {
-    const now = new Date();
-    if (this._createdAt && value.getTime() < this._createdAt.getTime()) {
-      throw new LastVisitBeforeCreationError();
+  addPointsAndUpdateVisit(newTotalPoints: number) {
+    const oldPoints = this._points;
+    this.setPoints(newTotalPoints);
+    if (newTotalPoints > oldPoints) {
+      this._lastVisitAt = new Date();
     }
-    if (value.getTime() > now.getTime()) {
-      throw new LastVisitInFutureError();
-    }
-    this._lastVisitAt = value;
   }
 
-  setId(id: number) {
-    if (this._id !== undefined) {
-      throw new IdAlreadyDefinedError();
-    }
-    this._id = id;
+  private ensureLastVisitAfterCreation() {
+    ensureLastVisitAfterCreation(this._lastVisitAt, this.createdAt)
+  }
+
+  private ensureDatesNotInFuture() {
+    ensureDatesNotInFuture(this._createdAt, this._lastVisitAt)
+  }
+
+  private ensureValidTimeline() {
+    this.ensureLastVisitAfterCreation();
+    this.ensureDatesNotInFuture();
   }
 
   toPersistence() {
@@ -108,8 +85,8 @@ export class Customer {
       name: this._name,
       phone: this._phone,
       points: this._points,
-      lastVisitAt: this._lastVisitAt,
       createdAt: this._createdAt,
+      lastVisitAt: this._lastVisitAt,
     };
   }
 }
