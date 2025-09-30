@@ -1,12 +1,5 @@
-import {
-  EmptyNameError,
-  CreationDateInFutureError,
-  IdAlreadyDefinedError
-} from "@/core/domain/shared/errors"
-import {
-  InvalidPointsRequiredError,
-  EmptyDescriptionError
-} from '@/core/domain/rewards/errors'
+import { ensurePointsRequiredIsValid } from "@/core/domain/rewards/rules"
+import { ensureIdNotSet, ensureDatesNotInFuture } from "@/core/domain/shared/rules"
 
 export class Reward {
   private _id?: number;  // It will be defined by the database
@@ -15,7 +8,7 @@ export class Reward {
   private _description!: string;
   private _createdAt!: Date;
 
-  private static MIN_POINTS_REQUIRED = 0;
+  private static MIN_POINTS_REQUIRED = 1;
 
   constructor(params: {
     name: string;
@@ -23,63 +16,33 @@ export class Reward {
     description: string;
     createdAt?: Date;
   }) {
-    this.name = params.name;
-    this.pointsRequired = params.pointsRequired;
-    this.description = params.description;
-    this.createdAt = params.createdAt ?? new Date();
+    this._name = params.name;
+    this.setPoints(params.pointsRequired);
+    this._description = params.description;
+    this._createdAt = params.createdAt ?? new Date();
+    this.ensureDatesNotInFuture()
   }
 
   // --- Getters ---
-  get id() {
-    return this._id
+  get id() { return this._id }
+  get name() { return this._name }
+  get pointsRequired() { return this._pointsRequired }
+  get description() { return this._description }
+  get createdAt() { return this._createdAt }
+
+  // --- Business rules ---
+  setId(id: number) {
+    ensureIdNotSet(this._id)
+    this._id = id;
   }
 
-  get name() {
-    return this._name
-  }
-
-  get pointsRequired() {
-    return this._pointsRequired
-  }
-
-  get description() {
-    return this._description
-  }
-
-  get createdAt() {
-    return this._createdAt
-  }
-
-  // --- Setters with validation ---
-  set name(value: string) {
-    if (!value.trim()) throw new EmptyNameError();
-    this._name = value;
-  }
-
-  set pointsRequired(value: number) {
-    if (value <= Reward.MIN_POINTS_REQUIRED)
-      throw new InvalidPointsRequiredError();
+  setPoints(value: number) {
+    ensurePointsRequiredIsValid(value, Reward.MIN_POINTS_REQUIRED)
     this._pointsRequired = value;
   }
 
-  set description(value: string) {
-    if (!value.trim()) throw new EmptyDescriptionError();
-    this._description = value;
-  }
-
-  set createdAt(value: Date) {
-    const now = new Date();
-    if (value.getTime() > now.getTime()) {
-      throw new CreationDateInFutureError();
-    }
-    this._createdAt = value;
-  }
-
-  setId(id: number) {
-    if (this._id !== undefined) {
-      throw new IdAlreadyDefinedError();
-    }
-    this._id = id;
+  private ensureDatesNotInFuture() {
+    ensureDatesNotInFuture(this._createdAt)
   }
 
   toPersistence() {

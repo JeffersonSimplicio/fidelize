@@ -1,9 +1,8 @@
 import {
   ensureLastVisitAfterCreation,
-  ensureDatesNotInFuture,
   ensureNonNegativePoint,
-  ensureIdNotSet
 } from "@/core/domain/customers/rules"
+import { ensureIdNotSet, ensureDatesNotInFuture } from "@/core/domain/shared/rules"
 
 export class Customer {
   private _id?: number;
