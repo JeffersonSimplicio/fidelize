@@ -45,7 +45,6 @@ export default function HomeScreen() {
   const handleSave = async () => {
     if (!reward) return;
     const updatedReward = { name, description, pointsRequired };
-    console.log(updatedReward);
     await editRewardDetail.execute(parseInt(id as string, 10), updatedReward);
     Alert.alert("Dados atualizados com sucesso!");
     router.back();
