@@ -1,22 +1,24 @@
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { Reward } from "@/interfaces/reward";
-import { rewardsDb } from "@/database/rewardsDb";
-import { useEffect, useState } from "react";
-import { Link } from "expo-router";
+import { useCallback, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { listRewards } from "@/core/composition/rewards/list-rewards";
+import { Reward } from "@/core/domain/rewards/reward.entity";
 
 export default function RewardsScreen() {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchRewards = async () => {
-    const rewards = await rewardsDb.getAll();
+  const fetchRewards = useCallback(async () => {
+    const rewards = await listRewards.execute();
     setRewards(rewards);
-  };
-
-  useEffect(() => {
-    fetchRewards();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRewards();
+    }, [fetchRewards])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -31,7 +33,7 @@ export default function RewardsScreen() {
       </Text>
       <FlatList
         data={rewards}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
           <Link href={`/rewards/${item.id}`}>
             <Text>
@@ -42,6 +44,11 @@ export default function RewardsScreen() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <Text>Nenhuma recompensa cadastrada.</Text>
+          </View>
+        )}
       />
       <Link href="/rewards/create">
         <FontAwesome6 name="add" size={24} color="black" />

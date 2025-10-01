@@ -1,4 +1,3 @@
-import { rewardsDb } from "@/database/rewardsDb";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -10,28 +9,28 @@ import {
   Button,
   Alert,
 } from "react-native";
+import { registerReward } from "@/core/composition/rewards/register-reward";
+import { NumberInput } from "@/ui/components/number-input";
+
+const MIN_POINTS_REQUIRED = 1;
 
 export default function NewRewardScreen() {
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [pointsRequired, setPointsRequired] = useState("");
+  const [pointsRequired, setPointsRequired] = useState(MIN_POINTS_REQUIRED);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleAddReward() {
-    if (
-      title.trim() === "" ||
-      pointsRequired.trim() === "" ||
-      description.trim() === ""
-    ) {
+    if (title.trim() === "" || description.trim() === "") {
       Alert.alert("Atenção", "Preencha todos os campos");
       return;
     }
     try {
       setLoading(true);
-      const newReward = await rewardsDb.add({
+      const newReward = await registerReward.execute({
         name: title,
-        pointsRequired: Number(pointsRequired),
+        pointsRequired: pointsRequired,
         description: description,
       });
       Alert.alert("Sucesso", "Recompensa cadastrada com sucesso!", [
@@ -46,6 +45,8 @@ export default function NewRewardScreen() {
         "Erro",
         `Não foi possível cadastrar a recompensa.\n ${errorMessage}`
       );
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -61,7 +62,7 @@ export default function NewRewardScreen() {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <View>
-            <Text>Cadastro Novo Cliente</Text>
+            <Text>Cadastro Nova Recompensa</Text>
           </View>
           <View>
             <Text>Título:</Text>
@@ -73,11 +74,9 @@ export default function NewRewardScreen() {
           </View>
           <View>
             <Text>Pontos necessários:</Text>
-            <TextInput
-              placeholder="Digite os pontos necessários"
-              keyboardType="numeric"
-              value={pointsRequired}
-              onChangeText={setPointsRequired}
+            <NumberInput
+              minValue={MIN_POINTS_REQUIRED}
+              onValueChange={setPointsRequired}
             />
           </View>
           <View>

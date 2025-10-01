@@ -8,8 +8,8 @@ import {
   Alert,
   Button,
 } from "react-native";
-import { customersDb } from "@/database/customersDb";
 import { Stack, useRouter } from "expo-router";
+import { registerCustomer } from "@/core/composition/customers/register-customer";
 
 export default function NewCustomerScreen() {
   const router = useRouter();
@@ -24,10 +24,7 @@ export default function NewCustomerScreen() {
     }
     try {
       setLoading(true);
-      const newCustomer = await customersDb.add({
-        name,
-        phone,
-      });
+      const newCustomer = await registerCustomer.execute({ name, phone });
       Alert.alert("Sucesso", "Cliente cadastrado com sucesso!", [
         {
           text: "OK",
@@ -40,6 +37,8 @@ export default function NewCustomerScreen() {
         "Erro",
         `Não foi possível cadastrar o cliente.\n ${errorMessage}`
       );
+    } finally {
+      setLoading(false);
     }
   }
 

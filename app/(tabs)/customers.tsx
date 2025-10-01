@@ -1,22 +1,24 @@
-import { Link } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
-import { customersDb } from "@/database/customersDb";
-import { Customer } from "@/interfaces/customer";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { listCustomers } from "@/core/composition/customers/list-customers";
+import { Customer } from "@/core/domain/customers/customer.entity";
 
 export default function CustomersScreen() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchCustomers = useCallback(async () => {
-    const customers = await customersDb.getAll();
+    const customers = await listCustomers.execute();
     setCustomers(customers);
   }, []);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchCustomers();
+    }, [fetchCustomers])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -31,7 +33,7 @@ export default function CustomersScreen() {
       </Text>
       <FlatList
         data={customers}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
           <Link href={`/customers/${item.id}`}>
             <Text>
@@ -42,6 +44,11 @@ export default function CustomersScreen() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <Text>Nenhum cliente cadastrado.</Text>
+          </View>
+        )}
       />
       <Link href={"/customers/create"}>
         <AntDesign name="user-add" size={24} color="black" />
