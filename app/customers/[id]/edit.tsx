@@ -1,5 +1,5 @@
 import { AppButton } from "@/ui/components/app-button";
-import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -13,6 +13,9 @@ import {
 import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
 import { editCustomerDetail } from "@/core/composition/customers/edit-customer-detail";
 import { Customer } from "@/core/domain/customers/customer.entity";
+import { NumberInput } from "@/ui/components/number-input";
+
+const MIN_POINTS = 0;
 
 export default function CustomerEditScreen() {
   const router = useRouter();
@@ -20,7 +23,7 @@ export default function CustomerEditScreen() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [points, setPoints] = useState<number>(0);
+  const [points, setPoints] = useState<number>(MIN_POINTS);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -37,18 +40,6 @@ export default function CustomerEditScreen() {
 
     fetchCustomers();
   }, [id]);
-
-  const increasePoints = () => setPoints((prev) => prev + 1);
-  const decreasePoints = () => setPoints((prev) => (prev > 0 ? prev - 1 : 0));
-
-  const handlePointsChange = (text: string) => {
-    const numericValue = parseInt(text, 10);
-    if (isNaN(numericValue) || numericValue < 0) {
-      setPoints(0);
-    } else {
-      setPoints(numericValue);
-    }
-  };
 
   const handleSave = async () => {
     if (!customer) return;
@@ -98,18 +89,12 @@ export default function CustomerEditScreen() {
           </View>
 
           <View>
-            <AppButton onPress={decreasePoints}>
-              <AntDesign name="minus" size={24} color="black" />
-            </AppButton>
-
-            <TextInput
-              keyboardType="numeric"
-              value={points.toString()}
-              onChangeText={handlePointsChange}
+            <Text>Pontos:</Text>
+            <NumberInput
+              minValue={MIN_POINTS}
+              initValue={points}
+              onValueChange={setPoints}
             />
-            <AppButton onPress={increasePoints}>
-              <AntDesign name="plus" size={24} color="black" />
-            </AppButton>
           </View>
 
           <View>

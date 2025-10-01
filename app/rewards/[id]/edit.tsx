@@ -1,7 +1,5 @@
 import { AppButton } from "@/ui/components/app-button";
-// import { rewardsDb } from "@/database_old/rewardsDb";
-// import { Reward } from "@/interfaces/reward";
-import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -15,13 +13,17 @@ import {
 import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
 import { editRewardDetail } from "@/core/composition/rewards/edit-reward-detail";
 import { Reward } from "@/core/domain/rewards/reward.entity";
+import { NumberInput } from "@/ui/components/number-input";
+
+const MIN_POINTS_REQUIRED = 1;
 
 export default function HomeScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const [reward, setReward] = useState<Reward | null>(null);
   const [name, setName] = useState<string>("");
-  const [pointsRequired, setPointsRequired] = useState<number>(0);
+  const [pointsRequired, setPointsRequired] =
+    useState<number>(MIN_POINTS_REQUIRED);
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
@@ -40,22 +42,10 @@ export default function HomeScreen() {
     fetchRewards();
   }, [id]);
 
-  const increasePoints = () => setPointsRequired((prev) => prev + 1);
-  const decreasePoints = () =>
-    setPointsRequired((prev) => (prev > 0 ? prev - 1 : 0));
-
-  const handlePointsChange = (text: string) => {
-    const numericValue = parseInt(text, 10);
-    if (isNaN(numericValue) || numericValue < 0) {
-      setPointsRequired(0);
-    } else {
-      setPointsRequired(numericValue);
-    }
-  };
-
   const handleSave = async () => {
     if (!reward) return;
     const updatedReward = { name, description, pointsRequired };
+    console.log(updatedReward);
     await editRewardDetail.execute(parseInt(id as string, 10), updatedReward);
     Alert.alert("Dados atualizados com sucesso!");
     router.back();
@@ -89,18 +79,12 @@ export default function HomeScreen() {
           </View>
 
           <View>
-            <AppButton onPress={decreasePoints}>
-              <AntDesign name="minus" size={24} color="black" />
-            </AppButton>
-
-            <TextInput
-              keyboardType="numeric"
-              value={pointsRequired.toString()}
-              onChangeText={handlePointsChange}
+            <Text>Pontos necessários:</Text>
+            <NumberInput
+              minValue={MIN_POINTS_REQUIRED}
+              initValue={pointsRequired}
+              onValueChange={setPointsRequired}
             />
-            <AppButton onPress={increasePoints}>
-              <AntDesign name="plus" size={24} color="black" />
-            </AppButton>
           </View>
 
           <View>
