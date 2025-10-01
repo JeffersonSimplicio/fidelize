@@ -35,7 +35,7 @@ export default function NewCustomerScreen() {
       const errorMessage = e instanceof Error ? e.message : String(e);
       Alert.alert(
         "Erro",
-        `Não foi possível cadastrar o cliente.\n ${errorMessage}`
+        `Não foi possível cadastrar o cliente.\n\n ${errorMessage}`
       );
     } finally {
       setLoading(false);

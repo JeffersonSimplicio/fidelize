@@ -1,13 +1,14 @@
+import { UpdateCustomerDto } from "@/core/application/dtos/customers/update-customer.dto";
+import { IEditCustomerDetail } from "@/core/application/interfaces/customers/edit-customer-detail";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
-import { IEditCustomerDetail } from "@/core/application/interfaces/customers/edit-customer-detail";
-import { UpdateCustomerDto } from "@/core/application/dtos/update-customer.dto";
 import { resolveLastVisit } from "@/core/domain/customers/rules";
 
 export class EditCustomerDetailUseCase implements IEditCustomerDetail {
   constructor(private readonly repo: ICustomerRepository) { }
 
-  async execute(id: number, data: UpdateCustomerDto): Promise<Customer | null> {const existing = await this.repo.findById(id);
+  async execute(id: number, data: UpdateCustomerDto): Promise<Customer | null> {
+    const existing = await this.repo.findById(id);
     if (!existing) return null;
 
     const newName = data.name ?? existing.name;
