@@ -1,19 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, TextInput, Alert, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
-import { useCounter } from "@/ui/hooks/use-counter";
 
 interface NumberInputProps {
   minValue: number;
+  initValue?: number;
   warningMessage?: string;
   onValueChange?: (value: number) => void;
 }
 
-export function NumberInput(props: NumberInputProps) {
-  const { minValue, warningMessage, onValueChange } = props;
+export function NumberInput({
+  minValue,
+  initValue = minValue,
+  warningMessage,
+  onValueChange,
+}: NumberInputProps) {
+  const [value, setValue] = useState<number>(initValue);
 
-  const { count, increment, decrement, setValue } = useCounter(minValue);
+  useEffect(() => {
+    setValue(initValue);
+  }, [initValue]);
+
+  function showWarning() {
+    Alert.alert(
+      "Aviso",
+      warningMessage || `O valor mínimo permitido é ${minValue}.`
+    );
+  }
 
   function updateValue(newValue: number) {
     setValue(newValue);
@@ -21,38 +35,25 @@ export function NumberInput(props: NumberInputProps) {
   }
 
   function handleIncrement() {
-    increment();
+    updateValue(value + 1);
   }
 
   function handleDecrement() {
-    if (count - 1 < minValue) {
+    if (value - 1 < minValue) {
       showWarning();
     } else {
-      decrement();
+      updateValue(value - 1);
     }
   }
 
   function handleChange(text: string) {
     const number = parseInt(text, 10);
-
-    if (isNaN(number)) {
-      updateValue(minValue);
-      return;
-    }
-
-    if (number < minValue) {
+    if (isNaN(number) || number < minValue) {
       showWarning();
       updateValue(minValue);
     } else {
       updateValue(number);
     }
-  }
-
-  function showWarning() {
-    Alert.alert(
-      "Aviso",
-      warningMessage || `O valor mínimo permitido é ${minValue}.`
-    );
   }
 
   return (
@@ -63,7 +64,7 @@ export function NumberInput(props: NumberInputProps) {
       <TextInput
         style={styles.input}
         keyboardType="numeric"
-        value={count.toString()}
+        value={value.toString()}
         onChangeText={handleChange}
       />
       <AppButton onPress={handleIncrement}>
