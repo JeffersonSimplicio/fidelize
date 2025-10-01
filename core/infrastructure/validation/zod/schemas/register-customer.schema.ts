@@ -5,13 +5,13 @@ export const registerCustomerSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(3, "Nome deve ter pelo menos 3 letras.")
-    .max(50, "Nome deve conter no máximo 50 letras."),
+    .min(3, "Nome deve ter pelo menos 3(três) letras.")
+    .max(50, "Nome deve conter no máximo 50(cinquenta) letras."),
 
   phone: z
     .coerce.string()
     .trim()
-    .length(11, "Telefone deve conter 11 dígitos.")
+    .length(11, "Telefone deve conter 11(onze) dígitos.")
     .regex(/^\d+$/, "Telefone deve conter apenas números.")
     .refine((phone) => {
       const ddd = phone.slice(0, 2);
