@@ -11,8 +11,8 @@ export const registerCustomerSchema = z.object({
   phone: z
     .coerce.string()
     .trim()
-    .length(11, "Telefone deve conter 11(onze) dígitos.")
     .regex(/^\d+$/, "Telefone deve conter apenas números.")
+    .length(11, "Telefone deve conter 11(onze) dígitos.")
     .refine((phone) => {
       const ddd = phone.slice(0, 2);
       return brazilAreaCodesByState.some((state) => state.ddds.includes(ddd));
@@ -21,3 +21,4 @@ export const registerCustomerSchema = z.object({
     }),
 });
 
+export type RegisterCustomerForm = z.infer<typeof registerCustomerSchema>;
