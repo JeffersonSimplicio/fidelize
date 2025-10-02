@@ -25,6 +25,7 @@ export default function HomeScreen() {
   const [pointsRequired, setPointsRequired] =
     useState<number>(MIN_POINTS_REQUIRED);
   const [description, setDescription] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -43,11 +44,21 @@ export default function HomeScreen() {
   }, [id]);
 
   const handleSave = async () => {
-    if (!reward) return;
-    const updatedReward = { name, description, pointsRequired };
-    await editRewardDetail.execute(parseInt(id as string, 10), updatedReward);
-    Alert.alert("Dados atualizados com sucesso!");
-    router.back();
+    try {
+      setLoading(true);
+      const updateReward = { ...reward, name, description, pointsRequired };
+      await editRewardDetail.execute(parseInt(id as string, 10), updateReward);
+      Alert.alert("Dados atualizados com sucesso!");
+      router.back();
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      Alert.alert(
+        "Erro",
+        `Não foi possível atualizar os dados da recompensa.\n\n ${errorMessage}`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancelEditing = () => {
@@ -96,7 +107,7 @@ export default function HomeScreen() {
           </View>
 
           <View>
-            <AppButton onPress={handleSave}>
+            <AppButton disabled={loading} onPress={handleSave}>
               <FontAwesome name="save" size={30} color="black" />
             </AppButton>
             <AppButton onPress={handleCancelEditing}>

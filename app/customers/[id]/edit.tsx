@@ -43,10 +43,6 @@ export default function CustomerEditScreen() {
   }, [id]);
 
   const handleSave = async () => {
-    if (name.trim() === "" || phone.trim() === "") {
-      Alert.alert("Atenção", "Preencha todos os campos");
-      return;
-    }
     try {
       setLoading(true);
       const updatedCustomer = { ...customer, name, phone, points };
@@ -63,7 +59,7 @@ export default function CustomerEditScreen() {
         `Não foi possível atualizar os dados do cliente.\n\n ${errorMessage}`
       );
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   };
 
