@@ -43,7 +43,7 @@ export default function NewRewardScreen() {
       const errorMessage = e instanceof Error ? e.message : String(e);
       Alert.alert(
         "Erro",
-        `Não foi possível cadastrar a recompensa.\n ${errorMessage}`
+        `Não foi possível cadastrar a recompensa.\n\n${errorMessage}`
       );
     } finally {
       setLoading(false);
