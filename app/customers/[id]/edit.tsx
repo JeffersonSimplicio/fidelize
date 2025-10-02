@@ -113,7 +113,7 @@ export default function CustomerEditScreen() {
           </View>
 
           <View>
-            <AppButton onPress={handleSave}>
+            <AppButton disabled={loading} onPress={handleSave}>
               <FontAwesome name="save" size={30} color="black" />
             </AppButton>
             <AppButton onPress={handleCancelEditing}>
