@@ -3,11 +3,21 @@ import { IEditCustomerDetail } from "@/core/application/interfaces/customers/edi
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
 import { resolveLastVisit } from "@/core/domain/customers/rules";
+import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
+import { IValidation } from "@/core/domain/validation/validation";
 
 export class EditCustomerDetailUseCase implements IEditCustomerDetail {
-  constructor(private readonly repo: ICustomerRepository) { }
+  constructor(
+    private readonly repo: ICustomerRepository,
+    private readonly validator: IValidation<UpdateCustomerDto>
+  ) { }
 
   async execute(id: number, data: UpdateCustomerDto): Promise<Customer | null> {
+    const errors = this.validator.validate(data);
+    if (errors.length > 0) {
+      throw new ValidationException(errors);
+    }
+  
     const existing = await this.repo.findById(id);
     if (!existing) return null;
 

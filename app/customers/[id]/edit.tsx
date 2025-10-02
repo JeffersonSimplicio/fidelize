@@ -24,6 +24,7 @@ export default function CustomerEditScreen() {
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [points, setPoints] = useState<number>(MIN_POINTS);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -42,14 +43,28 @@ export default function CustomerEditScreen() {
   }, [id]);
 
   const handleSave = async () => {
-    if (!customer) return;
-    const updatedCustomer = { ...customer, name, phone, points };
-    await editCustomerDetail.execute(
-      parseInt(id as string, 10),
-      updatedCustomer
-    );
-    Alert.alert("Dados atualizados com sucesso!");
-    router.back();
+    if (name.trim() === "" || phone.trim() === "") {
+      Alert.alert("Atenção", "Preencha todos os campos");
+      return;
+    }
+    try {
+      setLoading(true);
+      const updatedCustomer = { ...customer, name, phone, points };
+      await editCustomerDetail.execute(
+        parseInt(id as string, 10),
+        updatedCustomer
+      );
+      Alert.alert("Dados atualizados com sucesso!");
+      router.back();
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      Alert.alert(
+        "Erro",
+        `Não foi possível atualizar os dados do cliente.\n\n ${errorMessage}`
+      );
+    } finally {
+      setLoading(true);
+    }
   };
 
   const handleCancelEditing = () => {
