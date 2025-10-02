@@ -46,7 +46,7 @@ export default function RewardDetailsScreen() {
           }}
         />
         <View style={styles.container}>
-          <Text>Reward not found</Text>
+          <Text>A recompensa não foi encontrada!</Text>
         </View>
       </>
     );
@@ -60,10 +60,10 @@ export default function RewardDetailsScreen() {
         }}
       />
       <View style={styles.container}>
-        <Text>Reward</Text>
-        <Text>Name: {reward.name}</Text>
-        <Text>Description: {reward.description}</Text>
-        <Text>Points Required: {reward.pointsRequired}</Text>
+        <Text>Recompensa</Text>
+        <Text>Nome: {reward.name}</Text>
+        <Text>Descrição: {reward.description}</Text>
+        <Text>Pontos Necessários: {reward.pointsRequired}</Text>
       </View>
       <DeleteButton onDelete={handleDelete} />
       <AppButton onPress={() => route.push(`/rewards/${reward.id}/edit`)}>

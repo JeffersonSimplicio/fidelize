@@ -64,12 +64,12 @@ export default function CustomerDetailsScreen() {
         }}
       />
       <View style={styles.container}>
-        <Text>Client</Text>
+        <Text>Cliente</Text>
         <Text>Name: {customer.name}</Text>
-        <Text>Phone: {formatPhone(customer.phone)}</Text>
-        <Text>Points: {customer.points}</Text>
+        <Text>Telefone: {formatPhone(customer.phone)}</Text>
+        <Text>Pontos acumulados: {customer.points}</Text>
         <Text>
-          Last Visit: {customer.lastVisitAt.toLocaleDateString("pt-BR")}
+          Ultima Visita: {customer.lastVisitAt.toLocaleDateString("pt-BR")}
         </Text>
 
         <View>
