@@ -6,25 +6,41 @@ import {
   Platform,
   KeyboardAvoidingView,
   Alert,
-  Button,
+  StyleSheet,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { registerCustomer } from "@/core/composition/customers/register-customer";
+import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
+import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { AppButton } from "@/ui/components/app-button";
 
 export default function NewCustomerScreen() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+  });
   const [loading, setLoading] = useState(false);
+  const nameValidation = useRealtimeFieldValidation(
+    registerCustomerSchema.shape.name,
+    form.name
+  );
+  const phoneValidation = useRealtimeFieldValidation(
+    registerCustomerSchema.shape.phone,
+    form.phone,
+    1000
+  );
+
+  const isFormInvalid =
+    !!nameValidation.error ||
+    !!phoneValidation.error ||
+    form.name.trim() === "" ||
+    form.phone.trim() === "";
 
   async function handleAddCustomer() {
-    if (name.trim() === "" || phone.trim() === "") {
-      Alert.alert("Atenção", "Preencha todos os campos");
-      return;
-    }
     try {
       setLoading(true);
-      const newCustomer = await registerCustomer.execute({ name, phone });
+      const newCustomer = await registerCustomer.execute(form);
       Alert.alert("Sucesso", "Cliente cadastrado com sucesso!", [
         {
           text: "OK",
@@ -60,26 +76,59 @@ export default function NewCustomerScreen() {
             <Text>Nome:</Text>
             <TextInput
               placeholder="Digite o nome do cliente"
-              value={name}
-              onChangeText={setName}
+              value={form.name}
+              onChangeText={(value) => {
+                setForm({ ...form, name: value });
+                nameValidation.setTouched();
+              }}
             />
+            {nameValidation.error && (
+              <Text style={{ color: "red" }}>{nameValidation.error}</Text>
+            )}
           </View>
           <View>
             <Text>Telefone:</Text>
             <TextInput
-              placeholder="Digite o telefone"
+              placeholder="Digite o telefone do cliente"
               keyboardType="phone-pad"
-              value={phone}
-              onChangeText={setPhone}
+              value={form.phone}
+              onChangeText={(value) => {
+                setForm({ ...form, phone: value });
+                phoneValidation.setTouched();
+              }}
             />
+            {phoneValidation.error && (
+              <Text style={{ color: "red" }}>{phoneValidation.error}</Text>
+            )}
           </View>
-          <Button
+          <AppButton
             onPress={handleAddCustomer}
-            disabled={loading}
-            title={loading ? "Cadastrando..." : "Cadastrar"}
-          />
+            disabled={loading || isFormInvalid}
+            style={({ pressed }) => [
+              styles.default,
+              (loading || isFormInvalid) && styles.disabled,
+              pressed && !(loading || isFormInvalid) && { opacity: 0.6 },
+            ]}
+          >
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+              {loading ? "Cadastrando..." : "Cadastrar"}
+            </Text>
+          </AppButton>
         </KeyboardAvoidingView>
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  default: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 12,
+    borderRadius: 6,
+    backgroundColor: "#007AFF", // cor ativa
+  },
+  disabled: {
+    backgroundColor: "#ccc", // cor quando desabilitado
+  },
+});
