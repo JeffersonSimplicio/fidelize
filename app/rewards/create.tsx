@@ -12,7 +12,7 @@ import {
 import { registerReward } from "@/core/composition/rewards/register-reward";
 import { NumberInput } from "@/ui/components/number-input";
 import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
-import { editRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
 
 const MIN_POINTS_REQUIRED = 1;
@@ -27,15 +27,15 @@ export default function NewRewardScreen() {
   });
 
   const nameValidation = useRealtimeFieldValidation(
-    editRewardSchema.shape.name,
+    registerRewardSchema.shape.name,
     form.name
   );
   const descriptionValidation = useRealtimeFieldValidation(
-    editRewardSchema.shape.description,
+    registerRewardSchema.shape.description,
     form.description
   );
   const pointsRequiredValidation = useRealtimeFieldValidation(
-    editRewardSchema.shape.pointsRequired,
+    registerRewardSchema.shape.pointsRequired,
     form.pointsRequired
   );
 
