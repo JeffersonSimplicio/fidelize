@@ -6,7 +6,7 @@ import {
 } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import DeleteButton from "@/ui/components/delete-button";
+import { DeleteButton } from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
 import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";

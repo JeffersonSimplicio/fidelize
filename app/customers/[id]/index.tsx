@@ -7,7 +7,7 @@ import {
 import { useCallback, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import DeleteButton from "@/ui/components/delete-button";
+import { DeleteButton } from "@/ui/components/delete-button";
 import { AppButton } from "@/ui/components/app-button";
 import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
 import { deleteCustomer } from "@/core/composition/customers/delete-customer";

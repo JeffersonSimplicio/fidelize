@@ -9,7 +9,7 @@ type Props = {
   color?: string;
 };
 
-export default function DeleteButton({
+export function DeleteButton({
   onDelete,
   confirm = true,
   size = 30,
