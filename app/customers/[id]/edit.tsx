@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
 import { editCustomerDetail } from "@/core/composition/customers/edit-customer-detail";
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { NumberInput } from "@/ui/components/number-input";
 import { PhoneInput } from "@/ui/components/phone-input";
 import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
@@ -23,7 +22,6 @@ const MIN_POINTS = 0;
 export default function CustomerEditScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const [customer, setCustomer] = useState<Customer | null>(null);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -51,7 +49,6 @@ export default function CustomerEditScreen() {
         parseInt(id as string, 10)
       );
       if (fetchedCustomer) {
-        setCustomer(fetchedCustomer);
         setForm({
           name: fetchedCustomer.name,
           phone: fetchedCustomer.phone,
@@ -66,7 +63,7 @@ export default function CustomerEditScreen() {
   const handleSave = async () => {
     try {
       setLoading(true);
-      const updatedCustomer = { ...customer, ...form };
+      const updatedCustomer = { ...form };
       await editCustomerDetail.execute(
         parseInt(id as string, 10),
         updatedCustomer
@@ -109,7 +106,7 @@ export default function CustomerEditScreen() {
               value={form.name}
               onChangeText={(value) => {
                 setForm({ ...form, name: value });
-                nameValidation.setTouched()
+                nameValidation.setTouched();
               }}
             />
             {nameValidation.error && (
@@ -122,7 +119,7 @@ export default function CustomerEditScreen() {
               value={form.phone}
               onChange={(value) => {
                 setForm({ ...form, phone: value });
-                phoneValidation.setTouched()
+                phoneValidation.setTouched();
               }}
             />
             {phoneValidation.error && (
@@ -137,7 +134,7 @@ export default function CustomerEditScreen() {
               initValue={form.points}
               onValueChange={(value) => {
                 setForm({ ...form, points: value });
-                pointsValidation.setTouched()
+                pointsValidation.setTouched();
               }}
             />
             {pointsValidation.error && (
