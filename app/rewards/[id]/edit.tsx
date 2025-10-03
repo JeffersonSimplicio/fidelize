@@ -12,20 +12,33 @@ import {
 } from "react-native";
 import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
 import { editRewardDetail } from "@/core/composition/rewards/edit-reward-detail";
-import { Reward } from "@/core/domain/rewards/reward.entity";
 import { NumberInput } from "@/ui/components/number-input";
+import { editRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
 
 const MIN_POINTS_REQUIRED = 1;
 
 export default function HomeScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const [reward, setReward] = useState<Reward | null>(null);
-  const [name, setName] = useState<string>("");
-  const [pointsRequired, setPointsRequired] =
-    useState<number>(MIN_POINTS_REQUIRED);
-  const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    pointsRequired: MIN_POINTS_REQUIRED,
+  });
+  const nameValidation = useRealtimeFieldValidation(
+    editRewardSchema.shape.name,
+    form.name
+  );
+  const descriptionValidation = useRealtimeFieldValidation(
+    editRewardSchema.shape.description,
+    form.description
+  );
+  const pointsRequiredValidation = useRealtimeFieldValidation(
+    editRewardSchema.shape.pointsRequired,
+    form.pointsRequired
+  );
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -33,10 +46,11 @@ export default function HomeScreen() {
         parseInt(id as string, 10)
       );
       if (fetchedReward) {
-        setReward(fetchedReward);
-        setName(fetchedReward.name);
-        setPointsRequired(fetchedReward.pointsRequired);
-        setDescription(fetchedReward.description);
+        setForm({
+          name: fetchedReward.name,
+          description: fetchedReward.description,
+          pointsRequired: fetchedReward.pointsRequired,
+        });
       }
     };
 
@@ -46,8 +60,11 @@ export default function HomeScreen() {
   const handleSave = async () => {
     try {
       setLoading(true);
-      const updateReward = { ...reward, name, description, pointsRequired };
-      await editRewardDetail.execute(parseInt(id as string, 10), updateReward);
+      await editRewardDetail.execute(parseInt(id as string, 10), {
+        name: form.name,
+        description: form.description,
+        pointsRequired: form.pointsRequired,
+      });
       Alert.alert("Dados atualizados com sucesso!");
       router.back();
     } catch (e) {
@@ -83,27 +100,49 @@ export default function HomeScreen() {
             <Text>Título:</Text>
             <TextInput
               placeholder="Digite o título da recompensa"
-              value={name}
-              onChangeText={setName}
+              value={form.name}
+              onChangeText={(value) => {
+                setForm({ ...form, name: value });
+                nameValidation.setTouched();
+              }}
             />
+            {nameValidation.error && (
+              <Text style={{ color: "red" }}>{nameValidation.error}</Text>
+            )}
           </View>
 
           <View>
             <Text>Pontos necessários:</Text>
             <NumberInput
               minValue={MIN_POINTS_REQUIRED}
-              initValue={pointsRequired}
-              onValueChange={setPointsRequired}
+              initValue={form.pointsRequired}
+              onValueChange={(value) => {
+                setForm({ ...form, pointsRequired: value });
+                pointsRequiredValidation.setTouched();
+              }}
             />
+            {pointsRequiredValidation.error && (
+              <Text style={{ color: "red" }}>
+                {pointsRequiredValidation.error}
+              </Text>
+            )}
           </View>
 
           <View>
             <Text>Descrição:</Text>
             <TextInput
               placeholder="Digite a descrição da recompensa"
-              value={description}
-              onChangeText={setDescription}
+              value={form.description}
+              onChangeText={(value) => {
+                setForm({ ...form, description: value });
+                descriptionValidation.setTouched();
+              }}
             />
+            {descriptionValidation.error && (
+              <Text style={{ color: "red" }}>
+                {descriptionValidation.error}
+              </Text>
+            )}
           </View>
 
           <View>
