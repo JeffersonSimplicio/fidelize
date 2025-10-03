@@ -70,7 +70,10 @@ export class Customer {
   }
 
   private ensureDatesNotInFuture() {
-    ensureDatesNotInFuture(this._createdAt, this._lastVisitAt)
+    ensureDatesNotInFuture({
+      createdAt: this._createdAt,
+      lastVisitAt: this._lastVisitAt
+    })
   }
 
   private ensureValidTimeline() {

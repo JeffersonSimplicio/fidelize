@@ -4,4 +4,4 @@ export class LastVisitInFutureError extends BaseError {
   constructor() {
     super("Última visita não pode estar no futuro.");
   }
-}
+} 

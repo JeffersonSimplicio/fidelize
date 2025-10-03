@@ -44,7 +44,7 @@ export class Reward {
   }
 
   private ensureDatesNotInFuture() {
-    ensureDatesNotInFuture(this._createdAt)
+    ensureDatesNotInFuture({ createdAt: this._createdAt })
   }
 
   toPersistence() {
