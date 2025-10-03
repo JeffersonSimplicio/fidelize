@@ -13,6 +13,7 @@ import { registerCustomer } from "@/core/composition/customers/register-customer
 import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
 import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
+import { PhoneInput } from "@/ui/components/phone-input";
 
 export default function NewCustomerScreen() {
   const router = useRouter();
@@ -88,11 +89,9 @@ export default function NewCustomerScreen() {
           </View>
           <View>
             <Text>Telefone:</Text>
-            <TextInput
-              placeholder="Digite o telefone do cliente"
-              keyboardType="phone-pad"
+            <PhoneInput
               value={form.phone}
-              onChangeText={(value) => {
+              onChange={(value) => {
                 setForm({ ...form, phone: value });
                 phoneValidation.setTouched();
               }}
