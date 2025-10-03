@@ -20,5 +20,3 @@ export const registerCustomerSchema = z.object({
       message: "DDD inválido.",
     }),
 });
-
-export type RegisterCustomerForm = z.infer<typeof registerCustomerSchema>;

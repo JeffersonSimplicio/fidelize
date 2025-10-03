@@ -39,4 +39,3 @@ export const editCustomerSchema = z.object({
     })
     .optional(),
 });
-

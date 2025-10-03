@@ -14,6 +14,9 @@ import { getCustomerDetail } from "@/core/composition/customers/get-customer-det
 import { editCustomerDetail } from "@/core/composition/customers/edit-customer-detail";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { NumberInput } from "@/ui/components/number-input";
+import { PhoneInput } from "@/ui/components/phone-input";
+import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
+import { editCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
 
 const MIN_POINTS = 0;
 
@@ -21,10 +24,26 @@ export default function CustomerEditScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const [customer, setCustomer] = useState<Customer | null>(null);
-  const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [points, setPoints] = useState<number>(MIN_POINTS);
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    points: MIN_POINTS,
+  });
   const [loading, setLoading] = useState(false);
+
+  const nameValidation = useRealtimeFieldValidation(
+    editCustomerSchema.shape.name,
+    form.name
+  );
+  const phoneValidation = useRealtimeFieldValidation(
+    editCustomerSchema.shape.phone,
+    form.phone,
+    1000
+  );
+  const pointsValidation = useRealtimeFieldValidation(
+    editCustomerSchema.shape.points,
+    form.points
+  );
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -33,9 +52,11 @@ export default function CustomerEditScreen() {
       );
       if (fetchedCustomer) {
         setCustomer(fetchedCustomer);
-        setName(fetchedCustomer.name);
-        setPhone(fetchedCustomer.phone);
-        setPoints(fetchedCustomer.points);
+        setForm({
+          name: fetchedCustomer.name,
+          phone: fetchedCustomer.phone,
+          points: fetchedCustomer.points,
+        });
       }
     };
 
@@ -45,7 +66,7 @@ export default function CustomerEditScreen() {
   const handleSave = async () => {
     try {
       setLoading(true);
-      const updatedCustomer = { ...customer, name, phone, points };
+      const updatedCustomer = { ...customer, ...form };
       await editCustomerDetail.execute(
         parseInt(id as string, 10),
         updatedCustomer
@@ -85,27 +106,43 @@ export default function CustomerEditScreen() {
             <Text>Nome:</Text>
             <TextInput
               placeholder="Digite o nome do cliente"
-              value={name}
-              onChangeText={setName}
+              value={form.name}
+              onChangeText={(value) => {
+                setForm({ ...form, name: value });
+                nameValidation.setTouched()
+              }}
             />
+            {nameValidation.error && (
+              <Text style={{ color: "red" }}>{nameValidation.error}</Text>
+            )}
           </View>
           <View>
             <Text>Telefone:</Text>
-            <TextInput
-              placeholder="Digite o telefone"
-              keyboardType="phone-pad"
-              value={phone}
-              onChangeText={setPhone}
+            <PhoneInput
+              value={form.phone}
+              onChange={(value) => {
+                setForm({ ...form, phone: value });
+                phoneValidation.setTouched()
+              }}
             />
+            {phoneValidation.error && (
+              <Text style={{ color: "red" }}>{phoneValidation.error}</Text>
+            )}
           </View>
 
           <View>
             <Text>Pontos:</Text>
             <NumberInput
               minValue={MIN_POINTS}
-              initValue={points}
-              onValueChange={setPoints}
+              initValue={form.points}
+              onValueChange={(value) => {
+                setForm({ ...form, points: value });
+                pointsValidation.setTouched()
+              }}
             />
+            {pointsValidation.error && (
+              <Text style={{ color: "red" }}>{pointsValidation.error}</Text>
+            )}
           </View>
 
           <View>
