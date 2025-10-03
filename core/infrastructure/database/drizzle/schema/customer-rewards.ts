@@ -8,10 +8,10 @@ export const customerRewards = sqliteTable(
     id: integer('id').primaryKey({ autoIncrement: true }),
     customerId: integer('customer_id')
       .notNull()
-      .references(() => customers.id),
+      .references(() => customers.id, { onDelete: 'cascade' }),
     rewardId: integer('reward_id')
       .notNull()
-      .references(() => rewards.id),
+      .references(() => rewards.id, { onDelete: 'cascade' }),
     redeemedAt: integer('redeemed_at', { mode: 'timestamp' }).notNull(),
   },
   (table) => [

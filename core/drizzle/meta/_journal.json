@@ -15,6 +15,13 @@
       "when": 1759517610945,
       "tag": "0001_military_argent",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1759533815055,
+      "tag": "0002_spooky_leo",
+      "breakpoints": true
     }
   ]
 }
