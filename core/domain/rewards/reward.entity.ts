@@ -35,7 +35,7 @@ export class Reward {
   get name() { return this._name }
   get pointsRequired() { return this._pointsRequired }
   get description() { return this._description }
-  get isActive() { return this._isActive === RewardStatus.Active }
+  get isActive() { return this._isActive }
   get createdAt() { return this._createdAt }
 
   // --- Business rules ---

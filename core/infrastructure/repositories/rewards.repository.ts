@@ -73,12 +73,7 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
 
     const [updated] = await this.db
       .update(this.table)
-      .set({
-        name: reward.name,
-        pointsRequired: reward.pointsRequired,
-        description: reward.description,
-        createdAt: reward.createdAt,
-      })
+      .set(reward.toPersistence())
       .where(eq(this.table.id, reward.id))
       .returning();
 
