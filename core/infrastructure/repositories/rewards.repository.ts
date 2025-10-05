@@ -4,6 +4,7 @@ import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { RewardTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbRewardToDomain } from "@/core/infrastructure/mappers/rewardMapper";
 import { eq, like } from "drizzle-orm";
+import { RewardStatus } from "@/core/domain/rewards/reward-status"
 
 export class RewardRepositoryDrizzle implements IRewardRepository {
   constructor(
@@ -43,6 +44,24 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
     const dbRewards = await this.db
       .select()
       .from(this.table);
+
+    return dbRewards.map(mapDbRewardToDomain);
+  }
+
+  async findAllActivated(): Promise<Reward[]> {
+    const dbRewards = await this.db
+      .select()
+      .from(this.table)
+      .where(eq(this.table.isActive, RewardStatus.Active));
+
+    return dbRewards.map(mapDbRewardToDomain);
+  }
+
+  async findAllDeactivated(): Promise<Reward[]> {
+    const dbRewards = await this.db
+      .select()
+      .from(this.table)
+      .where(eq(this.table.isActive, RewardStatus.Inactive));
 
     return dbRewards.map(mapDbRewardToDomain);
   }
