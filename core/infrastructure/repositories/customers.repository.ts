@@ -3,7 +3,7 @@ import { ICustomerRepository } from "@/core/domain/customers/customer.repository
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { CustomerTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbCustomerToDomain } from "@/core/infrastructure/mappers/customerMapper";
-import { eq, like } from "drizzle-orm";
+import { eq, like, SQL } from "drizzle-orm";
 
 export class CustomerRepositoryDrizzle implements ICustomerRepository {
   constructor(
@@ -20,34 +20,27 @@ export class CustomerRepositoryDrizzle implements ICustomerRepository {
     return mapDbCustomerToDomain(inserted);
   }
 
-  private async findByField<T extends string | number>(
-    field: keyof typeof this.table.$inferSelect,
-    value: T
-  ): Promise<Customer | null> {
-    const [dbCustomer] = await this.db
+  private async findByCondition(condition: SQL): Promise<Customer[]> {
+    const result = await this.db
       .select()
       .from(this.table)
-      .where(eq(this.table[field], value));
+      .where(condition);
 
-    if (!dbCustomer) return null;
-    return mapDbCustomerToDomain(dbCustomer);
+    return result.map(mapDbCustomerToDomain);
   }
 
   async findById(id: number): Promise<Customer | null> {
-    return this.findByField('id', id);
+    const [result] = await this.findByCondition(eq(this.table.id, id));
+    return result || null;
   }
 
   async findByPhone(phone: string): Promise<Customer | null> {
-    return this.findByField('phone', phone);
+    const [result] = await this.findByCondition(eq(this.table.phone, phone));
+    return result || null;
   }
 
   async findByName(name: string): Promise<Customer[]> {
-    const dbCustomers = await this.db
-      .select()
-      .from(this.table)
-      .where(like(this.table.name, `%${name}%`));
-
-    return dbCustomers.map(mapDbCustomerToDomain);
+    return await this.findByCondition(like(this.table.name, `%${name}%`));
   }
 
   async findAll(): Promise<Customer[]> {
