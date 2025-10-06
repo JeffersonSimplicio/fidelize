@@ -4,7 +4,7 @@ import { RewardStatus } from "@/core/domain/rewards/reward.status";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { RewardTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbRewardToDomain } from "@/core/infrastructure/mappers/rewardMapper";
-import { eq, like } from "drizzle-orm";
+import { eq, like, SQL } from "drizzle-orm";
 
 export class RewardRepositoryDrizzle implements IRewardRepository {
   constructor(
@@ -21,23 +21,22 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
     return mapDbRewardToDomain(inserted);
   }
 
-  async findById(id: number): Promise<Reward | null> {
-    const [reward] = await this.db
+  private async findByCondition(condition: SQL): Promise<Reward[]> {
+    const result = await this.db
       .select()
       .from(this.table)
-      .where(eq(this.table.id, id));
+      .where(condition);
 
-    if (!reward) return null;
-    return mapDbRewardToDomain(reward);
+    return result.map(mapDbRewardToDomain);
+  }
+
+  async findById(id: number): Promise<Reward | null> {
+    const [result] = await this.findByCondition(eq(this.table.id, id));
+    return result || null;
   }
 
   async findByName(name: string): Promise<Reward[]> {
-    const dbCustomers = await this.db
-      .select()
-      .from(this.table)
-      .where(like(this.table.name, `%${name}%`));
-
-    return dbCustomers.map(mapDbRewardToDomain);
+    return await this.findByCondition(like(this.table.name, `%${name}%`));
   }
 
   async findAll(): Promise<Reward[]> {
@@ -49,21 +48,11 @@ export class RewardRepositoryDrizzle implements IRewardRepository {
   }
 
   async findAllActivated(): Promise<Reward[]> {
-    const dbRewards = await this.db
-      .select()
-      .from(this.table)
-      .where(eq(this.table.isActive, RewardStatus.Active));
-
-    return dbRewards.map(mapDbRewardToDomain);
+    return await this.findByCondition(eq(this.table.isActive, RewardStatus.Active));
   }
 
   async findAllDeactivated(): Promise<Reward[]> {
-    const dbRewards = await this.db
-      .select()
-      .from(this.table)
-      .where(eq(this.table.isActive, RewardStatus.Inactive));
-
-    return dbRewards.map(mapDbRewardToDomain);
+    return await this.findByCondition(eq(this.table.isActive, RewardStatus.Inactive));
   }
 
   async update(reward: Reward): Promise<Reward | null> {
