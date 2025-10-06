@@ -13,7 +13,7 @@ const customerRepository = new CustomerRepositoryDrizzle(db, customers);
 const rewardRepository = new RewardRepositoryDrizzle(db, rewards);
 const customerRewardRepository = new CustomerRewardRepositoryDrizzle(db, customerRewards);
 
-export const ListAvailableRewardsForCustomer = new ListAvailableRewardsForCustomerUseCase(
+export const listAvailableRewardsForCustomer = new ListAvailableRewardsForCustomerUseCase(
   rewardRepository,
   customerRepository,
   customerRewardRepository
