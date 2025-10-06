@@ -1,6 +1,6 @@
-import { ensurePointsRequiredIsValid } from "@/core/domain/rewards/rules"
-import { ensureIdNotSet, ensureDatesNotInFuture } from "@/core/domain/shared/rules"
-import { RewardStatus } from "@/core/domain/rewards/reward-status"
+import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { ensurePointsRequiredIsValid } from "@/core/domain/rewards/rules";
+import { ensureDatesNotInFuture, ensureIdNotSet } from "@/core/domain/shared/rules";
 
 export class Reward {
   private _id?: number;  // It will be defined by the database

@@ -1,5 +1,5 @@
-import { RewardStatus } from '@/core/domain/rewards/reward-status';
 import { Reward as RewardEntity } from '@/core/domain/rewards/reward.entity';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
 import { RewardSelect } from '@/core/infrastructure/database/drizzle/types';
 
 export function mapDbRewardToDomain(dbReward: RewardSelect): RewardEntity {
