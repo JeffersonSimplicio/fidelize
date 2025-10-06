@@ -34,12 +34,12 @@ export class CustomerRewardRepositoryDrizzle implements ICustomerRewardRepositor
     return result || null;
   }
 
-  async findByCustomerId(id: number): Promise<CustomerReward[]> {
-    return await this.findByCondition(eq(this.table.customerId, id));
+  async findByCustomerId(customerId: number): Promise<CustomerReward[]> {
+    return await this.findByCondition(eq(this.table.customerId, customerId));
   }
 
-  async findByRewardId(id: number): Promise<CustomerReward[]> {
-    return await this.findByCondition(eq(this.table.rewardId, id));
+  async findByRewardId(rewardId: number): Promise<CustomerReward[]> {
+    return await this.findByCondition(eq(this.table.rewardId, rewardId));
   }
 
   async findAll(): Promise<CustomerReward[]> {
