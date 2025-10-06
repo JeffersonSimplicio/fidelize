@@ -6,5 +6,5 @@ export interface ICustomerRewardRepository {
   findByCustomerId(id: number): Promise<CustomerReward[]>;
   findByRewardId(id: number): Promise<CustomerReward[]>;
   findAll(): Promise<CustomerReward[]>;
-  // delete(id: number): Promise<boolean>;
+  delete(id: number): Promise<boolean>;
 }
