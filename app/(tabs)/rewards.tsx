@@ -2,7 +2,7 @@ import { FlatList, RefreshControl, Text, View } from "react-native";
 import { useCallback, useState } from "react";
 import { Link, useFocusEffect } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { listRewards } from "@/core/composition/rewards/list-rewards";
+import { listRewardsActive } from "@/core/composition/rewards/list-rewards-active";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 
 export default function RewardsScreen() {
@@ -10,7 +10,7 @@ export default function RewardsScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchRewards = useCallback(async () => {
-    const rewards = await listRewards.execute();
+    const rewards = await listRewardsActive.execute();
     setRewards(rewards);
   }, []);
 
