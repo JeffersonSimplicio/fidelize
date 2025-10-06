@@ -1,4 +1,3 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
 import { IDisableReward } from "@/core/application/interfaces/rewards/disable-reward";
 
@@ -7,12 +6,13 @@ export class DisableRewardUseCase implements IDisableReward {
     private readonly repo: IRewardRepository,
   ) { }
 
-  async execute(id: number): Promise<Reward | null> {
+  async execute(id: number): Promise<boolean> {
     const existing = await this.repo.findById(id);
-    if (!existing) return null;
+    if (!existing) return false;
 
     existing.deactivate()
 
-    return await this.repo.update(existing);
+    const updated = await this.repo.update(existing);
+    return !!updated;
   }
 }

@@ -10,7 +10,7 @@ import { DeleteButton } from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
 import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
-import { deleteReward } from "@/core/composition/rewards/delete-reward";
+import { disableReward } from "@/core/composition/rewards/disable-reward";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 
 export default function RewardDetailsScreen() {
@@ -19,7 +19,7 @@ export default function RewardDetailsScreen() {
   const { id } = useLocalSearchParams();
 
   const handleDelete = () => {
-    deleteReward.execute(parseInt(id as string, 10));
+    disableReward.execute(parseInt(id as string, 10));
     Alert.alert("Recompensa deletada com sucesso!");
     route.back();
   };

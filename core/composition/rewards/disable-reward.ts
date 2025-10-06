@@ -4,4 +4,4 @@ import { rewards } from '@/core/infrastructure/database/drizzle/schema';
 import { DisableRewardUseCase } from "@/core/application/use-cases/rewards/disable-reward.use-case";
 
 const rewardRepository = new RewardRepositoryDrizzle(db, rewards);
-export const deleteReward = new DisableRewardUseCase(rewardRepository);
+export const disableReward = new DisableRewardUseCase(rewardRepository);
