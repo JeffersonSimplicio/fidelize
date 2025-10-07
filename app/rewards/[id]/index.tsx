@@ -18,8 +18,8 @@ export default function RewardDetailsScreen() {
   const route = useRouter();
   const { id } = useLocalSearchParams();
 
-  const handleDelete = () => {
-    disableReward.execute(parseInt(id as string, 10));
+  const handleDelete = async () => {
+    await disableReward.execute(parseInt(id as string, 10));
     Alert.alert("Recompensa deletada com sucesso!");
     route.back();
   };
