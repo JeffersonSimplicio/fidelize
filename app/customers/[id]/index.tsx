@@ -4,75 +4,33 @@ import {
   useLocalSearchParams,
   useRouter,
 } from "expo-router";
-import { useCallback, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
-import { deleteCustomer } from "@/core/composition/customers/delete-customer";
-import { listAvailableRewardsForCustomer } from "@/core/composition/customer-rewards/list-available-rewards-customer";
-import { listRedeemedRewardsForCustomer } from "@/core/composition/customer-rewards/list-redeemed-rewards-customer";
-import { redeemReward } from "@/core/composition/customer-rewards/redeem-reward";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { undoRedeemReward } from "@/core/composition/customer-rewards/undo-redeem-reward";
+import { useCallback } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { CustomerInfo } from "@/ui/components/customer-info";
 import { RedeemedRewardsList } from "@/ui/components/redeemed-rewards-list";
 import { AvailableRewardsList } from "@/ui/components/available-rewards-list";
 import { CustomerActions } from "@/ui/components/customer-actions";
+import { useCustomerDetails } from "@/ui/hooks/use-customer-details";
 
 export default function CustomerDetailsScreen() {
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [availableRewards, setAvailableRewards] = useState<Reward[] | null>(
-    null
-  );
-  const [redeemedRewards, setRedeemedRewards] = useState<Reward[] | null>(null);
-  const route = useRouter();
+  const router = useRouter();
   const { id } = useLocalSearchParams();
-
-  const handleDelete = async () => {
-    await deleteCustomer.execute(parseInt(id as string, 10));
-    Alert.alert("Cliente deletado com sucesso!");
-    route.back();
-  };
-
-  const fetchRedeemedRewards = useCallback(async () => {
-    const fetchedRedeemedRewards = await listRedeemedRewardsForCustomer.execute(
-      parseInt(id as string, 10)
-    );
-    setRedeemedRewards(fetchedRedeemedRewards ?? null);
-  }, [id]);
-
-  const fetchAvailableRewards = useCallback(async () => {
-    const fetchedAvailableRewards =
-      await listAvailableRewardsForCustomer.execute(parseInt(id as string, 10));
-    setAvailableRewards(fetchedAvailableRewards ?? null);
-  }, [id]);
-
-  const fetchCustomers = useCallback(async () => {
-    const fetchedCustomer = await getCustomerDetail.execute(
-      parseInt(id as string, 10)
-    );
-    setCustomer(fetchedCustomer ?? null);
-  }, [id]);
+  const customerId = parseInt(id as string, 10);
+  const {
+    customer,
+    availableRewards,
+    redeemedRewards,
+    reloadAll,
+    handleDelete,
+    redeem,
+    undoRedeem,
+  } = useCustomerDetails(customerId, () => router.back());
 
   useFocusEffect(
     useCallback(() => {
-      fetchCustomers();
-      fetchAvailableRewards();
-      fetchRedeemedRewards();
-    }, [fetchCustomers, fetchAvailableRewards, fetchRedeemedRewards])
+      reloadAll();
+    }, [reloadAll])
   );
-
-  const redeem = async (rewardId: number) => {
-    await redeemReward.execute(parseInt(id as string, 10), rewardId);
-    fetchRedeemedRewards();
-    fetchAvailableRewards();
-  };
-
-  const undoRedeem = async (rewardId: number) => {
-    await undoRedeemReward.execute(parseInt(id as string, 10), rewardId);
-    fetchRedeemedRewards();
-    fetchAvailableRewards();
-  };
 
   if (!customer) {
     return (
@@ -108,7 +66,7 @@ export default function CustomerDetailsScreen() {
 
         <CustomerActions
           onDelete={handleDelete}
-          onEdit={() => route.push(`/customers/${customer.id}/edit`)}
+          onEdit={() => router.push(`/customers/${customerId}/edit`)}
         />
       </View>
     </>
