@@ -5,10 +5,7 @@ import {
   useRouter,
 } from "expo-router";
 import { useCallback, useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { DeleteButton } from "@/ui/components/delete-button";
-import { AppButton } from "@/ui/components/app-button";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
 import { deleteCustomer } from "@/core/composition/customers/delete-customer";
 import { listAvailableRewardsForCustomer } from "@/core/composition/customer-rewards/list-available-rewards-customer";
@@ -17,11 +14,10 @@ import { redeemReward } from "@/core/composition/customer-rewards/redeem-reward"
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { undoRedeemReward } from "@/core/composition/customer-rewards/undo-redeem-reward";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
-
-const formatPhone = (phone: string): string => {
-  return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-};
+import { CustomerInfo } from "@/ui/components/customer-info";
+import { RedeemedRewardsList } from "@/ui/components/redeemed-rewards-list";
+import { AvailableRewardsList } from "@/ui/components/available-rewards-list";
+import { CustomerActions } from "@/ui/components/customer-actions";
 
 export default function CustomerDetailsScreen() {
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -87,7 +83,7 @@ export default function CustomerDetailsScreen() {
           }}
         />
         <View style={styles.container}>
-          <Text>User not found</Text>
+          <Text>Usuário não foi encontrado!</Text>
         </View>
       </>
     );
@@ -101,72 +97,19 @@ export default function CustomerDetailsScreen() {
         }}
       />
       <View style={styles.container}>
-        <View>
-          <Text>Cliente</Text>
-          <Text>Name: {customer.name}</Text>
-          <Text>Telefone: {formatPhone(customer.phone)}</Text>
-          <Text>Pontos acumulados: {customer.points}</Text>
-          <Text>
-            Ultima Visita: {customer.lastVisitAt.toLocaleDateString("pt-BR")}
-          </Text>
-        </View>
+        <CustomerInfo customer={customer} />
 
-        <View>
-          <Text>Recompensas resgatadas</Text>
-          <FlatList
-            data={redeemedRewards}
-            keyExtractor={(item) => item.id!.toString()}
-            renderItem={({ item }) => (
-              <View>
-                <Text>
-                  {item.name} - {item.pointsRequired} pontos
-                </Text>
-                {item.isActive === RewardStatus.Active && (
-                  <AppButton onPress={() => undoRedeem(item.id!)}>
-                    <Text>Desfazer resgate</Text>
-                  </AppButton>
-                )}
-              </View>
-            )}
-            ListEmptyComponent={() => (
-              <View style={{ alignItems: "center", marginTop: 20 }}>
-                <Text>Nenhuma recompensa foi resgatada.</Text>
-              </View>
-            )}
-          />
-        </View>
+        <RedeemedRewardsList
+          rewards={redeemedRewards}
+          onUndoRedeem={undoRedeem}
+        />
 
-        <View>
-          <Text>Recompensas disponíveis</Text>
-          <FlatList
-            data={availableRewards}
-            keyExtractor={(item) => item.id!.toString()}
-            renderItem={({ item }) => (
-              <View>
-                <Text>
-                  {item.name} - {item.pointsRequired} pontos
-                </Text>
-                <AppButton onPress={() => redeem(item.id!)}>
-                  <Text>Resgatar</Text>
-                </AppButton>
-              </View>
-            )}
-            ListEmptyComponent={() => (
-              <View style={{ alignItems: "center", marginTop: 20 }}>
-                <Text>Não há recompensas a resgatar.</Text>
-              </View>
-            )}
-          />
-        </View>
+        <AvailableRewardsList rewards={availableRewards} onRedeem={redeem} />
 
-        <View>
-          <DeleteButton onDelete={handleDelete} size={30} />
-          <AppButton
-            onPress={() => route.push(`/customers/${customer.id}/edit`)}
-          >
-            <FontAwesome name="edit" size={30} color="black" />
-          </AppButton>
-        </View>
+        <CustomerActions
+          onDelete={handleDelete}
+          onEdit={() => route.push(`/customers/${customer.id}/edit`)}
+        />
       </View>
     </>
   );
