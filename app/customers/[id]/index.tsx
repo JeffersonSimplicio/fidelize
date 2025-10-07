@@ -16,6 +16,7 @@ import { listRedeemedRewardsForCustomer } from "@/core/composition/customer-rewa
 import { redeemReward } from "@/core/composition/customer-rewards/redeem-reward";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { Reward } from "@/core/domain/rewards/reward.entity";
+import { undoRedeemReward } from "@/core/composition/customer-rewards/undo-redeem-reward";
 
 const formatPhone = (phone: string): string => {
   return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
@@ -70,6 +71,12 @@ export default function CustomerDetailsScreen() {
     fetchAvailableRewards();
   };
 
+  const undoRedeem = async (rewardId: number) => {
+    await undoRedeemReward.execute(parseInt(id as string, 10), rewardId);
+    fetchRedeemedRewards();
+    fetchAvailableRewards();
+  };
+
   if (!customer) {
     return (
       <>
@@ -109,9 +116,14 @@ export default function CustomerDetailsScreen() {
             data={redeemedRewards}
             keyExtractor={(item) => item.id!.toString()}
             renderItem={({ item }) => (
-              <Text>
-                {item.name} - {item.pointsRequired} pontos
-              </Text>
+              <View>
+                <Text>
+                  {item.name} - {item.pointsRequired} pontos
+                </Text>
+                <AppButton onPress={() => undoRedeem(item.id!)}>
+                  <Text>Desfazer resgate</Text>
+                </AppButton>
+              </View>
             )}
             ListEmptyComponent={() => (
               <View style={{ alignItems: "center", marginTop: 20 }}>
