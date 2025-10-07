@@ -21,6 +21,8 @@ export class RedeemRewardUseCase implements IRedeemReward {
 
     if (reward.isActive === RewardStatus.Inactive) throw new Error("Não é possível resgatar uma recompensas desativadas.");
 
+    if (customer.points < reward.pointsRequired) throw new Error(`${customer.name} não tem pontos suficientes para resgatar ${reward.name}.`);
+
     return await this.customerRewardRepo.create(
       new CustomerReward({ customerId, rewardId })
     );
