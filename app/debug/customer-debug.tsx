@@ -76,9 +76,9 @@ export default function CustomersDebugScreen() {
           <Link href={"/debug/reward-debug"} style={styles.navLink}>
             <Text style={styles.navText}>Rewards</Text>
           </Link>
-          {/* <Link href={"/debug/customer-rewards-debug"} style={styles.navLink}>
+          <Link href={"/debug/customer-rewards-debug"} style={styles.navLink}>
             <Text style={styles.navText}>CustomerRewards</Text>
-          </Link> */}
+          </Link>
         </ScrollView>
       </View>
     </View>

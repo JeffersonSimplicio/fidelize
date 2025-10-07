@@ -8,51 +8,57 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { listRewards } from "@/core/composition/rewards/list-rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
+import { listCustomerRewards } from "@/core/composition/customer-rewards/list-customer-rewards";
+import { CustomerReward } from "@/core/domain/customerRewards/customerReward.entity";
 
-export default function RewardsDebugScreen() {
-  const [rewards, setRewards] = useState<Reward[]>([]);
+export default function CustomerRewardsDebugScreen() {
+  const [customerRewards, setCustomerRewards] = useState<CustomerReward[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchRewards = useCallback(async () => {
-    const rewards = await listRewards.execute();
-    setRewards(rewards);
+  const fetchCustomerRewards = useCallback(async () => {
+    const rewards = await listCustomerRewards.execute();
+    setCustomerRewards(rewards);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      fetchRewards();
-    }, [fetchRewards])
+      fetchCustomerRewards();
+    }, [fetchCustomerRewards])
   );
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchRewards();
+    await fetchCustomerRewards();
     setRefreshing(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>📋 Rewards Debug</Text>
+      <Text style={styles.title}>🎯 Customer Rewards Debug</Text>
 
       <FlatList
-        data={rewards}
+        data={customerRewards}
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{item.name}</Text>
-            <Text style={styles.field}>ID: {item.id}</Text>
-            <Text style={styles.field}>Description: {item.description}</Text>
-            <Text style={styles.field}>
-              Points Required: {item.pointsRequired}
-            </Text>
-            <Text style={styles.field}>
-              Is Active: {item.isActive === 1 ? "Yes" : "No"}
-            </Text>
-            <Text style={styles.field}>
-              Created At: {item.createdAt?.toLocaleString()}
-            </Text>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardId}>#{item.id}</Text>
+              <Text style={styles.date}>
+                {item.redeemedAt
+                  ? item.redeemedAt.toISOString()
+                  : "Not redeemed"}
+              </Text>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>👤 Customer</Text>
+              <Text style={styles.field}>ID: {item.customerId}</Text>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>🏆 Reward</Text>
+              <Text style={styles.field}>ID: {item.rewardId}</Text>
+            </View>
           </View>
         )}
         refreshControl={
@@ -61,7 +67,7 @@ export default function RewardsDebugScreen() {
         ListEmptyComponent={() => (
           <View style={{ alignItems: "center", marginTop: 20 }}>
             <Text style={{ color: "#666" }}>
-              Nenhuma recompensa cadastrada.
+              Nenhuma relação de recompensa encontrada.
             </Text>
           </View>
         )}
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: "#ddd",
@@ -113,16 +119,35 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 3,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 6,
-    color: "#222",
+  },
+  cardId: {
+    fontWeight: "bold",
+    fontSize: 15,
+    color: "#333",
+  },
+  date: {
+    fontSize: 12,
+    color: "#777",
+  },
+  section: {
+    marginTop: 6,
+    backgroundColor: "#f1f3f5",
+    padding: 8,
+    borderRadius: 6,
+  },
+  sectionTitle: {
+    fontWeight: "bold",
+    fontSize: 14,
+    marginBottom: 2,
+    color: "#333",
   },
   field: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#444",
-    marginBottom: 2,
   },
   nav: {
     marginTop: 10,
