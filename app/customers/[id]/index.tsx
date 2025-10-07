@@ -13,6 +13,7 @@ import { getCustomerDetail } from "@/core/composition/customers/get-customer-det
 import { deleteCustomer } from "@/core/composition/customers/delete-customer";
 import { listAvailableRewardsForCustomer } from "@/core/composition/customer-rewards/list-available-rewards-customer";
 import { listRedeemedRewardsForCustomer } from "@/core/composition/customer-rewards/list-redeemed-rewards-customer";
+import { redeemReward } from "@/core/composition/customer-rewards/redeem-reward";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 
@@ -62,6 +63,10 @@ export default function CustomerDetailsScreen() {
       fetchRedeemedRewards();
     }, [fetchCustomers, fetchAvailableRewards, fetchRedeemedRewards])
   );
+
+  const redeem = async (rewardId: number) => {
+    await redeemReward.execute(parseInt(id as string, 10), rewardId);
+  };
 
   if (!customer) {
     return (
@@ -120,9 +125,14 @@ export default function CustomerDetailsScreen() {
             data={availableRewards}
             keyExtractor={(item) => item.id!.toString()}
             renderItem={({ item }) => (
-              <Text>
-                {item.name} - {item.pointsRequired} pontos
-              </Text>
+              <View>
+                <Text>
+                  {item.name} - {item.pointsRequired} pontos
+                </Text>
+                <AppButton onPress={() => redeem(item.id!)}>
+                  <Text>Resgatar</Text>
+                </AppButton>
+              </View>
             )}
             ListEmptyComponent={() => (
               <View style={{ alignItems: "center", marginTop: 20 }}>
