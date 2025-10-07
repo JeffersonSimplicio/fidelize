@@ -66,6 +66,8 @@ export default function CustomerDetailsScreen() {
 
   const redeem = async (rewardId: number) => {
     await redeemReward.execute(parseInt(id as string, 10), rewardId);
+    fetchRedeemedRewards();
+    fetchAvailableRewards();
   };
 
   if (!customer) {
