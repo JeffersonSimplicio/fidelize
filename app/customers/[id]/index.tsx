@@ -17,6 +17,7 @@ import { redeemReward } from "@/core/composition/customer-rewards/redeem-reward"
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { undoRedeemReward } from "@/core/composition/customer-rewards/undo-redeem-reward";
+import { RewardStatus } from "@/core/domain/rewards/reward.status";
 
 const formatPhone = (phone: string): string => {
   return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
@@ -120,9 +121,11 @@ export default function CustomerDetailsScreen() {
                 <Text>
                   {item.name} - {item.pointsRequired} pontos
                 </Text>
-                <AppButton onPress={() => undoRedeem(item.id!)}>
-                  <Text>Desfazer resgate</Text>
-                </AppButton>
+                {item.isActive === RewardStatus.Active && (
+                  <AppButton onPress={() => undoRedeem(item.id!)}>
+                    <Text>Desfazer resgate</Text>
+                  </AppButton>
+                )}
               </View>
             )}
             ListEmptyComponent={() => (
