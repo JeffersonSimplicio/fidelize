@@ -4,32 +4,21 @@ import {
   useLocalSearchParams,
   useRouter,
 } from "expo-router";
-import { useCallback, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { useCallback } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { DeleteButton } from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
-import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
-import { disableReward } from "@/core/composition/rewards/disable-reward";
-import { Reward } from "@/core/domain/rewards/reward.entity";
+import { useRewardData } from "@/ui/hooks/reward-details/use-reward-data";
 
 export default function RewardDetailsScreen() {
-  const [reward, setReward] = useState<Reward | null>(null);
-  const route = useRouter();
+  const router = useRouter();
   const { id } = useLocalSearchParams();
+  const rewardId = parseInt(id as string, 10);
 
-  const handleDelete = async () => {
-    await disableReward.execute(parseInt(id as string, 10));
-    Alert.alert("Recompensa deletada com sucesso!");
-    route.back();
-  };
-
-  const fetchReward = useCallback(async () => {
-    const fetchedReward = await getRewardDetail.execute(
-      parseInt(id as string, 10)
-    );
-    setReward(fetchedReward ?? null);
-  }, [id]);
+  const { reward, fetchReward, handleDelete } = useRewardData(rewardId, () =>
+    router.back()
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -66,7 +55,7 @@ export default function RewardDetailsScreen() {
         <Text>Pontos Necessários: {reward.pointsRequired}</Text>
       </View>
       <DeleteButton onDelete={handleDelete} />
-      <AppButton onPress={() => route.push(`/rewards/${reward.id}/edit`)}>
+      <AppButton onPress={() => router.push(`/rewards/${reward.id}/edit`)}>
         <FontAwesome name="edit" size={30} color="black" />
       </AppButton>
     </>
