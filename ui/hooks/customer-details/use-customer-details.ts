@@ -1,5 +1,5 @@
-import { useCustomerData } from "@/ui/hooks/use-customer-data";
-import { useCustomerRewards } from "@/ui/hooks/use-customer-rewards";
+import { useCustomerData } from "@/ui/hooks/customer-details/use-customer-data";
+import { useCustomerRewards } from "@/ui/hooks/customer-details/use-customer-rewards";
 import { useCallback } from "react";
 
 export function useCustomerDetails(customerId: number, onDeleteSuccess: () => void) {

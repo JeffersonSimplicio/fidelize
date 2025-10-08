@@ -10,7 +10,7 @@ import { CustomerInfo } from "@/ui/components/customer-info";
 import { RedeemedRewardsList } from "@/ui/components/redeemed-rewards-list";
 import { AvailableRewardsList } from "@/ui/components/available-rewards-list";
 import { CustomerActions } from "@/ui/components/customer-actions";
-import { useCustomerDetails } from "@/ui/hooks/use-customer-details";
+import { useCustomerDetails } from "@/ui/hooks/customer-details/use-customer-details";
 
 export default function CustomerDetailsScreen() {
   const router = useRouter();
