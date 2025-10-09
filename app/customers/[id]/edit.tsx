@@ -1,21 +1,21 @@
+import { editCustomerDetail } from "@/core/composition/customers/commands/edit-customer-detail";
+import { getCustomerDetail } from "@/core/composition/customers/queries/get-customer-detail";
+import { editCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import { useRouter, Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
-  View,
-  Text,
-  Alert,
-} from "react-native";
-import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
-import { editCustomerDetail } from "@/core/composition/customers/edit-customer-detail";
 import { NumberInput } from "@/ui/components/number-input";
 import { PhoneInput } from "@/ui/components/phone-input";
 import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
-import { editCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 const MIN_POINTS = 0;
 

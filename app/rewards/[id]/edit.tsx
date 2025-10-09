@@ -1,20 +1,20 @@
+import { editRewardDetail } from "@/core/composition/rewards/commands/edit-reward-detail";
+import { getRewardDetail } from "@/core/composition/rewards/queries/get-reward-detail";
+import { editRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
+import { NumberInput } from "@/ui/components/number-input";
+import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
   KeyboardAvoidingView,
   Platform,
+  Text,
   TextInput,
-  Alert,
+  View,
 } from "react-native";
-import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
-import { editRewardDetail } from "@/core/composition/rewards/edit-reward-detail";
-import { NumberInput } from "@/ui/components/number-input";
-import { editRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
-import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
 
 const MIN_POINTS_REQUIRED = 1;
 

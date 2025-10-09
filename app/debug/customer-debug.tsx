@@ -1,15 +1,15 @@
+import { listCustomers } from "@/core/composition/customers/queries/list-customers";
+import { Customer } from "@/core/domain/customers/customer.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
+  StyleSheet,
   Text,
   View,
-  StyleSheet,
-  ScrollView,
 } from "react-native";
-import { listCustomers } from "@/core/composition/customers/list-customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
 
 export default function CustomersDebugScreen() {
   const [customers, setCustomers] = useState<Customer[]>([]);

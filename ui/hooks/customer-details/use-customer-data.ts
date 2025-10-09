@@ -1,5 +1,4 @@
-import { deleteCustomer } from "@/core/composition/customers/delete-customer";
-import { getCustomerDetail } from "@/core/composition/customers/get-customer-detail";
+import { deleteCustomer, getCustomerDetail } from "@/core/composition/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";

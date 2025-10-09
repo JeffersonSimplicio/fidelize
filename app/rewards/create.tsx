@@ -1,19 +1,19 @@
+import { registerReward } from "@/core/composition/rewards/commands/register-reward";
+import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { AppButton } from "@/ui/components/app-button";
+import { NumberInput } from "@/ui/components/number-input";
+import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
-  Platform,
-  KeyboardAvoidingView,
-  Alert,
-  StyleSheet,
+  View,
 } from "react-native";
-import { registerReward } from "@/core/composition/rewards/register-reward";
-import { NumberInput } from "@/ui/components/number-input";
-import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
-import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
-import { AppButton } from "@/ui/components/app-button";
 
 const MIN_POINTS_REQUIRED = 1;
 

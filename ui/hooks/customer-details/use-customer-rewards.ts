@@ -1,7 +1,9 @@
-import { listAvailableRewardsForCustomer } from "@/core/composition/customer-rewards/list-available-rewards-customer";
-import { listRedeemedRewardsForCustomer } from "@/core/composition/customer-rewards/list-redeemed-rewards-customer";
-import { redeemReward } from "@/core/composition/customer-rewards/redeem-reward";
-import { undoRedeemReward } from "@/core/composition/customer-rewards/undo-redeem-reward";
+import {
+  listAvailableRewardsForCustomer,
+  listRedeemedRewardsForCustomer,
+  redeemReward
+} from "@/core/composition/customer-rewards";
+import { undoRedeemReward } from "@/core/composition/customer-rewards/commands/undo-redeem-reward";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { useCallback, useState } from "react";
 

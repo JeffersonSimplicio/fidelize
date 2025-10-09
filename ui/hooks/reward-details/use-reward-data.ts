@@ -1,5 +1,4 @@
-import { disableReward } from "@/core/composition/rewards/disable-reward";
-import { getRewardDetail } from "@/core/composition/rewards/get-reward-detail";
+import { disableReward, getRewardDetail } from "@/core/composition/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";

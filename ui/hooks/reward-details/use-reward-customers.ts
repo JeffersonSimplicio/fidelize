@@ -1,5 +1,7 @@
-import { listCustomersWhoRedeemedReward } from "@/core/composition/customer-rewards/list-customers-who-redeemed-reward";
-import { listEligibleCustomersForReward } from "@/core/composition/customer-rewards/list-eligible-customers-reward";
+import {
+  listCustomersWhoRedeemedReward,
+  listEligibleCustomersForReward
+} from "@/core/composition/customer-rewards";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { useCallback, useState } from "react";
 

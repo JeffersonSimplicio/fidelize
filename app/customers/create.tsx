@@ -1,19 +1,19 @@
-import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Platform,
-  KeyboardAvoidingView,
-  Alert,
-  StyleSheet,
-} from "react-native";
-import { Stack, useRouter } from "expo-router";
-import { registerCustomer } from "@/core/composition/customers/register-customer";
-import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
+import { registerCustomer } from "@/core/composition/customers/commands/register-customer";
 import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
 import { PhoneInput } from "@/ui/components/phone-input";
+import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
+import { Stack, useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 export default function NewCustomerScreen() {
   const router = useRouter();

@@ -1,15 +1,15 @@
+import { listRewards } from "@/core/composition/rewards/queries/list-rewards";
+import { Reward } from "@/core/domain/rewards/reward.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
+  StyleSheet,
   Text,
   View,
-  StyleSheet,
-  ScrollView,
 } from "react-native";
-import { listRewards } from "@/core/composition/rewards/list-rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
 
 export default function RewardsDebugScreen() {
   const [rewards, setRewards] = useState<Reward[]>([]);

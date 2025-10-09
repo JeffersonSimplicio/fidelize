@@ -1,4 +1,4 @@
-import { listRewardsActive } from "@/core/composition/rewards/list-rewards-active";
+import { listRewardsActive } from "@/core/composition/rewards/";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { useCallback, useState } from "react";
 

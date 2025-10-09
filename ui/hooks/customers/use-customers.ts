@@ -1,6 +1,6 @@
+import { listCustomers } from "@/core/composition/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { useCallback, useState } from "react";
-import { listCustomers } from "@/core/composition/customers/list-customers";
 
 export function useCustomers() {
   const [customers, setCustomers] = useState<Customer[]>([]);

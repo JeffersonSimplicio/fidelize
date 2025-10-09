@@ -1,15 +1,15 @@
+import { listCustomerRewards } from "@/core/composition/customer-rewards/queries/list-customer-rewards";
+import { CustomerReward } from "@/core/domain/customerRewards/customerReward.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
+  StyleSheet,
   Text,
   View,
-  StyleSheet,
-  ScrollView,
 } from "react-native";
-import { listCustomerRewards } from "@/core/composition/customer-rewards/list-customer-rewards";
-import { CustomerReward } from "@/core/domain/customerRewards/customerReward.entity";
 
 export default function CustomerRewardsDebugScreen() {
   const [customerRewards, setCustomerRewards] = useState<CustomerReward[]>([]);
