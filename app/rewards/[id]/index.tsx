@@ -9,21 +9,21 @@ import { StyleSheet, Text, View } from "react-native";
 import { DeleteButton } from "@/ui/components/delete-button";
 import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
-import { useRewardData } from "@/ui/hooks/reward-details/use-reward-data";
+import { useRewardDetails } from "@/ui/hooks/reward-details/use-reward-details";
+import { EligibleCustomersList } from "@/ui/components/reward-details/eligible-customers-list";
 
 export default function RewardDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const rewardId = parseInt(id as string, 10);
 
-  const { reward, fetchReward, handleDelete } = useRewardData(rewardId, () =>
-    router.back()
-  );
+  const { reward, eligibleCustomers, reloadAll, handleDelete } =
+    useRewardDetails(rewardId, () => router.back());
 
   useFocusEffect(
     useCallback(() => {
-      fetchReward();
-    }, [fetchReward])
+      reloadAll();
+    }, [reloadAll])
   );
 
   if (!reward) {
@@ -54,6 +54,12 @@ export default function RewardDetailsScreen() {
         <Text>Descrição: {reward.description}</Text>
         <Text>Pontos Necessários: {reward.pointsRequired}</Text>
       </View>
+
+      <EligibleCustomersList
+        customers={eligibleCustomers}
+        onRedeem={(rewardId) => console.log('WIP', rewardId)}
+      />
+
       <DeleteButton onDelete={handleDelete} />
       <AppButton onPress={() => router.push(`/rewards/${reward.id}/edit`)}>
         <FontAwesome name="edit" size={30} color="black" />
@@ -65,7 +71,6 @@ export default function RewardDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 16,
   },
 });
