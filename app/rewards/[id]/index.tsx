@@ -6,12 +6,13 @@ import {
 } from "expo-router";
 import { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { DeleteButton } from "@/ui/components/delete-button";
-import { FontAwesome } from "@expo/vector-icons";
-import { AppButton } from "@/ui/components/app-button";
 import { useRewardDetails } from "@/ui/hooks/reward-details/use-reward-details";
-import { EligibleCustomersList } from "@/ui/components/reward-details/eligible-customers-list";
-import { CustomersWhoRedeemedList } from "@/ui/components/reward-details/customers-who-redeemed-list";
+import {
+  CustomersWhoRedeemedList,
+  EligibleCustomersList,
+  CustomerInfo,
+} from "@/ui/components/reward-details";
+import { EntityActions } from "@/ui/components/entity-actions";
 
 export default function RewardDetailsScreen() {
   const router = useRouter();
@@ -54,24 +55,21 @@ export default function RewardDetailsScreen() {
           title: reward.name,
         }}
       />
-      <View style={styles.container}>
-        <Text>Recompensa</Text>
-        <Text>Nome: {reward.name}</Text>
-        <Text>Descrição: {reward.description}</Text>
-        <Text>Pontos Necessários: {reward.pointsRequired}</Text>
+      <View>
+        <CustomerInfo reward={reward} />
+
+        <EligibleCustomersList
+          customers={eligibleCustomers}
+          onRedeem={(rewardId) => console.log("WIP", rewardId)}
+        />
+
+        <CustomersWhoRedeemedList customers={customersWhoRedeemed} />
+
+        <EntityActions
+          onDelete={handleDelete}
+          onEdit={() => router.push(`/rewards/${rewardId}/edit`)}
+        />
       </View>
-
-      <EligibleCustomersList
-        customers={eligibleCustomers}
-        onRedeem={(rewardId) => console.log("WIP", rewardId)}
-      />
-
-      <CustomersWhoRedeemedList customers={customersWhoRedeemed} />
-
-      <DeleteButton onDelete={handleDelete} />
-      <AppButton onPress={() => router.push(`/rewards/${reward.id}/edit`)}>
-        <FontAwesome name="edit" size={30} color="black" />
-      </AppButton>
     </>
   );
 }

@@ -3,12 +3,12 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
 import { DeleteButton } from "@/ui/components/delete-button";
 
-interface Props {
+interface EntityActionsProps  {
   onDelete: () => void;
   onEdit: () => void;
 }
 
-export function CustomerActions({ onDelete, onEdit }: Props) {
+export function EntityActions({ onDelete, onEdit }: EntityActionsProps ) {
   return (
     <View>
       <DeleteButton onDelete={onDelete} size={30} />

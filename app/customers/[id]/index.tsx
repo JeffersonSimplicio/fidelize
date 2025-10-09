@@ -9,10 +9,11 @@ import { StyleSheet, Text, View } from "react-native";
 import { useCustomerDetails } from "@/ui/hooks/customer-details/use-customer-details";
 import {
   AvailableRewardsList,
-  CustomerActions,
   CustomerInfo,
   RedeemedRewardsList,
 } from "@/ui/components/customer-details";
+import {EntityActions} from "@/ui/components/entity-actions";
+
 
 export default function CustomerDetailsScreen() {
   const router = useRouter();
@@ -66,7 +67,7 @@ export default function CustomerDetailsScreen() {
 
         <AvailableRewardsList rewards={availableRewards} onRedeem={redeem} />
 
-        <CustomerActions
+        <EntityActions
           onDelete={handleDelete}
           onEdit={() => router.push(`/customers/${customerId}/edit`)}
         />
