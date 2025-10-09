@@ -6,11 +6,13 @@ import {
 } from "expo-router";
 import { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { CustomerInfo } from "@/ui/components/customer-info";
-import { RedeemedRewardsList } from "@/ui/components/redeemed-rewards-list";
-import { AvailableRewardsList } from "@/ui/components/available-rewards-list";
-import { CustomerActions } from "@/ui/components/customer-actions";
 import { useCustomerDetails } from "@/ui/hooks/customer-details/use-customer-details";
+import {
+  AvailableRewardsList,
+  CustomerActions,
+  CustomerInfo,
+  RedeemedRewardsList,
+} from "@/ui/components/customer-details";
 
 export default function CustomerDetailsScreen() {
   const router = useRouter();
