@@ -11,14 +11,20 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
 import { useRewardDetails } from "@/ui/hooks/reward-details/use-reward-details";
 import { EligibleCustomersList } from "@/ui/components/reward-details/eligible-customers-list";
+import { CustomersWhoRedeemedList } from "@/ui/components/reward-details/customers-who-redeemed-list";
 
 export default function RewardDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const rewardId = parseInt(id as string, 10);
 
-  const { reward, eligibleCustomers, reloadAll, handleDelete } =
-    useRewardDetails(rewardId, () => router.back());
+  const {
+    reward,
+    eligibleCustomers,
+    customersWhoRedeemed,
+    reloadAll,
+    handleDelete,
+  } = useRewardDetails(rewardId, () => router.back());
 
   useFocusEffect(
     useCallback(() => {
@@ -57,8 +63,10 @@ export default function RewardDetailsScreen() {
 
       <EligibleCustomersList
         customers={eligibleCustomers}
-        onRedeem={(rewardId) => console.log('WIP', rewardId)}
+        onRedeem={(rewardId) => console.log("WIP", rewardId)}
       />
+
+      <CustomersWhoRedeemedList customers={customersWhoRedeemed} />
 
       <DeleteButton onDelete={handleDelete} />
       <AppButton onPress={() => router.push(`/rewards/${reward.id}/edit`)}>

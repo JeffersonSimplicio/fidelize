@@ -8,16 +8,23 @@ export function useRewardDetails(rewardId: number, onDeleteSuccess: () => void) 
     onDeleteSuccess
   );
 
-  const { eligibleCustomers, fetchRewardCustomers } = useRewardCustomers(rewardId);
+  const {
+    eligibleCustomers,
+    fetchEligibleCustomers,
+    customersWhoRedeemed,
+    fetchCustomersWhoRedeemed
+  } = useRewardCustomers(rewardId);
 
   const reloadAll = useCallback(() => {
     fetchReward();
-    fetchRewardCustomers();
-  }, [fetchReward, fetchRewardCustomers]);
+    fetchEligibleCustomers();
+    fetchCustomersWhoRedeemed();
+  }, [fetchReward, fetchEligibleCustomers, fetchCustomersWhoRedeemed]);
 
   return {
     reward,
     eligibleCustomers,
+    customersWhoRedeemed,
     reloadAll,
     handleDelete,
   };
