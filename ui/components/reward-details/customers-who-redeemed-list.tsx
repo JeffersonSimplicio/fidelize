@@ -1,13 +1,13 @@
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { View, Text, FlatList } from "react-native";
-// import { AppButton } from "@/ui/components/app-button";
+import { AppButton } from "@/ui/components/app-button";
 
 interface Props {
   customers: Customer[];
-  // onUndoRedeem: (id: number) => void;
+  onUndoRedeem: (id: number) => void;
 }
 
-export function CustomersWhoRedeemedList({ customers }: Props) {
+export function CustomersWhoRedeemedList({ customers, onUndoRedeem }: Props) {
   return (
     <View>
       <Text>Clientes que já resgataram</Text>
@@ -19,6 +19,9 @@ export function CustomersWhoRedeemedList({ customers }: Props) {
             <Text>
               {customer.name} - {customer.points} pontos
             </Text>
+            <AppButton onPress={() => onUndoRedeem(customer.id!)}>
+              <Text>Desfazer resgate</Text>
+            </AppButton>
             {/* {customer.isActive === RewardStatus.Active && (
               <AppButton onPress={() => onUndoRedeem(customer.id!)}>
                 <Text>Desfazer resgate</Text>

@@ -12,7 +12,9 @@ export function useRewardDetails(rewardId: number, onDeleteSuccess: () => void) 
     eligibleCustomers,
     fetchEligibleCustomers,
     customersWhoRedeemed,
-    fetchCustomersWhoRedeemed
+    fetchCustomersWhoRedeemed,
+    redeem,
+    undoRedeem
   } = useRewardCustomers(rewardId);
 
   const reloadAll = useCallback(() => {
@@ -27,5 +29,7 @@ export function useRewardDetails(rewardId: number, onDeleteSuccess: () => void) 
     customersWhoRedeemed,
     reloadAll,
     handleDelete,
+    redeem,
+    undoRedeem
   };
 }

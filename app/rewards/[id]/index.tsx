@@ -25,6 +25,8 @@ export default function RewardDetailsScreen() {
     customersWhoRedeemed,
     reloadAll,
     handleDelete,
+    redeem,
+    undoRedeem,
   } = useRewardDetails(rewardId, () => router.back());
 
   useFocusEffect(
@@ -60,10 +62,13 @@ export default function RewardDetailsScreen() {
 
         <EligibleCustomersList
           customers={eligibleCustomers}
-          onRedeem={(rewardId) => console.log("WIP", rewardId)}
+          onRedeem={redeem}
         />
 
-        <CustomersWhoRedeemedList customers={customersWhoRedeemed} />
+        <CustomersWhoRedeemedList
+          customers={customersWhoRedeemed}
+          onUndoRedeem={undoRedeem}
+        />
 
         <EntityActions
           onDelete={handleDelete}
