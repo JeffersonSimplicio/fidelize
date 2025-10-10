@@ -4,7 +4,7 @@ import { AppButton } from "@/ui/components/app-button";
 import { View, Text, FlatList } from "react-native";
 
 interface Props {
-  rewards: Reward[] | null;
+  rewards: Reward[];
   onUndoRedeem: (id: number) => void;
 }
 
