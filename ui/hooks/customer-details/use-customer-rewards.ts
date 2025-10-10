@@ -25,14 +25,18 @@ export function useCustomerRewards(customerId: number) {
 
   const redeem = async (rewardId: number) => {
     await redeemReward.execute(customerId, rewardId);
-    await fetchAvailableRewards();
-    await fetchRedeemedRewards();
+    await Promise.all([
+      fetchAvailableRewards(),
+      fetchRedeemedRewards(),
+    ]);
   };
 
   const undoRedeem = async (rewardId: number) => {
     await undoRedeemReward.execute(customerId, rewardId);
-    await fetchAvailableRewards();
-    await fetchRedeemedRewards();
+    await Promise.all([
+      fetchAvailableRewards(),
+      fetchRedeemedRewards(),
+    ]);
   };
 
   return {
