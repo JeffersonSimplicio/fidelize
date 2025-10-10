@@ -15,7 +15,7 @@ export class UndoRedeemRewardUseCase implements IUndoRedeemReward {
 
     if (!customerReward) return false;
 
-    const reward = await this.rewardRepo.findById(customerReward.id!);
+    const reward = await this.rewardRepo.findById(customerReward.rewardId);
 
     if (reward!.isActive === RewardStatus.Inactive) {
       throw new Error("Não é possível reverter o resgate de uma recompensa desativada.")
