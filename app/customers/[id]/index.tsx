@@ -12,8 +12,7 @@ import {
   CustomerInfo,
   RedeemedRewardsList,
 } from "@/ui/components/customer-details";
-import {EntityActions} from "@/ui/components/entity-actions";
-
+import { EntityActions } from "@/ui/components/entity-actions";
 
 export default function CustomerDetailsScreen() {
   const router = useRouter();
@@ -60,12 +59,12 @@ export default function CustomerDetailsScreen() {
       <View style={styles.container}>
         <CustomerInfo customer={customer} />
 
+        <AvailableRewardsList rewards={availableRewards} onRedeem={redeem} />
+
         <RedeemedRewardsList
           rewards={redeemedRewards}
           onUndoRedeem={undoRedeem}
         />
-
-        <AvailableRewardsList rewards={availableRewards} onRedeem={redeem} />
 
         <EntityActions
           onDelete={handleDelete}
