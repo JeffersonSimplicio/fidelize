@@ -1,4 +1,4 @@
-export interface IValidation<T> {
+export interface Validation<T> {
   validate(input: T): ValidationError[];
 }
 

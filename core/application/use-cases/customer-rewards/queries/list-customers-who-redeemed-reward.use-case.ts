@@ -1,7 +1,7 @@
 import { IListCustomersWhoRedeemedReward } from "@/core/application/interfaces/customer-rewards";
 import { ICustomerRewardRepository } from "@/core/domain/customerRewards/customerReward.repository";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
 
 export class ListCustomersWhoRedeemedRewardUseCase implements IListCustomersWhoRedeemedReward {

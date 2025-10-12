@@ -1,24 +1,26 @@
-import { CreateCustomerDto } from "@/core/application/dtos/customers/create-customer.dto";
-import { IRegisterCustomer } from "@/core/application/interfaces/customers";
+import { CustomerDto, CreateCustomerDto } from "@/core/application/dtos/customers";
+import { RegisterCustomer } from "@/core/application/interfaces/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { ClientAlreadyExistsError } from "@/core/domain/customers/errors/client-already-exists.error";
 import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { IValidation } from "@/core/domain/validation/validation";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { Validation } from "@/core/domain/validation/validation.interface";
 
-export class RegisterCustomerUseCase implements IRegisterCustomer {
+export class RegisterCustomerUseCase implements RegisterCustomer {
   constructor(
-    private readonly repo: ICustomerRepository,
-    private readonly validator: IValidation<CreateCustomerDto>
+    private readonly customerRepo: CustomerRepository,
+    private readonly validator: Validation<CreateCustomerDto>,
+    private readonly mapper: Mapper<Customer, CustomerDto>,
   ) { }
 
-  async execute(data: CreateCustomerDto): Promise<Customer> {
+  async execute(data: CreateCustomerDto): Promise<CustomerDto> {
     const errors = this.validator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
     }
 
-    const existingCustomer = await this.repo.findByPhone(data.phone);
+    const existingCustomer = await this.customerRepo.findByPhone(data.phone);
     if (existingCustomer) {
       throw new ClientAlreadyExistsError(data.phone);
     }
@@ -29,8 +31,8 @@ export class RegisterCustomerUseCase implements IRegisterCustomer {
       points: 0,
     })
 
-    const customer = await this.repo.create(CustomerCreate);
+    const customer = await this.customerRepo.create(CustomerCreate);
 
-    return customer;
+    return this.mapper.map(customer);
   }
 }

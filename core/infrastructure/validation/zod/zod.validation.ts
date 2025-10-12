@@ -1,8 +1,8 @@
-import { ZodSchema } from "zod";
-import { IValidation, ValidationError } from "@/core/domain/validation/validation";
 import { validationFieldLabels } from "@/core/domain/validation/validation-field-labels";
+import { Validation, ValidationError } from "@/core/domain/validation/validation.interface";
+import { ZodSchema } from "zod";
 
-export class ZodValidation<T> implements IValidation<T> {
+export class ZodValidation<T> implements Validation<T> {
   constructor(private readonly schema: ZodSchema<T>) { }
 
   validate(input: T): ValidationError[] {

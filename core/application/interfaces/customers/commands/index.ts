@@ -1,3 +1,3 @@
-export * from "./delete-customer";
-export * from "./edit-customer-detail";
-export * from "./register-customer";
+export * from "./delete-customer.interface";
+export * from "./edit-customer-detail.interface";
+export * from "./register-customer.interface";

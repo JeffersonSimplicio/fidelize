@@ -3,7 +3,7 @@ import { IEditRewardDetail } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
 import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { IValidation } from "@/core/domain/validation/validation";
+import { IValidation } from "@/core/domain/validation/validation.interface";
 
 
 export class EditRewardDetailUseCase implements IEditRewardDetail {

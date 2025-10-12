@@ -1,3 +1,3 @@
-export interface IMapper<TInput, TOutput> {
+export interface Mapper<TInput, TOutput> {
   map(input: TInput): TOutput;
 }

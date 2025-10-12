@@ -1,25 +1,26 @@
-import { UpdateCustomerDto } from "@/core/application/dtos/customers/update-customer.dto";
-import { IEditCustomerDetail } from "@/core/application/interfaces/customers";
+import { UpdateCustomerDto, CustomerDto } from "@/core/application/dtos/customers";
+import { EditCustomerDetail } from "@/core/application/interfaces/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { resolveLastVisit } from "@/core/domain/customers/rules";
 import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { IValidation } from "@/core/domain/validation/validation";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { Validation } from "@/core/domain/validation/validation.interface";
 
-export class EditCustomerDetailUseCase implements IEditCustomerDetail {
+export class EditCustomerDetailUseCase implements EditCustomerDetail {
   constructor(
-    private readonly repo: ICustomerRepository,
-    private readonly validator: IValidation<UpdateCustomerDto>
+    private readonly customerRepo: CustomerRepository,
+    private readonly validator: Validation<UpdateCustomerDto>,
+    private readonly mapper: Mapper<Customer, CustomerDto>,
   ) { }
 
-  async execute(id: number, data: UpdateCustomerDto): Promise<Customer | null> {
+  async execute(id: number, data: UpdateCustomerDto): Promise<CustomerDto | null> {
     const errors = this.validator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
     }
-  
-    const existing = await this.repo.findById(id);
-    if (!existing) return null;
+
+    const existing = await this.customerRepo.getById(id);
 
     const newName = data.name ?? existing.name;
     const newPhone = data.phone ?? existing.phone;
@@ -42,6 +43,8 @@ export class EditCustomerDetailUseCase implements IEditCustomerDetail {
 
     updatedCustomer.setId(existing.id!);
 
-    return await this.repo.update(updatedCustomer);
+    const customer = await this.customerRepo.update(updatedCustomer);
+
+    return this.mapper.map(customer);
   }
 }

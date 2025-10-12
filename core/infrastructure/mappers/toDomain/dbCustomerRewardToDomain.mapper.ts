@@ -1,8 +1,8 @@
 import { CustomerReward as CustomerRewardEntity } from '@/core/domain/customerRewards/customerReward.entity';
-import { IMapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
 import { CustomerRewardsSelect } from '@/core/infrastructure/database/drizzle/types';
 
-export class DbCustomerRewardsToDomainMapper implements IMapper<
+export class DbCustomerRewardsToDomainMapper implements Mapper<
   CustomerRewardsSelect,
   CustomerRewardEntity
 > {

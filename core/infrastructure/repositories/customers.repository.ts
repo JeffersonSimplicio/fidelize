@@ -1,5 +1,5 @@
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { CustomerTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbCustomerToDomain } from "@/core/infrastructure/mappers/customerMapper";

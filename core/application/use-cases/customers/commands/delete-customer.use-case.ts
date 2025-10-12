@@ -1,10 +1,10 @@
-import { IDeleteCustomer } from "@/core/application/interfaces/customers";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { DeleteCustomer } from "@/core/application/interfaces/customers";
+import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 
-export class DeleteCustomerUseCase implements IDeleteCustomer {
-  constructor(private readonly repo: ICustomerRepository) { }
+export class DeleteCustomerUseCase implements DeleteCustomer {
+  constructor(private readonly repo: CustomerRepository) { }
 
-  async execute(id: number): Promise<boolean> {
-    return await this.repo.delete(id);
+  async execute(id: number): Promise<void> {
+    await this.repo.delete(id);
   }
 }

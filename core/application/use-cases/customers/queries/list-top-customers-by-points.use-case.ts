@@ -1,6 +1,6 @@
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { IListTopCustomersByPoints } from "@/core/application/interfaces/rewards";
+import { Customer } from "@/core/domain/customers/customer.entity";
+import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 
 export class ListTopCustomersByPointsUseCase implements IListTopCustomersByPoints {
   private static MIN_LIMIT = 1;
