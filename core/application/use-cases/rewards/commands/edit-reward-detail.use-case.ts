@@ -1,7 +1,7 @@
 import { UpdateRewardDto } from "@/core/application/dtos/rewards/update-reward.dto";
 import { IEditRewardDetail } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
 import { IValidation } from "@/core/domain/validation/validation.interface";
 

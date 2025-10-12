@@ -1,18 +1,21 @@
 import { CreateRewardDto } from "@/core/application/dtos/rewards/create-reward.dto";
-import { IRegisterReward } from "@/core/application/interfaces/rewards";
+import { RewardDto } from "@/core/application/dtos/rewards/reward.dto";
+import { RegisterReward } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { IValidation } from "@/core/domain/validation/validation.interface";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { Validation } from "@/core/domain/validation/validation.interface";
 
 
-export class RegisterRewardUseCase implements IRegisterReward {
+export class RegisterRewardUseCase implements RegisterReward {
   constructor(
-    private readonly repo: IRewardRepository,
-    private readonly validator: IValidation<CreateRewardDto>
+    private readonly rewardRepo: RewardRepository,
+    private readonly validator: Validation<CreateRewardDto>,
+    private readonly mapper: Mapper<Reward, RewardDto>,
   ) { }
 
-  async execute(data: CreateRewardDto): Promise<Reward> {
+  async execute(data: CreateRewardDto): Promise<RewardDto> {
     const errors = this.validator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
@@ -24,8 +27,8 @@ export class RegisterRewardUseCase implements IRegisterReward {
       pointsRequired: data.pointsRequired,
     })
 
-    const reward = await this.repo.create(rewardCreate);
+    const reward = await this.rewardRepo.create(rewardCreate);
 
-    return reward;
+    return this.mapper.map(reward);
   }
 }

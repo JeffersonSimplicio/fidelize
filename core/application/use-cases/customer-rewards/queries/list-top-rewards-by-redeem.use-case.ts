@@ -1,7 +1,7 @@
 import { IListTopRewardsByRedeem } from "@/core/application/interfaces/customer-rewards";
 import { ICustomerRewardRepository } from "@/core/domain/customerRewards/customerReward.repository";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
 export class ListTopRewardsByRedeemUseCase implements IListTopRewardsByRedeem {
   private static MIN_LIMIT = 1;

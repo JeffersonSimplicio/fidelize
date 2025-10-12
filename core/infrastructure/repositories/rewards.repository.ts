@@ -1,12 +1,12 @@
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { RewardTable } from '@/core/infrastructure/database/drizzle/types';
 import { mapDbRewardToDomain } from "@/core/infrastructure/mappers/rewardMapper";
 import { eq, like, SQL } from "drizzle-orm";
 
-export class RewardRepositoryDrizzle implements IRewardRepository {
+export class RewardRepositoryDrizzle implements RewardRepository {
   constructor(
     private readonly db: drizzleClient,
     private readonly table: RewardTable

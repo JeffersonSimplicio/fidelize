@@ -1,6 +1,6 @@
 import { IUndoRedeemReward } from "@/core/application/interfaces/customer-rewards";
 import { ICustomerRewardRepository } from "@/core/domain/customerRewards/customerReward.repository";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 
 export class UndoRedeemRewardUseCase implements IUndoRedeemReward {

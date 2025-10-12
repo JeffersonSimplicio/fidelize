@@ -1,5 +1,5 @@
 import { IDeleteReward } from "@/core/application/interfaces/rewards";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
 export class DeleteRewardUseCase implements IDeleteReward {
   constructor(private readonly repo: IRewardRepository) { }

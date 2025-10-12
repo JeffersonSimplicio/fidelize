@@ -1,6 +1,6 @@
 import { IListRewards } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
 export class ListRewardsUseCase implements IListRewards {
   constructor(private readonly repo: IRewardRepository) { }

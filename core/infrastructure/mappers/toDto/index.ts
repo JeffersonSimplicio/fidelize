@@ -1,1 +1,2 @@
-export * from "./customerEntityToDto.mapper"
+export * from "./customerEntityToDto.mapper";
+export * from "./rewardEntityToDto.mapper";

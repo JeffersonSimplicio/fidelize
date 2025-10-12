@@ -1,5 +1,5 @@
 import { IDisableReward } from "@/core/application/interfaces/rewards";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
 export class DisableRewardUseCase implements IDisableReward {
   constructor(

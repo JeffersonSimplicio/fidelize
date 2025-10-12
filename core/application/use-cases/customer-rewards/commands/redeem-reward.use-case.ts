@@ -2,7 +2,7 @@ import { IRedeemReward } from "@/core/application/interfaces/customer-rewards";
 import { CustomerReward } from "@/core/domain/customerRewards/customerReward.entity";
 import { ICustomerRewardRepository } from "@/core/domain/customerRewards/customerReward.repository";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 
 export class RedeemRewardUseCase implements IRedeemReward {
