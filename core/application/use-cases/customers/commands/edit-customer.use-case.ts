@@ -1,5 +1,5 @@
 import { UpdateCustomerDto, CustomerDto } from "@/core/application/dtos/customers";
-import { EditCustomerDetail } from "@/core/application/interfaces/customers";
+import { EditCustomer } from "@/core/application/interfaces/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { resolveLastVisit } from "@/core/domain/customers/rules";
@@ -7,7 +7,7 @@ import { ValidationException } from "@/core/domain/shared/errors/validation-exce
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Validation } from "@/core/domain/validation/validation.interface";
 
-export class EditCustomerDetailUseCase implements EditCustomerDetail {
+export class EditCustomerUseCase implements EditCustomer {
   constructor(
     private readonly customerRepo: CustomerRepository,
     private readonly validator: Validation<UpdateCustomerDto>,

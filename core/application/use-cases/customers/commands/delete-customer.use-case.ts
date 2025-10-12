@@ -2,9 +2,9 @@ import { DeleteCustomer } from "@/core/application/interfaces/customers";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 
 export class DeleteCustomerUseCase implements DeleteCustomer {
-  constructor(private readonly repo: CustomerRepository) { }
+  constructor(private readonly customerRepo: CustomerRepository) { }
 
   async execute(id: number): Promise<void> {
-    await this.repo.delete(id);
+    await this.customerRepo.delete(id);
   }
 }
