@@ -14,7 +14,7 @@ export class EditCustomerUseCase implements EditCustomer {
     private readonly mapper: Mapper<Customer, CustomerDto>,
   ) { }
 
-  async execute(id: number, data: UpdateCustomerDto): Promise<CustomerDto | null> {
+  async execute(id: number, data: UpdateCustomerDto): Promise<CustomerDto> {
     const errors = this.validator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
