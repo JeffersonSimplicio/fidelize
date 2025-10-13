@@ -1,4 +1,4 @@
-import { CustomerRewardDto } from "@/core/application/dtos/customers-rewards/customer-reward.dto";
+import { CustomerRewardDto } from "@/core/application/dtos/customer-rewards/customer-reward.dto";
 import { CustomerReward as CustomerRewardEntity } from "@/core/domain/customer-reward/customer-reward.entity";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 

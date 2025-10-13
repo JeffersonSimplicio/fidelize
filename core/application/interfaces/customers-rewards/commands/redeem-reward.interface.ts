@@ -1,5 +1,5 @@
-import { CustomerRewardDto } from "@/core/application/dtos/customers-rewards/customer-reward.dto";
+import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
 
 export interface RedeemReward {
-  execute(customerId: number, rewardId: number): Promise<CustomerRewardDto>;
+  execute(input: CreateCustomerRewardDto): Promise<CustomerRewardDto>;
 }

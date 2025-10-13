@@ -1,5 +1,4 @@
-import { RewardDto } from "@/core/application/dtos/rewards/reward.dto";
-import { UpdateRewardDto } from "@/core/application/dtos/rewards/update-reward.dto";
+import { RewardDto,UpdateRewardDto } from "@/core/application/dtos/rewards";
 
 export interface EditReward {
   execute(id: number, data: UpdateRewardDto): Promise<RewardDto>;

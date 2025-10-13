@@ -1,5 +1,4 @@
-import { RewardDto } from "@/core/application/dtos/rewards/reward.dto";
-import { UpdateRewardDto } from "@/core/application/dtos/rewards/update-reward.dto";
+import { RewardDto, UpdateRewardDto } from "@/core/application/dtos/rewards";
 import { EditReward } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";

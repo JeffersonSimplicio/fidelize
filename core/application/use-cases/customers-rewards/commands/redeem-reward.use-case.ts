@@ -1,4 +1,4 @@
-import { CustomerRewardDto } from "@/core/application/dtos/customers-rewards/customer-reward.dto";
+import { CustomerRewardDto, CreateCustomerRewardDto } from "@/core/application/dtos/customer-rewards";
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
 import { CustomerReward } from "@/core/domain/customer-reward/customer-reward.entity";
 import { CustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
@@ -15,7 +15,10 @@ export class RedeemRewardUseCase implements RedeemReward {
     private readonly mapper: Mapper<CustomerReward, CustomerRewardDto>
   ) { }
 
-  async execute(customerId: number, rewardId: number): Promise<CustomerRewardDto> {
+  async execute({
+    customerId,
+    rewardId
+  }: CreateCustomerRewardDto): Promise<CustomerRewardDto> {
     const customer = await this.customerRepo.getById(customerId);
 
     const reward = await this.rewardRepo.getById(rewardId);

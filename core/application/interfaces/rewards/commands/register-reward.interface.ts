@@ -1,5 +1,4 @@
-import { CreateRewardDto } from "@/core/application/dtos/rewards/create-reward.dto";
-import { RewardDto } from "@/core/application/dtos/rewards/reward.dto";
+import { CreateRewardDto, RewardDto } from "@/core/application/dtos/rewards";
 
 export interface RegisterReward {
   execute(data: CreateRewardDto): Promise<RewardDto>;
