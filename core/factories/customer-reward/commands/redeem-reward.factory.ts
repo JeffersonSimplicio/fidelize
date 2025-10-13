@@ -1,16 +1,18 @@
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
+import { RedeemRewardUseCase } from "@/core/application/use-cases";
 import { db } from "@/core/infrastructure/database/drizzle/db";
-import { rewards, customers, customerRewards } from '@/core/infrastructure/database/drizzle/schema';
+import { customerRewards, customers, rewards } from '@/core/infrastructure/database/drizzle/schema';
 import {
+  CustomerRewardEntityToDtoMapper,
+  DbCustomerRewardsToDomainMapper,
   DbCustomerToDomainMapper,
   DbRewardToDomainMapper,
-  DbCustomerRewardsToDomainMapper,
-  CustomerRewardEntityToDtoMapper,
 } from "@/core/infrastructure/mappers";
-import { RewardRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/write/reward.repository";
-import { CustomerRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/write/customer.repository";
-import { CustomerRewardRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/write/customer-reward.repository";
-import { RedeemRewardUseCase } from "@/core/application/use-cases";
+import {
+  CustomerRewardRepositoryDrizzle,
+  CustomerRepositoryDrizzle,
+  RewardRepositoryDrizzle
+} from "@/core/infrastructure/repositories/drizzle/commands";
 
 export function makeRedeemReward(): RedeemReward {
   const mapperRewardToDomain = new DbRewardToDomainMapper();

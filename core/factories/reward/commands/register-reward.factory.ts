@@ -1,11 +1,11 @@
-import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas/rewards";
-import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
+import { RegisterReward } from "@/core/application/interfaces";
+import { RegisterRewardUseCase } from "@/core/application/use-cases";
 import { db } from "@/core/infrastructure/database/drizzle/db";
 import { rewards } from '@/core/infrastructure/database/drizzle/schema';
-import { RewardRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/write/reward.repository";
 import { DbRewardToDomainMapper, RewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
-import { RegisterRewardUseCase } from "@/core/application/use-cases";
-import { RegisterReward } from "@/core/application/interfaces";
+import { RewardRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/commands";
+import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas/rewards";
+import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
 
 export function makeRegisterReward(): RegisterReward {
   const mapperToDomain = new DbRewardToDomainMapper();
