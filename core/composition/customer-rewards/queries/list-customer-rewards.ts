@@ -1,4 +1,4 @@
-import { ListCustomerRewardsUseCase } from "@/core/application/use-cases/customer-rewards";
+import { ListCustomerRewardsUseCase } from "@/core/application/use-cases/customers-rewards";
 import { db } from "@/core/infrastructure/database/drizzle/db";
 import { customerRewards } from '@/core/infrastructure/database/drizzle/schema';
 import { CustomerRewardRepositoryDrizzle } from "@/core/infrastructure/repositories/customer-reward.repository";

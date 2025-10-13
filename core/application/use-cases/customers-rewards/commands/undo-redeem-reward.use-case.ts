@@ -1,5 +1,5 @@
-import { IUndoRedeemReward } from "@/core/application/interfaces/customer-rewards";
-import { ICustomerRewardRepository } from "@/core/domain/customerRewards/customerReward.repository";
+import { IUndoRedeemReward } from "@/core/application/interfaces/customers-rewards";
+import { ICustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 

@@ -1,4 +1,4 @@
-import { CustomerReward as CustomerRewardEntity } from '@/core/domain/customerRewards/customerReward.entity';
+import { CustomerReward as CustomerRewardEntity } from '@/core/domain/customer-reward/customer-reward.entity';
 import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
 import { CustomerRewardsSelect } from '@/core/infrastructure/database/drizzle/types';
 

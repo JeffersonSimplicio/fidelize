@@ -1,10 +1,10 @@
-import { IListAvailableRewardsForCustomer } from "@/core/application/interfaces/customer-rewards";
-import { ICustomerRewardRepository } from "@/core/domain/customerRewards/customerReward.repository";
+import { IListRedeemedRewardsForCustomer } from "@/core/application/interfaces/customers-rewards/queries/list-redeemed-rewards-customer";
+import { ICustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
-export class ListAvailableRewardsForCustomerUseCase implements IListAvailableRewardsForCustomer {
+export class ListRedeemedRewardsForCustomerUseCase implements IListRedeemedRewardsForCustomer {
   constructor(
     private readonly rewardRepo: IRewardRepository,
     private readonly customerRepo: ICustomerRepository,
@@ -15,12 +15,12 @@ export class ListAvailableRewardsForCustomerUseCase implements IListAvailableRew
     const customer = await this.customerRepo.findById(customerId);
     if (!customer) throw new Error("Cliente não encontrado!")
 
-    const activeRewards = await this.rewardRepo.findAllActivated();
+    const allRewards = await this.rewardRepo.findAll();
     const customerRewards = await this.customerRewardRepo.findByCustomerId(customerId);
 
     const redeemedRewardIds = new Set(customerRewards.map(cr => cr.rewardId));
-    const availableRewards = activeRewards.filter(
-      r => !redeemedRewardIds.has(r.id!) && r.pointsRequired <= customer.points
+    const availableRewards = allRewards.filter(
+      r => redeemedRewardIds.has(r.id!)
     );
 
     return availableRewards;
