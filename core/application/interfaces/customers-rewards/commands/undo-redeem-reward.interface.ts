@@ -1,3 +1,3 @@
-export interface IUndoRedeemReward {
-  execute(customerId: number, rewardId: number): Promise<boolean>;
+export interface UndoRedeemReward {
+  execute(customerId: number, rewardId: number): Promise<void>;
 }

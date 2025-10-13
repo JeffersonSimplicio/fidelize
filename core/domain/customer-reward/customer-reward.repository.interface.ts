@@ -6,6 +6,6 @@ export interface CustomerRewardRepository {
   // findByCustomerId(id: number): Promise<CustomerReward[]>;
   // findByRewardId(id: number): Promise<CustomerReward[]>;
   // findAll(): Promise<CustomerReward[]>;
-  alreadyRedeemed(customerId: number, rewardId: number): Promise<boolean>;
+  alreadyRedeemed(customerId: number, rewardId: number): Promise<CustomerReward | null>;
   delete(id: number): Promise<void>;
 }

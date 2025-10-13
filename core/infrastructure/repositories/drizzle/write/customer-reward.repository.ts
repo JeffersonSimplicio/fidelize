@@ -32,7 +32,10 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
     throw new Error("Resgate não encontrado")
   }
 
-  async alreadyRedeemed(customerId: number, rewardId: number): Promise<boolean> {
+  async alreadyRedeemed(
+    customerId: number,
+    rewardId: number
+  ): Promise<CustomerReward | null> {
     const result = this.db
       .select()
       .from(this.table)
@@ -44,7 +47,7 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
       )
       .get();
 
-    return result ? true : false
+    return result ? this.mapper.map(result) : null
   }
 
   async delete(id: number): Promise<void> {
