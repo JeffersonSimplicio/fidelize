@@ -10,7 +10,7 @@ import { Validation } from "@/core/domain/validation/validation.interface";
 
 export class EditRewardUseCase implements EditReward {
   constructor(
-    private readonly repo: RewardRepository,
+    private readonly rewardRepo: RewardRepository,
     private readonly validator: Validation<UpdateRewardDto>,
     private readonly mapper: Mapper<UpdateRewardDto, RewardDto>
   ) { }
@@ -21,7 +21,7 @@ export class EditRewardUseCase implements EditReward {
       throw new ValidationException(errors);
     }
 
-    const existing = await this.repo.getById(id);
+    const existing = await this.rewardRepo.getById(id);
 
     const newName = data.name ?? existing.name;
     const newPointsRequired = data.pointsRequired ?? existing.pointsRequired;
@@ -34,7 +34,7 @@ export class EditRewardUseCase implements EditReward {
     })
     updateRewards.setId(existing.id!)
 
-    const reward = await this.repo.update(updateRewards)
+    const reward = await this.rewardRepo.update(updateRewards)
 
     return this.mapper.map(reward);
   }
