@@ -1,5 +1,5 @@
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerQueryRepository } from "@/core/domain/customers/customer.query.repository";
+import { CustomerQueryRepository } from "@/core/domain/customers/customer.query.repository.interface";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import {

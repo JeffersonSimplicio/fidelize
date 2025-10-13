@@ -1,11 +1,17 @@
-import { IListCustomers } from "@/core/application/interfaces/customers";
+import { CustomerDto } from "@/core/application/dtos/customers";
+import { ListCustomers } from "@/core/application/interfaces/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
+import { CustomerQueryRepository } from "@/core/domain/customers/customer.query.repository.interface";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 
-export class ListCustomersUseCase implements IListCustomers {
-  constructor(private readonly repo: ICustomerRepository) { }
+export class ListCustomersUseCase implements ListCustomers {
+  constructor(
+    private readonly repo: CustomerQueryRepository,
+    private readonly mapper: Mapper<Customer, CustomerDto>,
+  ) { }
 
-  async execute(): Promise<Customer[]> {
-    return await this.repo.findAll();
+  async execute(): Promise<CustomerDto[]> {
+    const allCustomers = await this.repo.findAll();
+    return allCustomers.map(this.mapper.map);
   }
 }
