@@ -1,12 +1,12 @@
 import { CustomerReward as CustomerRewardEntity } from '@/core/domain/customer-rewards/customer-reward.entity';
 import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
-import { CustomerRewardsSelect } from '@/core/infrastructure/database/drizzle/types';
+import { CustomerRewardSelect } from '@/core/infrastructure/database/drizzle/types';
 
 export class DbCustomerRewardsToDomainMapper implements Mapper<
-  CustomerRewardsSelect,
+  CustomerRewardSelect,
   CustomerRewardEntity
 > {
-  map(input: CustomerRewardsSelect): CustomerRewardEntity {
+  map(input: CustomerRewardSelect): CustomerRewardEntity {
     const customerReward = new CustomerRewardEntity({
       customerId: input.customerId,
       rewardId: input.rewardId,

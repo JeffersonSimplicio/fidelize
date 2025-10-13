@@ -1,6 +1,6 @@
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Customer as CustomerEntity } from '@/core/domain/customers/customer.entity';
-import { CustomerDto } from "@/core/application/dtos/customers/customer.dto";
+import { CustomerDto } from "@/core/application/dtos/customers";
 
 export class CustomerEntityToDtoMapper implements Mapper<
   CustomerEntity,

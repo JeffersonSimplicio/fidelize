@@ -2,14 +2,14 @@ import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.e
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
-import { CustomerRewardsSelect, CustomerRewardsTable } from "@/core/infrastructure/database/drizzle/types";
+import { CustomerRewardSelect, CustomerRewardTable } from "@/core/infrastructure/database/drizzle/types";
 import { and, eq } from "drizzle-orm";
 
 export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository {
   constructor(
     private readonly db: drizzleClient,
-    private readonly table: CustomerRewardsTable,
-    private readonly mapper: Mapper<CustomerRewardsSelect, CustomerReward>,
+    private readonly table: CustomerRewardTable,
+    private readonly mapper: Mapper<CustomerRewardSelect, CustomerReward>,
   ) { }
 
   async create(customerReward: CustomerReward): Promise<CustomerReward> {
