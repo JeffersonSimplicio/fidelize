@@ -1,4 +1,4 @@
-import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas/rewards";
 import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
 import { db } from "@/core/infrastructure/database/drizzle/db";
 import { rewards } from '@/core/infrastructure/database/drizzle/schema';

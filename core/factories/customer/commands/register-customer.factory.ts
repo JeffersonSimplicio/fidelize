@@ -5,7 +5,7 @@ import {
   CustomerEntityToDtoMapper,
   DbCustomerToDomainMapper
 } from "@/core/infrastructure/mappers";
-import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
+import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas/customers";
 import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
 import { RegisterCustomerUseCase } from "@/core/application/use-cases";
 import { RegisterCustomer } from "@/core/application/interfaces";
