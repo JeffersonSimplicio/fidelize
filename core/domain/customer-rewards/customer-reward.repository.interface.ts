@@ -1,4 +1,4 @@
-import { CustomerReward } from "@/core/domain/customer-reward/customer-reward.entity";
+import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 
 export interface CustomerRewardRepository {
   create(customerReward: CustomerReward): Promise<CustomerReward>;

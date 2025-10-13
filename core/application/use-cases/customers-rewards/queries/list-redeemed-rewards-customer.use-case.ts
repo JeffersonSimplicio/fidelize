@@ -1,5 +1,5 @@
 import { IListRedeemedRewardsForCustomer } from "@/core/application/interfaces/customers-rewards/queries/list-redeemed-rewards-customer";
-import { ICustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
+import { ICustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";

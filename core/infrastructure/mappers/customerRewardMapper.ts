@@ -1,4 +1,4 @@
-import { CustomerReward as CustomerRewardEntity } from '@/core/domain/customer-reward/customer-reward.entity';
+import { CustomerReward as CustomerRewardEntity } from '@/core/domain/customer-rewards/customer-reward.entity';
 import { CustomerRewardsSelect } from '@/core/infrastructure/database/drizzle/types';
 
 export function mapDbCustomerRewardToDomain(

@@ -1,5 +1,5 @@
-import { CustomerReward } from "@/core/domain/customer-reward/customer-reward.entity";
-import { CustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
+import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
+import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { CustomerRewardsSelect, CustomerRewardsTable } from "@/core/infrastructure/database/drizzle/types";

@@ -1,5 +1,5 @@
 import { IListEligibleCustomersForReward } from "@/core/application/interfaces/customers-rewards";
-import { ICustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
+import { ICustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";

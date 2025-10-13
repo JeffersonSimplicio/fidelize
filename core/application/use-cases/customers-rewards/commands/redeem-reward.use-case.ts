@@ -1,7 +1,7 @@
-import { CustomerRewardDto, CreateCustomerRewardDto } from "@/core/application/dtos/customer-rewards";
+import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
-import { CustomerReward } from "@/core/domain/customer-reward/customer-reward.entity";
-import { CustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
+import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
+import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";

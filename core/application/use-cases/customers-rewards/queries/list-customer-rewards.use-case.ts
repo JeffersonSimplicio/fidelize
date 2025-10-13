@@ -1,6 +1,6 @@
 import { IListCustomerRewards } from "@/core/application/interfaces/customers-rewards";
-import { CustomerReward } from "@/core/domain/customer-reward/customer-reward.entity";
-import { ICustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
+import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
+import { ICustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 
 export class ListCustomerRewardsUseCase implements IListCustomerRewards {
   constructor(

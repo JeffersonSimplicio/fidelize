@@ -1,5 +1,5 @@
 import { listCustomerRewards } from "@/core/composition/customer-rewards/queries/list-customer-rewards";
-import { CustomerReward } from "@/core/domain/customer-reward/customer-reward.entity";
+import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {

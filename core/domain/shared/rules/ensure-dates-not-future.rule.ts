@@ -1,4 +1,4 @@
-import { RedeemedInFutureError } from "@/core/domain/customer-reward/errors";
+import { RedeemedInFutureError } from "@/core/domain/customer-rewards/errors";
 import { LastVisitInFutureError } from "@/core/domain/customers/errors";
 import { CreationDateInFutureError } from "@/core/domain/shared/errors";
 

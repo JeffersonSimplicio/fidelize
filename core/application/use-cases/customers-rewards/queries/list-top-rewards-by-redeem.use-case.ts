@@ -1,5 +1,5 @@
 import { IListTopRewardsByRedeem } from "@/core/application/interfaces/customers-rewards";
-import { ICustomerRewardRepository } from "@/core/domain/customer-reward/customer-reward.repository.interface";
+import { ICustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { Reward } from "@/core/domain/rewards/reward.entity";
 import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
