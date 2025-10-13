@@ -1,10 +1,10 @@
-import { IDeleteReward } from "@/core/application/interfaces/rewards";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
+import { DeleteReward } from "@/core/application/interfaces/rewards";
+import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
-export class DeleteRewardUseCase implements IDeleteReward {
-  constructor(private readonly repo: IRewardRepository) { }
+export class DeleteRewardUseCase implements DeleteReward {
+  constructor(private readonly rewardRepo: RewardRepository) { }
 
-  async execute(id: number): Promise<boolean> {
-    return await this.repo.delete(id);
+  async execute(id: number): Promise<void> {
+    return await this.rewardRepo.delete(id);
   }
 }
