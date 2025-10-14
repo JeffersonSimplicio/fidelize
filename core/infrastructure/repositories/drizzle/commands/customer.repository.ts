@@ -29,6 +29,7 @@ export class CustomerRepositoryDrizzle implements CustomerRepository {
       .select()
       .from(this.table)
       .where(condition)
+      .limit(1)
       .get();
 
     return result ? this.mapper.map(result) : null;
