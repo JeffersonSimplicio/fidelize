@@ -6,7 +6,7 @@ import {
   CustomerSelect,
   CustomerTable
 } from '@/core/infrastructure/database/drizzle/types';
-import { like } from "drizzle-orm";
+import { desc, like } from "drizzle-orm";
 
 export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
   constructor(
@@ -28,6 +28,16 @@ export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
     const dbCustomers = await this.db
       .select()
       .from(this.table);
+
+    return dbCustomers.map(this.mapper.map);
+  }
+
+  async findTopCustomersByPoints(limit: number): Promise<Customer[]> {
+    const dbCustomers = await this.db
+      .select()
+      .from(this.table)
+      .orderBy(desc(this.table.points))
+      .limit(limit);
 
     return dbCustomers.map(this.mapper.map);
   }
