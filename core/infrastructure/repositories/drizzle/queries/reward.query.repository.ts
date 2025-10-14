@@ -30,21 +30,20 @@ export class RewardQueryRepositoryDrizzle implements RewardQueryRepository {
     return dbRewards.map(this.mapper.map);
   }
 
-  async findAllActive(): Promise<Reward[]> {
+  private async findAllStatus(status: RewardStatus): Promise<Reward[]> {
     const dbRewards = await this.db
       .select()
       .from(this.table)
-      .where(eq(this.table.isActive, RewardStatus.Active));
+      .where(eq(this.table.isActive, status));
 
     return dbRewards.map(this.mapper.map);
   }
 
-  async findAllInactive(): Promise<Reward[]> {
-    const dbRewards = await this.db
-      .select()
-      .from(this.table)
-      .where(eq(this.table.isActive, RewardStatus.Inactive));
+  async findAllActive(): Promise<Reward[]> {
+    return await this.findAllStatus(RewardStatus.Active);
+  }
 
-    return dbRewards.map(this.mapper.map);
+  async findAllInactive(): Promise<Reward[]> {
+    return await this.findAllStatus(RewardStatus.Inactive);
   }
 }
