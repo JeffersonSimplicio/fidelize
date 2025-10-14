@@ -1,3 +1,3 @@
 export * from "./get-reward-detail";
 export * from "./list-rewards.interface";
-export * from "./list-rewards-active";
+export * from "./list-rewards-active.interface";
