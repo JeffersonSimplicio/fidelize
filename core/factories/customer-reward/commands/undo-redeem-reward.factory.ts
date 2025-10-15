@@ -16,12 +16,12 @@ export function makeUndoRedeemReward(): UndoRedeemReward {
     rewardToDomainMapper: dbRewardToDomainMapper
   });
 
-  const mapperCustomerRewardToDomain = new DbCustomerRewardsToDomainMapper();
-  const customerRewardRepo = new CustomerRewardRepositoryDrizzle(
-    db,
-    customerRewards,
-    mapperCustomerRewardToDomain
-  )
+  const dbCustomerRewardsToDomainMapper = new DbCustomerRewardsToDomainMapper();
+  const customerRewardRepo = new CustomerRewardRepositoryDrizzle({
+    dbClient: db,
+    customerRewardTable: customerRewards,
+    customerRewardToDomainMapper: dbCustomerRewardsToDomainMapper
+  })
 
   return new UndoRedeemRewardUseCase(
     rewardRepo,

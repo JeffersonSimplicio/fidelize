@@ -29,12 +29,12 @@ export function makeRedeemReward(): RedeemReward {
     customerToDomainMapper: dbCustomerToDomainMapper
   });
 
-  const mapperCustomerRewardToDomain = new DbCustomerRewardsToDomainMapper();
-  const customerRewardRepo = new CustomerRewardRepositoryDrizzle(
-    db,
-    customerRewards,
-    mapperCustomerRewardToDomain
-  )
+  const dbCustomerRewardsToDomainMapper = new DbCustomerRewardsToDomainMapper();
+  const customerRewardRepo = new CustomerRewardRepositoryDrizzle({
+    dbClient: db,
+    customerRewardTable: customerRewards,
+    customerRewardToDomainMapper: dbCustomerRewardsToDomainMapper
+  })
 
   const mapperCustomerRewardEntityToDto = new CustomerRewardEntityToDtoMapper();
   return new RedeemRewardUseCase(

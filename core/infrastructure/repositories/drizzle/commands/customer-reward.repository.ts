@@ -5,30 +5,43 @@ import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { CustomerRewardSelect, CustomerRewardTable } from "@/core/infrastructure/database/drizzle/types";
 import { and, eq } from "drizzle-orm";
 
+export interface CustomerRewardRepositoryDrizzleDep {
+  dbClient: drizzleClient,
+  customerRewardTable: CustomerRewardTable,
+  customerRewardToDomainMapper: Mapper<CustomerRewardSelect, CustomerReward>,
+}
+
 export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository {
-  constructor(
-    private readonly db: drizzleClient,
-    private readonly table: CustomerRewardTable,
-    private readonly mapper: Mapper<CustomerRewardSelect, CustomerReward>,
-  ) { }
+  private readonly dbClient: drizzleClient;
+  private readonly customerRewardTable: CustomerRewardTable;
+  private readonly customerRewardToDomainMapper: Mapper<
+    CustomerRewardSelect,
+    CustomerReward
+  >;
+
+  constructor(deps: CustomerRewardRepositoryDrizzleDep) {
+    this.dbClient = deps.dbClient;
+    this.customerRewardTable = deps.customerRewardTable;
+    this.customerRewardToDomainMapper = deps.customerRewardToDomainMapper;
+  }
 
   async create(customerReward: CustomerReward): Promise<CustomerReward> {
-    const [inserted] = await this.db
-      .insert(this.table)
+    const [inserted] = await this.dbClient
+      .insert(this.customerRewardTable)
       .values(customerReward.toPersistence())
       .returning();
 
-    return this.mapper.map(inserted)
+    return this.customerRewardToDomainMapper.map(inserted)
   }
 
   async getById(id: number): Promise<CustomerReward> {
-    const result = this.db
+    const result = this.dbClient
       .select()
-      .from(this.table)
-      .where(eq(this.table.id, id))
+      .from(this.customerRewardTable)
+      .where(eq(this.customerRewardTable.id, id))
       .get();
 
-    if (result) return this.mapper.map(result);
+    if (result) return this.customerRewardToDomainMapper.map(result);
     throw new Error("Resgate não encontrado")
   }
 
@@ -36,24 +49,24 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
     customerId: number,
     rewardId: number
   ): Promise<CustomerReward | null> {
-    const result = this.db
+    const result = this.dbClient
       .select()
-      .from(this.table)
+      .from(this.customerRewardTable)
       .where(
         and(
-          eq(this.table.customerId, customerId),
-          eq(this.table.rewardId, rewardId)
+          eq(this.customerRewardTable.customerId, customerId),
+          eq(this.customerRewardTable.rewardId, rewardId)
         )
       )
       .get();
 
-    return result ? this.mapper.map(result) : null
+    return result ? this.customerRewardToDomainMapper.map(result) : null
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.db
-      .delete(this.table)
-      .where(eq(this.table.id, id));
+    const result = await this.dbClient
+      .delete(this.customerRewardTable)
+      .where(eq(this.customerRewardTable.id, id));
 
     if (result.changes === 0) throw new Error("Resgate não encontrado");
   }
