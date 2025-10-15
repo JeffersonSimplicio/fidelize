@@ -1,44 +1,30 @@
-import { IListTopRewardsByRedeem } from "@/core/application/interfaces/customers-rewards";
-import { ICustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
+import { ListTopRewardsByRedeem } from "@/core/application/interfaces/customers-rewards";
+import { CustomerRewardQueryRepository } from "@/core/domain/customer-rewards/customer-reward.query.repository.interface";
+import { TopRewardDto } from "@/core/application/dtos/customer-rewards";
+import { RewardDto } from "@/core/application/dtos/rewards";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
-export class ListTopRewardsByRedeemUseCase implements IListTopRewardsByRedeem {
+export class ListTopRewardsByRedeemUseCase implements ListTopRewardsByRedeem {
   private static MIN_LIMIT = 1;
 
   constructor(
-    private readonly rewardRepo: IRewardRepository,
-    private readonly customerRewardRepo: ICustomerRewardRepository,
+    private readonly customerRewardRepo: CustomerRewardQueryRepository,
+    private readonly mapper: Mapper<Reward, RewardDto>,
   ) { }
 
-  async execute(limit: number): Promise<{ reward: Reward; amount: number; }[]> {
-    const listCR = await this.customerRewardRepo.findAll();
-
-    const countMap = new Map<number, number>(); //<id, amount>
-
-    for (const cr of listCR) {
-      const id = cr.rewardId;
-      countMap.set(id, (countMap.get(id) ?? 0) + 1);
-    }
-
-    const sorted = Array.from(countMap.entries())
-      .sort((a, b) => b[1] - a[1]);
-
+  async execute(limit: number = 3): Promise<TopRewardDto[]> {
     const effectiveLimit = Math.max(limit, ListTopRewardsByRedeemUseCase.MIN_LIMIT);
 
-    const topCR = sorted.slice(0, effectiveLimit);
-
-    const result = await Promise.all(
-      topCR.map(async ([rewardId, amount]) => {
-        const reward = await this.rewardRepo.findById(rewardId);
-        if (!reward) throw new Error(`Reward ${rewardId} não encontrado`);
-        return {
-          reward,
-          amount,
-        };
-      })
+    const topRewards = await this.customerRewardRepo.findTopRewardsByRedeem(
+      effectiveLimit
     );
 
-    return result;
+    const mapped: TopRewardDto[] = topRewards.map(item => ({
+      reward: this.mapper.map(item.reward),
+      redeemedCount: item.redeemedCount
+    }));
+
+    return mapped
   }
 }
