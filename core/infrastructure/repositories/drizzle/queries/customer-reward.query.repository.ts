@@ -8,7 +8,10 @@ import {
   CustomerRewardTable
 } from "@/core/infrastructure/database/drizzle/types";
 import { eq, desc, sql } from "drizzle-orm";
-import { TopReward } from "@/core/domain/customer-rewards/query-models"
+import {
+  TopReward,
+  CustomerRedeemedReward,
+} from "@/core/domain/customer-rewards/query-models"
 
 export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQueryRepository {
   constructor(
@@ -40,6 +43,39 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       new TopReward(
         this.rewardMapper.map(item.reward),
         item.redeemedCount
+      )
+    );
+
+    return mapped;
+  }
+
+  async findRewardsRedeemedByCustomer(
+    customerId: number
+  ): Promise<CustomerRedeemedReward[]> {
+    const result = await this.db
+      .select({
+        reward: this.rewardTable,
+        redeemedAt: this.customerRewardTable.redeemedAt,
+      })
+      .from(this.customerRewardTable)
+      .innerJoin(
+        this.rewardTable,
+        eq(
+          this.rewardTable.id,
+          this.customerRewardTable.rewardId
+        )
+      )
+      .where(
+        eq(
+          this.customerRewardTable.customerId,
+          customerId
+        )
+      )
+
+    const mapped = result.map(item =>
+      new CustomerRedeemedReward(
+        this.rewardMapper.map(item.reward),
+        item.redeemedAt
       )
     );
 
