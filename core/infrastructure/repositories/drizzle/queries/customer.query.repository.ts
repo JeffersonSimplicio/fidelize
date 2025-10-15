@@ -8,37 +8,47 @@ import {
 } from '@/core/infrastructure/database/drizzle/types';
 import { desc, like } from "drizzle-orm";
 
+export interface CustomerQueryRepositoryDrizzleDep {
+  dbClient: drizzleClient,
+  customerTable: CustomerTable,
+  customerToDomainMapper: Mapper<CustomerSelect, Customer>,
+}
+
 export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
-  constructor(
-    private readonly db: drizzleClient,
-    private readonly table: CustomerTable,
-    private readonly mapper: Mapper<CustomerSelect, Customer>,
-  ) { }
+  private readonly dbClient: drizzleClient;
+  private readonly customerTable: CustomerTable;
+  private readonly customerToDomainMapper: Mapper<CustomerSelect, Customer>;
+
+  constructor(deps: CustomerQueryRepositoryDrizzleDep) {
+    this.dbClient = deps.dbClient;
+    this.customerTable = deps.customerTable;
+    this.customerToDomainMapper = deps.customerToDomainMapper;
+  }
 
   async findByName(name: string): Promise<Customer[]> {
-    const dbCustomers = await this.db
+    const dbCustomers = await this.dbClient
       .select()
-      .from(this.table)
-      .where(like(this.table.name, `%${name}%`));
+      .from(this.customerTable)
+      .where(like(this.customerTable.name, `%${name}%`));
 
-    return dbCustomers.map(this.mapper.map);
+    return dbCustomers.map(this.customerToDomainMapper.map);
   }
 
   async findAll(): Promise<Customer[]> {
-    const dbCustomers = await this.db
+    const dbCustomers = await this.dbClient
       .select()
-      .from(this.table);
+      .from(this.customerTable);
 
-    return dbCustomers.map(this.mapper.map);
+    return dbCustomers.map(this.customerToDomainMapper.map);
   }
 
   async findTopCustomersByPoints(limit: number): Promise<Customer[]> {
-    const dbCustomers = await this.db
+    const dbCustomers = await this.dbClient
       .select()
-      .from(this.table)
-      .orderBy(desc(this.table.points))
+      .from(this.customerTable)
+      .orderBy(desc(this.customerTable.points))
       .limit(limit);
 
-    return dbCustomers.map(this.mapper.map);
+    return dbCustomers.map(this.customerToDomainMapper.map);
   }
 }
