@@ -9,8 +9,12 @@ import { db } from "@/core/infrastructure/database/drizzle/db";
 import { rewards } from '@/core/infrastructure/database/drizzle/schema';
 
 export function makeGetRewardDetail(): GetRewardDetail {
-  const mapperToDomain = new DbRewardToDomainMapper();
-  const rewardRepo = new RewardRepositoryDrizzle(db, rewards, mapperToDomain);
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardRepo = new RewardRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
   const mapperToDto = new RewardEntityToDtoMapper();
   return new GetRewardDetailUseCase(rewardRepo, mapperToDto);
 }

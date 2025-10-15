@@ -8,30 +8,41 @@ import {
 } from "@/core/infrastructure/database/drizzle/types";
 import { eq } from "drizzle-orm";
 
+export interface RewardRepositoryDrizzleDep {
+  dbClient: drizzleClient,
+  rewardTable: RewardTable,
+  rewardToDomainMapper: Mapper<RewardSelect, Reward>,
+}
+
+
 export class RewardRepositoryDrizzle implements RewardRepository {
-  constructor(
-    private readonly db: drizzleClient,
-    private readonly table: RewardTable,
-    private readonly mapper: Mapper<RewardSelect, Reward>,
-  ) { }
+  private readonly dbClient: drizzleClient;
+  private readonly rewardTable: RewardTable;
+  private readonly rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+
+  constructor(deps: RewardRepositoryDrizzleDep) {
+    this.dbClient = deps.dbClient;
+    this.rewardTable = deps.rewardTable;
+    this.rewardToDomainMapper = deps.rewardToDomainMapper;
+  }
 
   async create(reward: Reward): Promise<Reward> {
-    const [inserted] = await this.db
-      .insert(this.table)
+    const [inserted] = await this.dbClient
+      .insert(this.rewardTable)
       .values(reward.toPersistence())
       .returning();
 
-    return this.mapper.map(inserted);
+    return this.rewardToDomainMapper.map(inserted);
   }
 
   async getById(id: number): Promise<Reward> {
-    const result = this.db
+    const result = this.dbClient
       .select()
-      .from(this.table)
-      .where(eq(this.table.id, id))
+      .from(this.rewardTable)
+      .where(eq(this.rewardTable.id, id))
       .get();
 
-    if (result) return this.mapper.map(result);
+    if (result) return this.rewardToDomainMapper.map(result);
     throw new Error("Recompensa não encontrado")
   }
 
@@ -42,19 +53,19 @@ export class RewardRepositoryDrizzle implements RewardRepository {
 
     const { id, ...data } = reward.toPersistence();
 
-    const [updated] = await this.db
-      .update(this.table)
+    const [updated] = await this.dbClient
+      .update(this.rewardTable)
       .set(data)
-      .where(eq(this.table.id, reward.id))
+      .where(eq(this.rewardTable.id, reward.id))
       .returning();
 
-    return this.mapper.map(updated);
+    return this.rewardToDomainMapper.map(updated);
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.db
-      .delete(this.table)
-      .where(eq(this.table.id, id));
+    const result = await this.dbClient
+      .delete(this.rewardTable)
+      .where(eq(this.rewardTable.id, id));
 
     if (result.changes === 0) throw new Error("Recompensa não encontrada");
   }

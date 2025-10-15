@@ -8,8 +8,12 @@ import { editRewardSchema } from "@/core/infrastructure/validation/zod/schemas/r
 import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
 
 export function makeEditReward(): EditReward {
-  const mapperToDomain = new DbRewardToDomainMapper();
-  const rewardRepo = new RewardRepositoryDrizzle(db, rewards, mapperToDomain);
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardRepo = new RewardRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
   const validator = new ZodValidation(editRewardSchema);
   const mapperToDto = new RewardEntityToDtoMapper();
   return new EditRewardUseCase(rewardRepo, validator, mapperToDto);

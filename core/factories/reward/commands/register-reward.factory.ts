@@ -8,9 +8,13 @@ import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schem
 import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
 
 export function makeRegisterReward(): RegisterReward {
-  const mapperToDomain = new DbRewardToDomainMapper();
-  const rewardRepo = new RewardRepositoryDrizzle(db, rewards, mapperToDomain);
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardRepo = new RewardRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
   const validator = new ZodValidation(registerRewardSchema);
-  const mapperToDto = new RewardEntityToDtoMapper();
-  return new RegisterRewardUseCase(rewardRepo, validator, mapperToDto);
+  const rewardMapToDto = new RewardEntityToDtoMapper();
+  return new RegisterRewardUseCase(rewardRepo, validator, rewardMapToDto);
 }

@@ -9,12 +9,12 @@ import {
 import { CustomerRewardRepositoryDrizzle, RewardRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/commands";
 
 export function makeUndoRedeemReward(): UndoRedeemReward {
-  const mapperRewardToDomain = new DbRewardToDomainMapper();
-  const rewardRepo = new RewardRepositoryDrizzle(
-    db,
-    rewards,
-    mapperRewardToDomain,
-  );
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardRepo = new RewardRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
 
   const mapperCustomerRewardToDomain = new DbCustomerRewardsToDomainMapper();
   const customerRewardRepo = new CustomerRewardRepositoryDrizzle(

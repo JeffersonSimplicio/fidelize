@@ -6,7 +6,11 @@ import { DbRewardToDomainMapper } from "@/core/infrastructure/mappers";
 import { RewardRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/commands";
 
 export function makeDisableReward(): DisableReward {
-  const mapperToDomain = new DbRewardToDomainMapper();
-  const rewardRepo = new RewardRepositoryDrizzle(db, rewards, mapperToDomain);
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardRepo = new RewardRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
   return new DisableRewardUseCase(rewardRepo);
 }

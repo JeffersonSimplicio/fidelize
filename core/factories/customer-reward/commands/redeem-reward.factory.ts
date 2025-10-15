@@ -15,12 +15,12 @@ import {
 } from "@/core/infrastructure/repositories/drizzle/commands";
 
 export function makeRedeemReward(): RedeemReward {
-  const mapperRewardToDomain = new DbRewardToDomainMapper();
-  const rewardRepo = new RewardRepositoryDrizzle(
-    db,
-    rewards,
-    mapperRewardToDomain,
-  );
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardRepo = new RewardRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
 
   const mapperCustomerToDomain = new DbCustomerToDomainMapper();
   const customerRepo = new CustomerRepositoryDrizzle(
