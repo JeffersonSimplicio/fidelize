@@ -6,37 +6,47 @@ import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { RewardSelect, RewardTable } from "@/core/infrastructure/database/drizzle/types";
 import { eq, like } from "drizzle-orm";
 
+export interface RewardQueryRepositoryDrizzleDep {
+  dbClient: drizzleClient;
+  rewardTable: RewardTable;
+  rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+}
+
 export class RewardQueryRepositoryDrizzle implements RewardQueryRepository {
-  constructor(
-    private readonly db: drizzleClient,
-    private readonly table: RewardTable,
-    private readonly mapper: Mapper<RewardSelect, Reward>,
-  ) { }
+  private readonly dbClient: drizzleClient;
+  private readonly rewardTable: RewardTable;
+  private readonly rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+
+  constructor(deps: RewardQueryRepositoryDrizzleDep) {
+    this.dbClient = deps.dbClient;
+    this.rewardTable = deps.rewardTable;
+    this.rewardToDomainMapper = deps.rewardToDomainMapper;
+  }
 
   async findByName(name: string): Promise<Reward[]> {
-    const result = await this.db
+    const result = await this.dbClient
       .select()
-      .from(this.table)
-      .where(like(this.table.name, `%${name}%`));
+      .from(this.rewardTable)
+      .where(like(this.rewardTable.name, `%${name}%`));
 
-    return result.map(this.mapper.map);
+    return result.map(this.rewardToDomainMapper.map);
   }
 
   async findAll(): Promise<Reward[]> {
-    const dbRewards = await this.db
+    const dbRewards = await this.dbClient
       .select()
-      .from(this.table);
+      .from(this.rewardTable);
 
-    return dbRewards.map(this.mapper.map);
+    return dbRewards.map(this.rewardToDomainMapper.map);
   }
 
   private async findAllStatus(status: RewardStatus): Promise<Reward[]> {
-    const dbRewards = await this.db
+    const dbRewards = await this.dbClient
       .select()
-      .from(this.table)
-      .where(eq(this.table.isActive, status));
+      .from(this.rewardTable)
+      .where(eq(this.rewardTable.isActive, status));
 
-    return dbRewards.map(this.mapper.map);
+    return dbRewards.map(this.rewardToDomainMapper.map);
   }
 
   async findAllActive(): Promise<Reward[]> {

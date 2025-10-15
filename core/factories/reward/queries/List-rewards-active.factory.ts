@@ -11,12 +11,12 @@ import {
 } from "@/core/infrastructure/repositories/drizzle";
 
 export function makeListRewardsActive(): ListRewardsActive {
-  const mapperToDomain = new DbRewardToDomainMapper();
-  const rewardQueryRepo = new RewardQueryRepositoryDrizzle(
-    db,
-    rewards,
-    mapperToDomain
-  );
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const rewardQueryRepo = new RewardQueryRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
   const mapperToDto = new RewardEntityToDtoMapper();
   return new ListRewardsActiveUseCase(rewardQueryRepo, mapperToDto);
 }
