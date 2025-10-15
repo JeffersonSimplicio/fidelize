@@ -12,13 +12,13 @@ import {
 } from '@/core/infrastructure/database/drizzle/schema';
 
 export function makeListTopRewardByRedeem(): ListTopRewardsByRedeem {
-  const rewardMapToDomain = new DbRewardToDomainMapper();
-  const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle(
-    db,
-    rewards,
-    customerRewards,
-    rewardMapToDomain
-  );
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    customerRewardTable: customerRewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
   const rewardMapToDto = new RewardEntityToDtoMapper();
   return new ListTopRewardsByRedeemUseCase(customerRewardRepo, rewardMapToDto);
 }

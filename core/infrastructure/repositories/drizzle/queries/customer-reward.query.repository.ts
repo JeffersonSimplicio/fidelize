@@ -13,16 +13,28 @@ import {
   CustomerRedeemedReward,
 } from "@/core/domain/customer-rewards/query-models"
 
+export interface CustomerRewardQueryRepositoryDrizzleDep {
+  dbClient: drizzleClient,
+  rewardTable: RewardTable,
+  customerRewardTable: CustomerRewardTable,
+  rewardToDomainMapper: Mapper<RewardSelect, Reward>,
+}
+
 export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQueryRepository {
-  constructor(
-    private readonly db: drizzleClient,
-    private readonly rewardTable: RewardTable,
-    private readonly customerRewardTable: CustomerRewardTable,
-    private readonly rewardMapper: Mapper<RewardSelect, Reward>,
-  ) { }
+  private readonly dbClient: drizzleClient;
+  private readonly rewardTable: RewardTable;
+  private readonly customerRewardTable: CustomerRewardTable;
+  private readonly rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+
+  constructor(deps: CustomerRewardQueryRepositoryDrizzleDep) {
+    this.dbClient = deps.dbClient;
+    this.rewardTable = deps.rewardTable;
+    this.customerRewardTable = deps.customerRewardTable
+    this.rewardToDomainMapper = deps.rewardToDomainMapper;
+  }
 
   async findTopRewardsByRedeem(limit: number): Promise<TopReward[]> {
-    const result = await this.db
+    const result = await this.dbClient
       .select({
         reward: this.rewardTable,
         redeemedCount: sql<number>`COUNT(${this.customerRewardTable.id})`,
@@ -41,7 +53,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
 
     const mapped = result.map(item =>
       new TopReward(
-        this.rewardMapper.map(item.reward),
+        this.rewardToDomainMapper.map(item.reward),
         item.redeemedCount
       )
     );
@@ -52,7 +64,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
   async findRewardsRedeemedByCustomer(
     customerId: number
   ): Promise<CustomerRedeemedReward[]> {
-    const result = await this.db
+    const result = await this.dbClient
       .select({
         reward: this.rewardTable,
         redeemedAt: this.customerRewardTable.redeemedAt,
@@ -74,7 +86,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
 
     const mapped = result.map(item =>
       new CustomerRedeemedReward(
-        this.rewardMapper.map(item.reward),
+        this.rewardToDomainMapper.map(item.reward),
         item.redeemedAt
       )
     );

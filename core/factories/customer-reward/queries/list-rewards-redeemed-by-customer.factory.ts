@@ -26,13 +26,13 @@ export function makeListRewardsRedeemedByCustomer(): ListRewardsRedeemedByCustom
     customerToDomainMapper: dbCustomerToDomainMapper
   });
 
-  const rewardMapToDomain = new DbRewardToDomainMapper();
-  const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle(
-    db,
-    rewards,
-    customerRewards,
-    rewardMapToDomain
-  );
+  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle({
+    dbClient: db,
+    rewardTable: rewards,
+    customerRewardTable: customerRewards,
+    rewardToDomainMapper: dbRewardToDomainMapper
+  });
 
   const rewardMapToDto = new RewardEntityToDtoMapper();
   return new ListRewardsRedeemedByCustomerUseCase(
