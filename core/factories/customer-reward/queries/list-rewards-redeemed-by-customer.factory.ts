@@ -19,12 +19,12 @@ import {
 import { ListRewardsRedeemedByCustomer } from "@/core/application/interfaces/customers-rewards/queries";
 
 export function makeListRewardsRedeemedByCustomer(): ListRewardsRedeemedByCustomer {
-  const customerMapToDomain = new DbCustomerToDomainMapper();
-  const customerRepo = new CustomerRepositoryDrizzle(
-    db,
-    customers,
-    customerMapToDomain
-  );
+  const dbCustomerToDomainMapper = new DbCustomerToDomainMapper();
+  const customerRepo = new CustomerRepositoryDrizzle({
+    dbClient: db,
+    customerTable: customers,
+    customerToDomainMapper: dbCustomerToDomainMapper
+  });
 
   const rewardMapToDomain = new DbRewardToDomainMapper();
   const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle(

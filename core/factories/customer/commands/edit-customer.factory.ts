@@ -12,8 +12,12 @@ import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validati
 
 
 export function makeEditCustomer(): EditCustomer {
-  const mapperToDomain = new DbCustomerToDomainMapper();
-  const customerRepo = new CustomerRepositoryDrizzle(db, customers, mapperToDomain);
+  const dbCustomerToDomainMapper = new DbCustomerToDomainMapper();
+  const customerRepo = new CustomerRepositoryDrizzle({
+    dbClient: db,
+    customerTable: customers,
+    customerToDomainMapper: dbCustomerToDomainMapper
+  });
   const validator = new ZodValidation(editCustomerSchema);
   const mapperToDto = new CustomerEntityToDtoMapper();
   return new EditCustomerUseCase(customerRepo, validator, mapperToDto)

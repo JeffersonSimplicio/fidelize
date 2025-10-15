@@ -8,41 +8,55 @@ import {
 } from '@/core/infrastructure/database/drizzle/types';
 import { eq, SQL } from "drizzle-orm";
 
+export interface CustomerRepositoryDrizzleDep {
+  dbClient: drizzleClient,
+  customerTable: CustomerTable,
+  customerToDomainMapper: Mapper<CustomerSelect, Customer>,
+}
+
 export class CustomerRepositoryDrizzle implements CustomerRepository {
-  constructor(
-    private readonly db: drizzleClient,
-    private readonly table: CustomerTable,
-    private readonly mapper: Mapper<CustomerSelect, Customer>,
-  ) { }
+  private readonly dbClient: drizzleClient;
+  private readonly customerTable: CustomerTable;
+  private readonly customerToDomainMapper: Mapper<CustomerSelect, Customer>;
+
+  constructor(deps: CustomerRepositoryDrizzleDep) {
+    this.dbClient = deps.dbClient;
+    this.customerTable = deps.customerTable;
+    this.customerToDomainMapper = deps.customerToDomainMapper;
+  }
 
   async create(customer: Customer): Promise<Customer> {
-    const [inserted] = await this.db
-      .insert(this.table)
+    const [inserted] = await this.dbClient
+      .insert(this.customerTable)
       .values(customer.toPersistence())
       .returning();
 
-    return this.mapper.map(inserted);
+    return this.customerToDomainMapper.map(inserted);
   }
 
   private async findOneByCondition(condition: SQL): Promise<Customer | null> {
-    const result = this.db
+    const result = this.dbClient
       .select()
-      .from(this.table)
+      .from(this.customerTable)
       .where(condition)
       .limit(1)
       .get();
 
-    return result ? this.mapper.map(result) : null;
+    return result ? this.customerToDomainMapper.map(result) : null;
   }
 
   async getById(id: number): Promise<Customer> {
-    const result = await this.findOneByCondition(eq(this.table.id, id));
+    const result = await this.findOneByCondition(
+      eq(this.customerTable.id, id)
+    );
     if (result) return result;
     throw new Error("Cliente não encontrado")
   }
 
   async findByPhone(phone: string): Promise<Customer | null> {
-    return await this.findOneByCondition(eq(this.table.phone, phone));
+    return await this.findOneByCondition(
+      eq(this.customerTable.phone, phone)
+    );
   }
 
   async update(customer: Customer): Promise<Customer> {
@@ -52,19 +66,21 @@ export class CustomerRepositoryDrizzle implements CustomerRepository {
 
     const { id, ...data } = customer.toPersistence();
 
-    const [updated] = await this.db
-      .update(this.table)
+    const [updated] = await this.dbClient
+      .update(this.customerTable)
       .set(data)
-      .where(eq(this.table.id, customer.id))
+      .where(
+        eq(this.customerTable.id, customer.id)
+      )
       .returning();
 
-    return this.mapper.map(updated);
+    return this.customerToDomainMapper.map(updated);
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.db
-      .delete(this.table)
-      .where(eq(this.table.id, id));
+    const result = await this.dbClient
+      .delete(this.customerTable)
+      .where(eq(this.customerTable.id, id));
 
     if (result.changes === 0) throw new Error("Cliente não encontrado");
   }

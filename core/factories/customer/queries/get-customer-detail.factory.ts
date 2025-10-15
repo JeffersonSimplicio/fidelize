@@ -9,8 +9,12 @@ import {
 import { CustomerRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle/commands";
 
 export function makeGetCustomerDetail(): GetCustomerDetail {
-  const mapperToDomain = new DbCustomerToDomainMapper();
-  const customerRepo = new CustomerRepositoryDrizzle(db, customers, mapperToDomain);
+  const dbCustomerToDomainMapper = new DbCustomerToDomainMapper();
+  const customerRepo = new CustomerRepositoryDrizzle({
+    dbClient: db,
+    customerTable: customers,
+    customerToDomainMapper: dbCustomerToDomainMapper
+  });
   const mapperToDto = new CustomerEntityToDtoMapper();
   return new GetCustomerDetailUseCase(customerRepo, mapperToDto);
 }

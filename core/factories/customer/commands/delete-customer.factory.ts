@@ -7,7 +7,11 @@ import { CustomerRepositoryDrizzle } from "@/core/infrastructure/repositories/dr
 
 
 export function makeDeleteCustomer(): DeleteCustomer {
-  const mapperToDomain = new DbCustomerToDomainMapper();
-  const customerRepo = new CustomerRepositoryDrizzle(db, customers, mapperToDomain);
+  const dbCustomerToDomainMapper = new DbCustomerToDomainMapper();
+  const customerRepo = new CustomerRepositoryDrizzle({
+    dbClient: db,
+    customerTable: customers,
+    customerToDomainMapper: dbCustomerToDomainMapper
+  });
   return new DeleteCustomerUseCase(customerRepo,)
 }
