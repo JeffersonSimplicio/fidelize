@@ -1,23 +1,17 @@
 import { db } from "@/core/infrastructure/database/drizzle/db";
-import {
-  rewards,
-  customers,
-  customerRewards,
-} from '@/core/infrastructure/database/drizzle/schema';
+import { customers } from '@/core/infrastructure/database/drizzle/schema';
 import {
   DbCustomerToDomainMapper,
-  DbRewardToDomainMapper,
-  DbCustomerRewardsToDomainMapper,
   RewardEntityToDtoMapper,
 } from "@/core/infrastructure/mappers";
 import {
   CustomerRepositoryDrizzle,
-  CustomerRewardQueryRepositoryDrizzle
 } from "@/core/infrastructure/repositories/drizzle/";
 import {
   ListRewardsRedeemedByCustomerUseCase
 } from "@/core/application/use-cases/customers-rewards/queries";
 import { ListRewardsRedeemedByCustomer } from "@/core/application/interfaces/customers-rewards/queries";
+import { makeCustomerRewardQueryRepositoryDrizzle } from "@/core/factories/infrastructure/customer-reward-query-repository-drizzle.factory";
 
 export function makeListRewardsRedeemedByCustomer(): ListRewardsRedeemedByCustomer {
   const dbCustomerToDomainMapper = new DbCustomerToDomainMapper();
@@ -27,15 +21,7 @@ export function makeListRewardsRedeemedByCustomer(): ListRewardsRedeemedByCustom
     customerToDomainMapper: dbCustomerToDomainMapper
   });
 
-  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
-  const dbCustomerRewardsToDomainMapper = new DbCustomerRewardsToDomainMapper();
-  const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle({
-    dbClient: db,
-    rewardTable: rewards,
-    customerRewardTable: customerRewards,
-    rewardToDomainMapper: dbRewardToDomainMapper,
-    customerRewardToDomainMapper: dbCustomerRewardsToDomainMapper,
-  });
+  const customerRewardRepo = makeCustomerRewardQueryRepositoryDrizzle();
 
   const rewardMapToDto = new RewardEntityToDtoMapper();
   return new ListRewardsRedeemedByCustomerUseCase(
