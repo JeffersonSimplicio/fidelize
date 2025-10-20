@@ -1,22 +1,10 @@
 import { ListRewardsActive } from "@/core/application/interfaces/rewards";
 import { ListRewardsActiveUseCase } from "@/core/application/use-cases/rewards";
-import { db } from "@/core/infrastructure/database/drizzle/db";
-import { rewards } from '@/core/infrastructure/database/drizzle/schema';
-import {
-  DbRewardToDomainMapper,
-  RewardEntityToDtoMapper
-} from "@/core/infrastructure/mappers";
-import {
-  RewardQueryRepositoryDrizzle
-} from "@/core/infrastructure/repositories/drizzle";
+import { makeRewardQueryRepositoryDrizzle } from "@/core/factories/repositories";
+import { RewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
 
 export function makeListRewardsActive(): ListRewardsActive {
-  const dbRewardToDomainMapper = new DbRewardToDomainMapper();
-  const rewardQueryRepo = new RewardQueryRepositoryDrizzle({
-    dbClient: db,
-    rewardTable: rewards,
-    rewardToDomainMapper: dbRewardToDomainMapper
-  });
+  const rewardQueryRepo = makeRewardQueryRepositoryDrizzle();
   const mapperToDto = new RewardEntityToDtoMapper();
   return new ListRewardsActiveUseCase(rewardQueryRepo, mapperToDto);
 }
