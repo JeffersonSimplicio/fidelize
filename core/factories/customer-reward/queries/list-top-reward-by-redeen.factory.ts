@@ -3,7 +3,8 @@ import { ListTopRewardsByRedeemUseCase } from "@/core/application/use-cases/cust
 import { CustomerRewardQueryRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle";
 import {
   DbRewardToDomainMapper,
-  RewardEntityToDtoMapper
+  RewardEntityToDtoMapper,
+  DbCustomerRewardsToDomainMapper,
 } from "@/core/infrastructure/mappers";
 import { db } from "@/core/infrastructure/database/drizzle/db";
 import {
@@ -13,11 +14,13 @@ import {
 
 export function makeListTopRewardByRedeem(): ListTopRewardsByRedeem {
   const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const dbCustomerRewardsToDomainMapper = new DbCustomerRewardsToDomainMapper();
   const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle({
     dbClient: db,
     rewardTable: rewards,
     customerRewardTable: customerRewards,
-    rewardToDomainMapper: dbRewardToDomainMapper
+    rewardToDomainMapper: dbRewardToDomainMapper,
+    customerRewardToDomainMapper: dbCustomerRewardsToDomainMapper,
   });
   const rewardMapToDto = new RewardEntityToDtoMapper();
   return new ListTopRewardsByRedeemUseCase(customerRewardRepo, rewardMapToDto);

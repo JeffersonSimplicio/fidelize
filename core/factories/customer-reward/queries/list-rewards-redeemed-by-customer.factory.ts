@@ -7,6 +7,7 @@ import {
 import {
   DbCustomerToDomainMapper,
   DbRewardToDomainMapper,
+  DbCustomerRewardsToDomainMapper,
   RewardEntityToDtoMapper,
 } from "@/core/infrastructure/mappers";
 import {
@@ -27,11 +28,13 @@ export function makeListRewardsRedeemedByCustomer(): ListRewardsRedeemedByCustom
   });
 
   const dbRewardToDomainMapper = new DbRewardToDomainMapper();
+  const dbCustomerRewardsToDomainMapper = new DbCustomerRewardsToDomainMapper();
   const customerRewardRepo = new CustomerRewardQueryRepositoryDrizzle({
     dbClient: db,
     rewardTable: rewards,
     customerRewardTable: customerRewards,
-    rewardToDomainMapper: dbRewardToDomainMapper
+    rewardToDomainMapper: dbRewardToDomainMapper,
+    customerRewardToDomainMapper: dbCustomerRewardsToDomainMapper,
   });
 
   const rewardMapToDto = new RewardEntityToDtoMapper();

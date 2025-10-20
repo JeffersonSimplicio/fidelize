@@ -5,19 +5,22 @@ import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import {
   RewardSelect,
   RewardTable,
-  CustomerRewardTable
+  CustomerRewardSelect,
+  CustomerRewardTable,
 } from "@/core/infrastructure/database/drizzle/types";
 import { eq, desc, sql } from "drizzle-orm";
 import {
   TopReward,
   CustomerRedeemedReward,
 } from "@/core/domain/customer-rewards/query-models"
+import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 
 export interface CustomerRewardQueryRepositoryDrizzleDep {
   dbClient: drizzleClient,
   rewardTable: RewardTable,
   customerRewardTable: CustomerRewardTable,
   rewardToDomainMapper: Mapper<RewardSelect, Reward>,
+  customerRewardToDomainMapper: Mapper<CustomerRewardSelect, CustomerReward>,
 }
 
 export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQueryRepository {
@@ -25,12 +28,25 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
   private readonly rewardTable: RewardTable;
   private readonly customerRewardTable: CustomerRewardTable;
   private readonly rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+  private readonly customerRewardToDomainMapper: Mapper<
+    CustomerRewardSelect,
+    CustomerReward
+  >;
 
   constructor(deps: CustomerRewardQueryRepositoryDrizzleDep) {
     this.dbClient = deps.dbClient;
     this.rewardTable = deps.rewardTable;
     this.customerRewardTable = deps.customerRewardTable
     this.rewardToDomainMapper = deps.rewardToDomainMapper;
+    this.customerRewardToDomainMapper = deps.customerRewardToDomainMapper;
+  }
+
+  async findAll(): Promise<CustomerReward[]> {
+    const dbCustomerRewards = await this.dbClient
+      .select()
+      .from(this.customerRewardTable);
+
+    return dbCustomerRewards.map(this.customerRewardToDomainMapper.map)
   }
 
   async findTopRewardsByRedeem(limit: number): Promise<TopReward[]> {
