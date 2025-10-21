@@ -4,14 +4,22 @@ import { CustomerRepository } from "@/core/domain/customers/customer.repository.
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { CustomerDto } from "@/core/application/dtos/customers";
 
+export interface GetCustomerDetailDep {
+  customerRepo: CustomerRepository,
+  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+}
+
 export class GetCustomerDetailUseCase implements GetCustomerDetail {
-  constructor(
-    private readonly repo: CustomerRepository,
-    private readonly mapper: Mapper<Customer, CustomerDto>,
-  ) { }
+  private readonly customerRepo: CustomerRepository;
+  private readonly customerToDtoMapper: Mapper<Customer, CustomerDto>;
+
+  constructor(deps: GetCustomerDetailDep) {
+    this.customerRepo = deps.customerRepo;
+    this.customerToDtoMapper = deps.customerToDtoMapper
+  }
 
   async execute(id: number): Promise<CustomerDto> {
-    const customer = await this.repo.getById(id);
-    return this.mapper.map(customer);
+    const customer = await this.customerRepo.getById(id);
+    return this.customerToDtoMapper.map(customer);
   }
 }

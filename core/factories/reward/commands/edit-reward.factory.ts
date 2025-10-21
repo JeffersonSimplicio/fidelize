@@ -7,7 +7,11 @@ import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validati
 
 export function makeEditReward(): EditReward {
   const rewardRepo = makeRewardRepositoryDrizzle();
-  const validator = new ZodValidation(editRewardSchema);
-  const mapperToDto = new RewardEntityToDtoMapper();
-  return new EditRewardUseCase(rewardRepo, validator, mapperToDto);
+  const zodValidation = new ZodValidation(editRewardSchema);
+  const rewardEntityToDtoMapper = new RewardEntityToDtoMapper();
+  return new EditRewardUseCase({
+    rewardRepo: rewardRepo,
+    editRewardValidator: zodValidation,
+    rewardToDtoMapper: rewardEntityToDtoMapper
+  });
 }

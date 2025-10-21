@@ -9,10 +9,10 @@ export function makeListAvailableRewardsForCustomer() {
   const customerRepo = makeCustomerRepositoryDrizzle();
   const customerRewardQueryRepo = makeCustomerRewardQueryRepositoryDrizzle();
 
-  const mapperToDto = new RewardEntityToDtoMapper();
-  return new ListAvailableRewardsForCustomerUseCase(
-    customerRepo,
-    customerRewardQueryRepo,
-    mapperToDto
-  );
+  const rewardEntityToDtoMapper = new RewardEntityToDtoMapper();
+  return new ListAvailableRewardsForCustomerUseCase({
+    customerRepo: customerRepo,
+    customerRewardQueryRepo: customerRewardQueryRepo,
+    rewardToDtoMapper: rewardEntityToDtoMapper
+  });
 }

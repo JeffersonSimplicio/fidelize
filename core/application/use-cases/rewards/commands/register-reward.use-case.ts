@@ -6,16 +6,25 @@ import { ValidationException } from "@/core/domain/shared/errors/validation-exce
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Validation } from "@/core/domain/validation/validation.interface";
 
+export interface RegisterRewardDep {
+  rewardRepo: RewardRepository,
+  createRewardValidator: Validation<CreateRewardDto>,
+  rewardToDtoMapper: Mapper<Reward, RewardDto>,
+}
 
 export class RegisterRewardUseCase implements RegisterReward {
-  constructor(
-    private readonly rewardRepo: RewardRepository,
-    private readonly validator: Validation<CreateRewardDto>,
-    private readonly mapper: Mapper<Reward, RewardDto>,
-  ) { }
+  private readonly rewardRepo: RewardRepository;
+  private readonly createRewardValidator: Validation<CreateRewardDto>;
+  private readonly rewardToDtoMapper: Mapper<Reward, RewardDto>;
+
+  constructor(deps: RegisterRewardDep) {
+    this.rewardRepo = deps.rewardRepo;
+    this.createRewardValidator = deps.createRewardValidator;
+    this.rewardToDtoMapper = deps.rewardToDtoMapper;
+  }
 
   async execute(data: CreateRewardDto): Promise<RewardDto> {
-    const errors = this.validator.validate(data);
+    const errors = this.createRewardValidator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
     }
@@ -28,6 +37,6 @@ export class RegisterRewardUseCase implements RegisterReward {
 
     const reward = await this.rewardRepo.create(rewardCreate);
 
-    return this.mapper.map(reward);
+    return this.rewardToDtoMapper.map(reward);
   }
 }

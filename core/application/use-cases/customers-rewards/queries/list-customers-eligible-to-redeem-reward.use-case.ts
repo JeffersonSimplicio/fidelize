@@ -5,12 +5,22 @@ import { CustomerDto } from "@/core/application/dtos/customers";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Customer } from "@/core/domain/customers/customer.entity";
 
+export interface ListCustomersEligibleToRedeemRewardDep {
+  rewardRepo: RewardRepository,
+  customerRewardQueryRepo: CustomerRewardQueryRepository,
+  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+}
+
 export class ListEligibleCustomersForRewardUseCase implements ListCustomersEligibleToRedeemReward {
-  constructor(
-    private readonly rewardRepo: RewardRepository,
-    private readonly customerRewardQueryRepo: CustomerRewardQueryRepository,
-    private readonly mapper: Mapper<Customer, CustomerDto>,
-  ) { }
+  private readonly rewardRepo: RewardRepository;
+  private readonly customerRewardQueryRepo: CustomerRewardQueryRepository;
+  private readonly customerToDtoMapper: Mapper<Customer, CustomerDto>;
+
+  constructor(deps: ListCustomersEligibleToRedeemRewardDep) {
+    this.rewardRepo = deps.rewardRepo;
+    this.customerRewardQueryRepo = deps.customerRewardQueryRepo;
+    this.customerToDtoMapper = deps.customerToDtoMapper;
+  }
 
   async execute(rewardId: number): Promise<CustomerDto[]> {
     await this.rewardRepo.getById(rewardId);
@@ -18,6 +28,6 @@ export class ListEligibleCustomersForRewardUseCase implements ListCustomersEligi
     const eligibleCustomers = await this.customerRewardQueryRepo
       .findCustomersEligibleToRedeemReward(rewardId);
 
-    return eligibleCustomers.map(this.mapper.map);
+    return eligibleCustomers.map(this.customerToDtoMapper.map);
   }
 }

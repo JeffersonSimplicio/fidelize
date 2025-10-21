@@ -7,15 +7,25 @@ import { ValidationException } from "@/core/domain/shared/errors/validation-exce
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Validation } from "@/core/domain/validation/validation.interface";
 
+export interface RegisterCustomerDep {
+  customerRepo: CustomerRepository,
+  createCustomerValidator: Validation<CreateCustomerDto>,
+  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+}
+
 export class RegisterCustomerUseCase implements RegisterCustomer {
-  constructor(
-    private readonly customerRepo: CustomerRepository,
-    private readonly validator: Validation<CreateCustomerDto>,
-    private readonly mapper: Mapper<Customer, CustomerDto>,
-  ) { }
+  private readonly customerRepo: CustomerRepository;
+  private readonly createCustomerValidator: Validation<CreateCustomerDto>;
+  private readonly customerToDtoMapper: Mapper<Customer, CustomerDto>;
+
+  constructor(deps: RegisterCustomerDep) {
+    this.customerRepo = deps.customerRepo;
+    this.createCustomerValidator = deps.createCustomerValidator;
+    this.customerToDtoMapper = deps.customerToDtoMapper;
+  }
 
   async execute(data: CreateCustomerDto): Promise<CustomerDto> {
-    const errors = this.validator.validate(data);
+    const errors = this.createCustomerValidator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
     }
@@ -33,6 +43,6 @@ export class RegisterCustomerUseCase implements RegisterCustomer {
 
     const customer = await this.customerRepo.create(CustomerCreate);
 
-    return this.mapper.map(customer);
+    return this.customerToDtoMapper.map(customer);
   }
 }

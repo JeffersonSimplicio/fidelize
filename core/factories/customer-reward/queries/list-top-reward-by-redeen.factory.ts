@@ -4,7 +4,10 @@ import { makeCustomerRewardQueryRepositoryDrizzle } from "@/core/factories/repos
 import { RewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
 
 export function makeListTopRewardByRedeem(): ListTopRewardsByRedeem {
-  const customerRewardRepo = makeCustomerRewardQueryRepositoryDrizzle();
-  const rewardMapToDto = new RewardEntityToDtoMapper();
-  return new ListTopRewardsByRedeemUseCase(customerRewardRepo, rewardMapToDto);
+  const customerRewardQueryRepo = makeCustomerRewardQueryRepositoryDrizzle();
+  const rewardEntityToDtoMapper = new RewardEntityToDtoMapper();
+  return new ListTopRewardsByRedeemUseCase({
+    customerRewardQueryRepo: customerRewardQueryRepo,
+    rewardToDtoMapper: rewardEntityToDtoMapper,
+  });
 }

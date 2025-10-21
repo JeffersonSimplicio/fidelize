@@ -8,7 +8,11 @@ import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validati
 
 export function makeRegisterCustomer(): RegisterCustomer {
   const customerRepo = makeCustomerRepositoryDrizzle();
-  const validator = new ZodValidation(registerCustomerSchema);
-  const mapperToDto = new CustomerEntityToDtoMapper();
-  return new RegisterCustomerUseCase(customerRepo, validator, mapperToDto);
+  const zodValidator = new ZodValidation(registerCustomerSchema);
+  const customerEntityToDtoMapper = new CustomerEntityToDtoMapper();
+  return new RegisterCustomerUseCase({
+    customerRepo: customerRepo,
+    createCustomerValidator: zodValidator,
+    customerToDtoMapper: customerEntityToDtoMapper
+  });
 }

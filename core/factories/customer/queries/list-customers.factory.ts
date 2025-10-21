@@ -4,7 +4,10 @@ import { makeCustomerQueryRepositoryDrizzle } from "@/core/factories/repositorie
 import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
 
 export function makeListCustomers(): ListCustomers {
-  const customerRepo = makeCustomerQueryRepositoryDrizzle();
-  const mapperToDto = new CustomerEntityToDtoMapper();
-  return new ListCustomersUseCase(customerRepo, mapperToDto);
-}
+  const customerQueryRepo = makeCustomerQueryRepositoryDrizzle();
+  const customerEntityToDtoMapper = new CustomerEntityToDtoMapper();
+  return new ListCustomersUseCase({
+    customerQueryRepo: customerQueryRepo,
+    customerToDtoMapper: customerEntityToDtoMapper,
+  });
+} 

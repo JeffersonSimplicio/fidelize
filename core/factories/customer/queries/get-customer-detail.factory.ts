@@ -5,6 +5,9 @@ import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
 
 export function makeGetCustomerDetail(): GetCustomerDetail {
   const customerRepo = makeCustomerRepositoryDrizzle();
-  const mapperToDto = new CustomerEntityToDtoMapper();
-  return new GetCustomerDetailUseCase(customerRepo, mapperToDto);
+  const customerEntityToDtoMapper = new CustomerEntityToDtoMapper();
+  return new GetCustomerDetailUseCase({
+    customerRepo: customerRepo,
+    customerToDtoMapper: customerEntityToDtoMapper
+  });
 }

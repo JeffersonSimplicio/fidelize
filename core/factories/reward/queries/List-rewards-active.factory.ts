@@ -5,6 +5,9 @@ import { RewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
 
 export function makeListRewardsActive(): ListRewardsActive {
   const rewardQueryRepo = makeRewardQueryRepositoryDrizzle();
-  const mapperToDto = new RewardEntityToDtoMapper();
-  return new ListRewardsActiveUseCase(rewardQueryRepo, mapperToDto);
+  const rewardEntityToDtoMapper = new RewardEntityToDtoMapper();
+  return new ListRewardsActiveUseCase({
+    rewardQueryRepo: rewardQueryRepo,
+    rewardToDtoMapper: rewardEntityToDtoMapper
+  });
 }

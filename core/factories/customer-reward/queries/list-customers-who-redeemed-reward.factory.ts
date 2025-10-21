@@ -8,10 +8,10 @@ import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
 export function makeListCustomersWhoRedeemedReward() {
   const rewardRepo = makeRewardRepositoryDrizzle();
   const customerRewardQueryRepo = makeCustomerRewardQueryRepositoryDrizzle();
-  const mapperToDto = new CustomerEntityToDtoMapper();
-  return new ListCustomersWhoRedeemedRewardUseCase(
-    rewardRepo,
-    customerRewardQueryRepo,
-    mapperToDto
-  );
+  const customerEntityToDtoMapper = new CustomerEntityToDtoMapper();
+  return new ListCustomersWhoRedeemedRewardUseCase({
+    rewardRepo: rewardRepo,
+    customerRewardQueryRepo: customerRewardQueryRepo,
+    customerDtoMapper: customerEntityToDtoMapper,
+  });
 }

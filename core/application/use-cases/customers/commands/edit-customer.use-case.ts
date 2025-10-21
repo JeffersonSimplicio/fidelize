@@ -7,15 +7,25 @@ import { ValidationException } from "@/core/domain/shared/errors/validation-exce
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { Validation } from "@/core/domain/validation/validation.interface";
 
+export interface EditCustomerDep {
+  customerRepo: CustomerRepository,
+  editCustomerValidator: Validation<UpdateCustomerDto>,
+  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+}
+
 export class EditCustomerUseCase implements EditCustomer {
-  constructor(
-    private readonly customerRepo: CustomerRepository,
-    private readonly validator: Validation<UpdateCustomerDto>,
-    private readonly mapper: Mapper<Customer, CustomerDto>,
-  ) { }
+  private readonly customerRepo: CustomerRepository;
+  private readonly editCustomerValidator: Validation<UpdateCustomerDto>;
+  private readonly customerToDtoMapper: Mapper<Customer, CustomerDto>;
+
+  constructor(deps: EditCustomerDep) {
+    this.customerRepo = deps.customerRepo;
+    this.editCustomerValidator = deps.editCustomerValidator
+    this.customerToDtoMapper = deps.customerToDtoMapper
+  }
 
   async execute(id: number, data: UpdateCustomerDto): Promise<CustomerDto> {
-    const errors = this.validator.validate(data);
+    const errors = this.editCustomerValidator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
     }
@@ -45,6 +55,6 @@ export class EditCustomerUseCase implements EditCustomer {
 
     const customer = await this.customerRepo.update(updatedCustomer);
 
-    return this.mapper.map(customer);
+    return this.customerToDtoMapper.map(customer);
   }
 }

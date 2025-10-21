@@ -4,5 +4,5 @@ import { makeCustomerRepositoryDrizzle } from "@/core/factories/repositories";
 
 export function makeDeleteCustomer(): DeleteCustomer {
   const customerRepo = makeCustomerRepositoryDrizzle();
-  return new DeleteCustomerUseCase(customerRepo,)
+  return new DeleteCustomerUseCase({ customerRepo })
 }

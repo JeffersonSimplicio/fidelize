@@ -13,12 +13,12 @@ import {
 export function makeListRewardsRedeemedByCustomer(): ListRewardsRedeemedByCustomer {
   const customerRepo = makeCustomerRepositoryDrizzle();
 
-  const customerRewardRepo = makeCustomerRewardQueryRepositoryDrizzle();
+  const customerRewardQueryRepo = makeCustomerRewardQueryRepositoryDrizzle();
 
-  const rewardMapToDto = new RewardEntityToDtoMapper();
-  return new ListRewardsRedeemedByCustomerUseCase(
-    customerRepo,
-    customerRewardRepo,
-    rewardMapToDto
-  );
+  const rewardEntityToDtoMapper = new RewardEntityToDtoMapper();
+  return new ListRewardsRedeemedByCustomerUseCase({
+    customerRepo: customerRepo,
+    customerRewardQueryRepo: customerRewardQueryRepo,
+    rewardToDtoMapper: rewardEntityToDtoMapper,
+  });
 }

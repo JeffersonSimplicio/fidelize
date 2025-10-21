@@ -3,11 +3,19 @@ import { CustomerRewardRepository } from "@/core/domain/customer-rewards/custome
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 
+export interface UndoRedeemRewardDep {
+  rewardRepo: RewardRepository,
+  customerRewardRepo: CustomerRewardRepository,
+}
+
 export class UndoRedeemRewardUseCase implements UndoRedeemReward {
-  constructor(
-    private readonly rewardRepo: RewardRepository,
-    private readonly customerRewardRepo: CustomerRewardRepository,
-  ) { }
+  private readonly rewardRepo: RewardRepository;
+  private readonly customerRewardRepo: CustomerRewardRepository;
+
+  constructor(deps: UndoRedeemRewardDep) {
+    this.rewardRepo = deps.rewardRepo;
+    this.customerRewardRepo = deps.customerRewardRepo;
+  }
 
   async execute(customerId: number, rewardId: number): Promise<void> {
     const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(

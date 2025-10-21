@@ -10,8 +10,8 @@ export function makeUndoRedeemReward(): UndoRedeemReward {
 
   const customerRewardRepo = makeCustomerRewardRepositoryDrizzle();
 
-  return new UndoRedeemRewardUseCase(
-    rewardRepo,
-    customerRewardRepo
-  );
+  return new UndoRedeemRewardUseCase({
+    rewardRepo: rewardRepo,
+    customerRewardRepo: customerRewardRepo
+  });
 }

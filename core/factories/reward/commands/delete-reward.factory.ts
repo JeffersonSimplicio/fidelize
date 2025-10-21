@@ -4,5 +4,5 @@ import { makeRewardRepositoryDrizzle } from "@/core/factories/repositories";
 
 export function makeDeleteReward(): DeleteReward {
   const rewardRepo = makeRewardRepositoryDrizzle();
-  return new DeleteRewardUseCase(rewardRepo);
+  return new DeleteRewardUseCase({ rewardRepo });
 }

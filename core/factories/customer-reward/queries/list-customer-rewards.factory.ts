@@ -6,12 +6,12 @@ import {
 } from "@/core/infrastructure/mappers";
 
 export function makeListCustomerRewards(): ListCustomerRewards {
-  const customerRewardRepo = makeCustomerRewardQueryRepositoryDrizzle();
+  const customerRewardQueryRepo = makeCustomerRewardQueryRepositoryDrizzle();
 
   const customerRewardEntityToDtoMapper = new CustomerRewardEntityToDtoMapper()
 
-  return new ListCustomerRewardsUseCase(
-    customerRewardRepo,
-    customerRewardEntityToDtoMapper
-  );
+  return new ListCustomerRewardsUseCase({
+    customerRewardQueryRepo: customerRewardQueryRepo,
+    customerRewardToDtoMapper: customerRewardEntityToDtoMapper
+  });
 }

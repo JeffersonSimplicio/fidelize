@@ -7,13 +7,28 @@ import { RewardRepository } from "@/core/domain/rewards/reward.repository.interf
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 
+export interface RedeemRewardDep {
+  rewardRepo: RewardRepository,
+  customerRepo: CustomerRepository,
+  customerRewardRepo: CustomerRewardRepository,
+  customerRewardToDtoMapper: Mapper<CustomerReward, CustomerRewardDto>,
+}
+
 export class RedeemRewardUseCase implements RedeemReward {
-  constructor(
-    private readonly rewardRepo: RewardRepository,
-    private readonly customerRepo: CustomerRepository,
-    private readonly customerRewardRepo: CustomerRewardRepository,
-    private readonly mapper: Mapper<CustomerReward, CustomerRewardDto>
-  ) { }
+  private readonly rewardRepo: RewardRepository;
+  private readonly customerRepo: CustomerRepository;
+  private readonly customerRewardRepo: CustomerRewardRepository;
+  private readonly customerRewardToDtoMapper: Mapper<
+    CustomerReward,
+    CustomerRewardDto
+  >;
+
+  constructor(deps: RedeemRewardDep) {
+    this.rewardRepo = deps.rewardRepo;
+    this.customerRepo = deps.customerRepo;
+    this.customerRewardRepo = deps.customerRewardRepo;
+    this.customerRewardToDtoMapper = deps.customerRewardToDtoMapper
+  }
 
   async execute({
     customerId,
@@ -35,7 +50,7 @@ export class RedeemRewardUseCase implements RedeemReward {
 
     const customerReward = await this.customerRewardRepo.create(newCustomerReward);
 
-    return this.mapper.map(customerReward);
+    return this.customerRewardToDtoMapper.map(customerReward);
 
   }
 }
