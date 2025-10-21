@@ -14,6 +14,7 @@ import { eq, desc, sql, and, gte, isNull } from "drizzle-orm";
 import {
   TopReward,
   CustomerRedeemedReward,
+  CustomerRewardRedemption,
 } from "@/core/domain/customer-rewards/query-models"
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
@@ -31,10 +32,10 @@ export interface CustomerRewardQueryRepositoryDrizzleDep {
 export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQueryRepository {
   private readonly dbClient: drizzleClient;
   private readonly rewardTable: RewardTable;
-  private readonly customerTable: CustomerTable;
-  private readonly customerRewardTable: CustomerRewardTable;
   private readonly rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+  private readonly customerTable: CustomerTable;
   private readonly customerToDomainMapper: Mapper<CustomerSelect, Customer>;
+  private readonly customerRewardTable: CustomerRewardTable;
   private readonly customerRewardToDomainMapper: Mapper<
     CustomerRewardSelect,
     CustomerReward
@@ -152,5 +153,38 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       );
 
     return result.map(this.customerToDomainMapper.map);
+  }
+
+  async findCustomersWhoRedeemedReward(
+    rewardId: number
+  ): Promise<CustomerRewardRedemption[]> {
+    const result = await this.dbClient
+      .select({
+        customer: this.customerTable,
+        redeemedAt: this.customerRewardTable.redeemedAt
+      })
+      .from(this.customerTable)
+      .innerJoin(
+        this.customerRewardTable,
+        eq(
+          this.customerRewardTable.customerId,
+          this.customerTable.id
+        )
+      )
+      .where(
+        eq(
+          this.customerRewardTable.rewardId,
+          rewardId
+        )
+      )
+
+    const mapped = result.map(item =>
+      new CustomerRewardRedemption(
+        this.customerToDomainMapper.map(item.customer),
+        item.redeemedAt
+      )
+    );
+
+    return mapped;
   }
 }

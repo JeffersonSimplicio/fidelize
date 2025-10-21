@@ -1,29 +1,29 @@
-import { IListCustomersWhoRedeemedReward } from "@/core/application/interfaces/customers-rewards";
-import { ICustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
+import { ListCustomersWhoRedeemedReward } from "@/core/application/interfaces/customers-rewards";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository.interface";
+import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
+import { CustomerRewardQueryRepository } from "@/core/domain/customer-rewards/customer-reward.query.repository.interface";
+import { CustomerRewardRedemptionDto } from "@/core/application/dtos/customer-rewards";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { CustomerDto } from "@/core/application/dtos/customers";
 
-export class ListCustomersWhoRedeemedRewardUseCase implements IListCustomersWhoRedeemedReward {
+export class ListCustomersWhoRedeemedRewardUseCase implements ListCustomersWhoRedeemedReward {
   constructor(
-    private readonly rewardRepo: IRewardRepository,
-    private readonly customerRepo: ICustomerRepository,
-    private readonly customerRewardRepo: ICustomerRewardRepository,
+    private readonly rewardRepo: RewardRepository,
+    private readonly customerRewardQueryRepo: CustomerRewardQueryRepository,
+    private readonly mapper: Mapper<Customer, CustomerDto>
   ) { }
 
-  async execute(rewardId: number): Promise<Customer[]> {
-    const reward = await this.rewardRepo.findById(rewardId);
-    if (!reward) throw new Error("Recompensa não encontrada!")
+  async execute(rewardId: number): Promise<CustomerRewardRedemptionDto[]> {
+    await this.rewardRepo.getById(rewardId);
 
-    const [allCustomers, customerRewards] = await Promise.all([
-      this.customerRepo.findAll(),
-      this.customerRewardRepo.findByRewardId(rewardId),
-    ]);
+    const abc = await this.customerRewardQueryRepo
+      .findCustomersWhoRedeemedReward(rewardId);
 
-    const customerRedeemedIds = new Set(customerRewards.map(cr => cr.customerId));
+    const mapped: CustomerRewardRedemptionDto[] = abc.map(item => ({
+      customer: this.mapper.map(item.customer),
+      redeemedAt: item.redeemedAt.toISOString(),
+    }))
 
-    const customersWhoRedeemed = allCustomers.filter(r => customerRedeemedIds.has(r.id!));
-
-    return customersWhoRedeemed;
+    return mapped;
   }
 }
