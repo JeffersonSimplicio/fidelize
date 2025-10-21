@@ -18,6 +18,7 @@ import {
 } from "@/core/domain/customer-rewards/query-models"
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
+import { RewardStatus } from "@/core/domain/rewards/reward.status";
 
 export interface CustomerRewardQueryRepositoryDrizzleDep {
   dbClient: drizzleClient,
@@ -44,10 +45,10 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
   constructor(deps: CustomerRewardQueryRepositoryDrizzleDep) {
     this.dbClient = deps.dbClient;
     this.rewardTable = deps.rewardTable;
-    this.customerTable = deps.customerTable;
-    this.customerRewardTable = deps.customerRewardTable;
     this.rewardToDomainMapper = deps.rewardToDomainMapper;
+    this.customerTable = deps.customerTable;
     this.customerToDomainMapper = deps.customerToDomainMapper;
+    this.customerRewardTable = deps.customerRewardTable;
     this.customerRewardToDomainMapper = deps.customerRewardToDomainMapper;
   }
 
@@ -118,6 +119,39 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
     );
 
     return mapped;
+  }
+
+  async findAvailableRewardsForCustomer(customerId: number): Promise<Reward[]> {
+    const result = await this.dbClient
+      .select({
+        id: this.rewardTable.id,
+        name: this.rewardTable.name,
+        pointsRequired: this.rewardTable.pointsRequired,
+        description: this.rewardTable.description,
+        isActive: this.rewardTable.isActive,
+        createdAt: this.rewardTable.createdAt,
+      })
+      .from(this.rewardTable)
+      .innerJoin(
+        this.customerTable,
+        gte(this.customerTable.points, this.rewardTable.pointsRequired)
+      )
+      .leftJoin(
+        this.customerRewardTable,
+        and(
+          eq(this.customerRewardTable.rewardId, this.rewardTable.id),
+          eq(this.customerRewardTable.customerId, customerId)
+        )
+      )
+      .where(
+        and(
+          eq(this.customerTable.id, customerId),
+          eq(this.rewardTable.isActive, RewardStatus.Active),
+          isNull(this.customerRewardTable.id)
+        )
+      );
+
+    return result.map(this.rewardToDomainMapper.map);
   }
 
   async findCustomersEligibleToRedeemReward(rewardId: number): Promise<Customer[]> {

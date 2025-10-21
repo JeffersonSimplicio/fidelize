@@ -1,4 +1,4 @@
-export * from "./list-available-rewards-customer";
+export * from "./list-available-rewards-for-customer.interface";
 export * from "./list-customer-rewards.interface";
 export * from "./list-customers-who-redeemed-reward.interface";
 export * from "./list-customers-eligible-to-redeem-reward.interface";
