@@ -2,6 +2,7 @@ import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/d
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
+import { InactiveRewardRedemptionError } from "@/core/domain/customer-rewards/errors";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
@@ -38,7 +39,9 @@ export class RedeemRewardUseCase implements RedeemReward {
 
     const reward = await this.rewardRepo.getById(rewardId);
 
-    if (reward.isActive === RewardStatus.Inactive) throw new Error("Não é possível resgatar uma recompensas desativadas.");
+    if (reward.isActive === RewardStatus.Inactive) {
+      throw new InactiveRewardRedemptionError();
+    }
 
     if (customer.points < reward.pointsRequired) throw new Error(`${customer.name} não tem pontos suficientes para resgatar ${reward.name}.`);
 
