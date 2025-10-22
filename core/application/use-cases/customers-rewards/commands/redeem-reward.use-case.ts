@@ -2,7 +2,7 @@ import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/d
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
-import { InactiveRewardRedemptionError, InsufficientPointsError } from "@/core/domain/customer-rewards/errors";
+import { InactiveRewardRedemptionError, InsufficientPointsError, RewardAlreadyRedeemedError } from "@/core/domain/customer-rewards/errors";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
@@ -53,7 +53,7 @@ export class RedeemRewardUseCase implements RedeemReward {
     );
 
     if (hasAlreadyRedeemed) {
-      throw new Error(`${customer.name} já resgatou ${reward.name}.`);
+      throw new RewardAlreadyRedeemedError(customer.name, reward.name);
     }
 
     const newCustomerReward = new CustomerReward({ customerId, rewardId });
@@ -61,6 +61,5 @@ export class RedeemRewardUseCase implements RedeemReward {
     const customerReward = await this.customerRewardRepo.create(newCustomerReward);
 
     return this.customerRewardToDtoMapper.map(customerReward);
-
   }
 }
