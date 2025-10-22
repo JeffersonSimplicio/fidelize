@@ -13,6 +13,7 @@ export class DeleteCustomerUseCase implements DeleteCustomer {
   }
 
   async execute(id: number): Promise<void> {
+    await this.customerRepo.getById(id);
     await this.customerRepo.delete(id);
   }
 }
