@@ -6,14 +6,19 @@ import { formatDate } from "@/ui/utils/format-date";
 interface Props {
   customers: CustomerRewardRedemptionDto[];
   onUndoRedeem: (id: number) => void;
+  isActive: boolean;
 }
 
-export function CustomersWhoRedeemedList({ customers, onUndoRedeem }: Props) {
+export function CustomersWhoRedeemedList({
+  customers,
+  onUndoRedeem,
+  isActive,
+}: Props) {
   return (
     <View>
       <Text>Clientes que já resgataram</Text>
       <FlatList
-        data={customers} 
+        data={customers}
         keyExtractor={(customer) => customer.customer.id!.toString()}
         renderItem={({ item: { customer, redeemedAt } }) => (
           <View>
@@ -21,14 +26,11 @@ export function CustomersWhoRedeemedList({ customers, onUndoRedeem }: Props) {
               {customer.name} - {customer.points} pontos
             </Text>
             <Text>Resgatado em {formatDate(redeemedAt)}</Text>
-            <AppButton onPress={() => onUndoRedeem(customer.id!)}>
-              <Text>Desfazer resgate</Text>
-            </AppButton>
-            {/* {reward.isActive === RewardStatus.Active && (
-              <AppButton onPress={() => onUndoRedeem(reward.id!)}>
+            {isActive && (
+              <AppButton onPress={() => onUndoRedeem(customer.id!)}>
                 <Text>Desfazer resgate</Text>
               </AppButton>
-            )} */}
+            )}
           </View>
         )}
         ListEmptyComponent={() => (
