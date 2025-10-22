@@ -32,7 +32,7 @@ export class ListRewardsRedeemedByCustomerUseCase implements ListRewardsRedeemed
     const mapped: CustomerRedeemedRewardDto[] = rewardsRedeemedByCustomer
       .map(item => ({
         reward: this.rewardToDtoMapper.map(item.reward),
-        redeemedAt: item.redeemedAt
+        redeemedAt: item.redeemedAt.toISOString()
       }));
 
     return mapped;

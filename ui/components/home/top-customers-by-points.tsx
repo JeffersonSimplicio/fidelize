@@ -1,9 +1,9 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
+import { CustomerDto } from "@/core/application/dtos";
 import { Link } from "expo-router";
 import { FlatList, View, Text } from "react-native";
 
 interface Props {
-  customers: Customer[];
+  customers: CustomerDto[];
 }
 
 export function TopCustomersByPoints({ customers }: Props) {

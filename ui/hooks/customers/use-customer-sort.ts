@@ -1,4 +1,4 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
+import { CustomerDto } from "@/core/application/dtos/customers";
 import { useCallback, useState } from "react";
 
 type SortOption =
@@ -15,8 +15,12 @@ export function useCustomerSort() {
   const [sortOption, setSortOption] = useState<SortOption>("createdAt-desc");
 
   const sortCustomers = useCallback(
-    (list: Customer[]) => {
-      const sorted = [...list];
+    (list: CustomerDto[]) => {
+      const sorted = [...list].map(c => ({
+        ...c,
+        createdAt: new Date(c.createdAt),
+        lastVisitAt: new Date(c.lastVisitAt),
+      }));
       switch (sortOption) {
         case "name-asc":
           return sorted.sort((a, b) => a.name.localeCompare(b.name));

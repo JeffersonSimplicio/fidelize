@@ -1,10 +1,10 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
 import { useListFilter } from "@/ui/hooks/use-list-filter";
 import { useRewardSort } from "@/ui/hooks/rewards/use-reward-sort";
 import { useMemo } from "react";
+import { RewardDto } from "@/core/application/dtos";
 
-export function useRewardList(rewards: Reward[]) {
-  const { searchTerm, setSearchTerm, filterList } = useListFilter<Reward>("name");
+export function useRewardList(rewards: RewardDto[]) {
+  const { searchTerm, setSearchTerm, filterList } = useListFilter<RewardDto>("name");
   const { sortOption, setSortOption, sortRewards } = useRewardSort();
 
   const filteredAndSorted = useMemo(() => {

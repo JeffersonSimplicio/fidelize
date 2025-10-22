@@ -1,5 +1,3 @@
-import { editCustomerDetail } from "@/core/composition/customers/commands/edit-customer-detail";
-import { getCustomerDetail } from "@/core/composition/customers/queries/get-customer-detail";
 import { editCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
 import { NumberInput } from "@/ui/components/number-input";
@@ -16,6 +14,10 @@ import {
   TextInput,
   View,
 } from "react-native";
+import {
+  makeEditCustomer,
+  makeGetCustomerDetail,
+} from "@/core/factories/customer";
 
 const MIN_POINTS = 0;
 
@@ -45,7 +47,7 @@ export default function CustomerEditScreen() {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const fetchedCustomer = await getCustomerDetail.execute(
+      const fetchedCustomer = await makeGetCustomerDetail().execute(
         parseInt(id as string, 10)
       );
       if (fetchedCustomer) {
@@ -64,7 +66,7 @@ export default function CustomerEditScreen() {
     try {
       setLoading(true);
       const updatedCustomer = { ...form };
-      await editCustomerDetail.execute(
+      await makeEditCustomer().execute(
         parseInt(id as string, 10),
         updatedCustomer
       );

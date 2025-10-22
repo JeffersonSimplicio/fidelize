@@ -2,6 +2,7 @@ import { UndoRedeemReward } from "@/core/application/interfaces/customers-reward
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { DeleteCustomerRewardDto } from "@/core/application/dtos/customer-rewards"
 
 export interface UndoRedeemRewardDep {
   rewardRepo: RewardRepository,
@@ -17,7 +18,7 @@ export class UndoRedeemRewardUseCase implements UndoRedeemReward {
     this.customerRewardRepo = deps.customerRewardRepo;
   }
 
-  async execute(customerId: number, rewardId: number): Promise<void> {
+  async execute({ customerId, rewardId }: DeleteCustomerRewardDto): Promise<void> {
     const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(
       customerId,
       rewardId

@@ -3,6 +3,6 @@ export type CustomerDto = {
   name: string;
   phone: string;
   points: number;
-  createAt: string;
+  createdAt: string;
   lastVisitAt: string;
 }

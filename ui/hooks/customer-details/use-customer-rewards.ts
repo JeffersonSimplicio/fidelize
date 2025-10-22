@@ -1,30 +1,33 @@
-import {
-  listAvailableRewardsForCustomer,
-  listRedeemedRewardsForCustomer,
-  redeemReward
-} from "@/core/composition/customer-rewards";
-import { undoRedeemReward } from "@/core/composition/customer-rewards/commands/undo-redeem-reward";
-import { Reward } from "@/core/domain/rewards/reward.entity";
 import { useCallback, useState } from "react";
+import {
+  makeRedeemReward,
+  makeUndoRedeemReward,
+  makeListAvailableRewardsForCustomer,
+  makeListRewardsRedeemedByCustomer,
+} from "@/core/factories/customer-reward";
+import { RewardDto } from "@/core/application/dtos/rewards";
+import { CustomerRedeemedRewardDto } from "@/core/application/dtos/customer-rewards";
 
 export function useCustomerRewards(customerId: number) {
-  const [availableRewards, setAvailableRewards] = useState<Reward[]>([]);
-  const [redeemedRewards, setRedeemedRewards] = useState<Reward[]>([]);
+  const [availableRewards, setAvailableRewards] = useState<RewardDto[]>([]);
+  const [redeemedRewards, setRedeemedRewards] = useState<
+    CustomerRedeemedRewardDto[]
+  >([]);
 
   const fetchAvailableRewards = useCallback(async () => {
-    const data = await listAvailableRewardsForCustomer
+    const data = await makeListAvailableRewardsForCustomer()
       .execute(customerId);
     setAvailableRewards(data);
   }, [customerId]);
 
   const fetchRedeemedRewards = useCallback(async () => {
-    const data = await listRedeemedRewardsForCustomer
+    const data = await makeListRewardsRedeemedByCustomer()
       .execute(customerId);
     setRedeemedRewards(data);
   }, [customerId]);
 
   const redeem = async (rewardId: number) => {
-    await redeemReward.execute(customerId, rewardId);
+    await makeRedeemReward().execute({ customerId, rewardId });
     await Promise.all([
       fetchAvailableRewards(),
       fetchRedeemedRewards(),
@@ -32,7 +35,7 @@ export function useCustomerRewards(customerId: number) {
   };
 
   const undoRedeem = async (rewardId: number) => {
-    await undoRedeemReward.execute(customerId, rewardId);
+    await makeUndoRedeemReward().execute({ customerId, rewardId });
     await Promise.all([
       fetchAvailableRewards(),
       fetchRedeemedRewards(),

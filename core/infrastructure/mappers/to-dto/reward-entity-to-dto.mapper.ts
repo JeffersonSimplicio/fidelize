@@ -14,7 +14,7 @@ export class RewardEntityToDtoMapper implements Mapper<
       description: input.description,
       pointsRequired: input.pointsRequired,
       isActive: input.isActive === RewardStatus.Active,
-      createAt: input.createdAt.toISOString(),
+      createdAt: input.createdAt.toISOString(),
     }
   }
 }

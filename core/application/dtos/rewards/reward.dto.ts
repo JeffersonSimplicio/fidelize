@@ -4,5 +4,5 @@ export type RewardDto = {
   pointsRequired: number;
   description: string;
   isActive: boolean;
-  createAt: string;
+  createdAt: string;
 }

@@ -1,13 +1,13 @@
-import { listRewardsActive } from "@/core/composition/rewards/";
-import { Reward } from "@/core/domain/rewards/reward.entity";
+import { makeListRewardsActive } from "@/core/factories/reward";
+import { RewardDto } from "@/core/application/dtos/rewards";
 import { useCallback, useState } from "react";
 
 export function useRewards() {
-  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [rewards, setRewards] = useState<RewardDto[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchRewards = useCallback(async () => {
-    const rewards = await listRewardsActive.execute();
+    const rewards = await makeListRewardsActive().execute();
     setRewards(rewards);
   }, []);
 

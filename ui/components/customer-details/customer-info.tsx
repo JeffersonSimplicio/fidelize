@@ -1,11 +1,12 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
+import { CustomerDto } from "@/core/application/dtos";
+import { formatDate } from "@/ui/utils/format-date";
 import { View, Text } from "react-native";
 
 function formatPhone(phone: string): string {
   return phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
 }
 
-export function CustomerInfo({ customer }: { customer: Customer }) {
+export function CustomerInfo({ customer }: { customer: CustomerDto }) {
   return (
     <View>
       <Text>Cliente</Text>
@@ -13,10 +14,10 @@ export function CustomerInfo({ customer }: { customer: Customer }) {
       <Text>Telefone: {formatPhone(customer.phone)}</Text>
       <Text>Pontos acumulados: {customer.points}</Text>
       <Text>
-        Ultima visita: {customer.lastVisitAt.toLocaleDateString("pt-BR")}
+        Ultima visita: {formatDate(customer.lastVisitAt)}
       </Text>
       <Text>
-        Criado em: {customer.createdAt.toLocaleDateString("pt-BR")}
+        Criado em: {formatDate(customer.createdAt)}
       </Text>
     </View>
   );

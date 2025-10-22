@@ -1,13 +1,13 @@
-import { listCustomers } from "@/core/composition/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
+import { makeListCustomers } from "@/core/factories/customer";
+import { CustomerDto } from "@/core/application/dtos/customers";
 import { useCallback, useState } from "react";
 
 export function useCustomers() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<CustomerDto[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchCustomers = useCallback(async () => {
-    const customers = await listCustomers.execute();
+    const customers = await makeListCustomers().execute();
     setCustomers(customers);
   }, []);
 

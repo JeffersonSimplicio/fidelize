@@ -1,3 +1,5 @@
+import { DeleteCustomerRewardDto } from "@/core/application/dtos/customer-rewards";
+
 export interface UndoRedeemReward {
-  execute(customerId: number, rewardId: number): Promise<void>;
+  execute(input: DeleteCustomerRewardDto): Promise<void>;
 }

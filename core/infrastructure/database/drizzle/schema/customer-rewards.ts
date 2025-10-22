@@ -1,8 +1,6 @@
 import { sqliteTable, integer, uniqueIndex } from 'drizzle-orm/sqlite-core';
-import {
-  customers,
-  rewards
-} from "@/core/infrastructure/database/drizzle/schema";
+import { customers } from "./customers";
+import { rewards } from "./rewards";
 
 export const customerRewards = sqliteTable(
   'customer_rewards',

@@ -1,4 +1,4 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
+import { RewardDto } from "@/core/application/dtos";
 import { useCallback, useState } from "react";
 
 type SortOption =
@@ -13,8 +13,11 @@ export function useRewardSort() {
   const [sortOption, setSortOption] = useState<SortOption>("createdAt-desc");
 
   const sortRewards = useCallback(
-    (list: Reward[]) => {
-      const sorted = [...list];
+    (list: RewardDto[]) => {
+      const sorted = [...list].map(c => ({
+        ...c,
+        createdAt: new Date(c.createdAt),
+      }));
       switch (sortOption) {
         case "name-asc":
           return sorted.sort((a, b) => a.name.localeCompare(b.name));

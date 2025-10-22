@@ -1,4 +1,4 @@
-import { BaseError } from "@/core/domain/shared/errors";
+import { BaseError } from "./base.error";
 import { ValidationError } from "@/core/domain/validation/validation.interface";
 
 

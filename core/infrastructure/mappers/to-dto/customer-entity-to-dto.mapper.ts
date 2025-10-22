@@ -12,7 +12,7 @@ export class CustomerEntityToDtoMapper implements Mapper<
       name: input.name,
       phone: input.phone,
       points: input.points,
-      createAt: input.createdAt.toISOString(),
+      createdAt: input.createdAt.toISOString(),
       lastVisitAt: input.lastVisitAt.toISOString(),
     }
   }

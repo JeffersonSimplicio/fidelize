@@ -1,4 +1,3 @@
-import { registerReward } from "@/core/composition/rewards/commands/register-reward";
 import { registerRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
 import { NumberInput } from "@/ui/components/number-input";
@@ -14,6 +13,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { makeRegisterReward } from "@/core/factories/reward";
 
 const MIN_POINTS_REQUIRED = 1;
 
@@ -48,7 +48,7 @@ export default function NewRewardScreen() {
   async function handleAddReward() {
     try {
       setLoading(true);
-      const newReward = await registerReward.execute({
+      const newReward = await makeRegisterReward().execute({
         name: form.name,
         pointsRequired: form.pointsRequired,
         description: form.description,
