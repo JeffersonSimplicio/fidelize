@@ -2,7 +2,7 @@ import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/d
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
-import { InactiveRewardRedemptionError } from "@/core/domain/customer-rewards/errors";
+import { InactiveRewardRedemptionError, InsufficientPointsError } from "@/core/domain/customer-rewards/errors";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
@@ -43,11 +43,18 @@ export class RedeemRewardUseCase implements RedeemReward {
       throw new InactiveRewardRedemptionError();
     }
 
-    if (customer.points < reward.pointsRequired) throw new Error(`${customer.name} não tem pontos suficientes para resgatar ${reward.name}.`);
+    if (customer.points < reward.pointsRequired) {
+      throw new InsufficientPointsError(customer.name, reward.name)
+    }
 
-    const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(customerId, rewardId);
+    const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(
+      customerId,
+      rewardId
+    );
 
-    if (hasAlreadyRedeemed) throw new Error(`${customer.name} já resgatou ${reward.name}.`);
+    if (hasAlreadyRedeemed) {
+      throw new Error(`${customer.name} já resgatou ${reward.name}.`);
+    }
 
     const newCustomerReward = new CustomerReward({ customerId, rewardId });
 
