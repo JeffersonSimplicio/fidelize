@@ -1,4 +1,3 @@
-import { registerCustomer } from "@/core/composition/customers/commands/register-customer";
 import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
 import { PhoneInput } from "@/ui/components/phone-input";
@@ -14,6 +13,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { makeRegisterCustomer } from "@/core/factories/customer";
 
 export default function NewCustomerScreen() {
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function NewCustomerScreen() {
   async function handleAddCustomer() {
     try {
       setLoading(true);
-      const newCustomer = await registerCustomer.execute(form);
+      const newCustomer = await makeRegisterCustomer().execute(form);
       Alert.alert("Sucesso", "Cliente cadastrado com sucesso!", [
         {
           text: "OK",

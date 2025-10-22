@@ -1,18 +1,20 @@
-import { IDisableReward } from "@/core/application/interfaces/rewards";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { DisableReward } from "@/core/application/interfaces/rewards";
+import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 
-export class DisableRewardUseCase implements IDisableReward {
-  constructor(
-    private readonly repo: IRewardRepository,
-  ) { }
+export interface DisableRewardDep {
+  rewardRepo: RewardRepository
+}
 
-  async execute(id: number): Promise<boolean> {
-    const existing = await this.repo.findById(id);
-    if (!existing) return false;
+export class DisableRewardUseCase implements DisableReward {
+  private readonly rewardRepo: RewardRepository;
 
+  constructor(deps: DisableRewardDep) {
+    this.rewardRepo = deps.rewardRepo
+  }
+
+  async execute(id: number): Promise<void> {
+    const existing = await this.rewardRepo.getById(id);
     existing.deactivate()
-
-    const updated = await this.repo.update(existing);
-    return !!updated;
+    await this.rewardRepo.update(existing);
   }
 }

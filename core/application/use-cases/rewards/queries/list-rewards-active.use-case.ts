@@ -1,11 +1,25 @@
-import { IListRewardsActive } from "@/core/application/interfaces/rewards";
+import { RewardDto } from "@/core/application/dtos/rewards";
+import { ListRewardsActive } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { RewardQueryRepository } from "@/core/domain/rewards/reward.query.repository.interface";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 
-export class ListRewardsActiveUseCase implements IListRewardsActive {
-  constructor(private readonly repo: IRewardRepository) { }
+export interface ListRewardsActiveDep {
+  rewardQueryRepo: RewardQueryRepository,
+  rewardToDtoMapper: Mapper<Reward, RewardDto>,
+}
 
-  async execute(): Promise<Reward[]> {
-    return await this.repo.findAllActivated();
+export class ListRewardsActiveUseCase implements ListRewardsActive {
+  private readonly rewardQueryRepo: RewardQueryRepository;
+  private readonly rewardToDtoMapper: Mapper<Reward, RewardDto>;
+
+  constructor(deps: ListRewardsActiveDep) {
+    this.rewardQueryRepo = deps.rewardQueryRepo;
+    this.rewardToDtoMapper = deps.rewardToDtoMapper;
+  }
+
+  async execute(): Promise<RewardDto[]> {
+    const listRewardsActive = await this.rewardQueryRepo.findAllActive();
+    return listRewardsActive.map(this.rewardToDtoMapper.map);
   }
 }

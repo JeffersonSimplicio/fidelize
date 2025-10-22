@@ -1,19 +1,30 @@
-import { CreateRewardDto } from "@/core/application/dtos/rewards/create-reward.dto";
-import { IRegisterReward } from "@/core/application/interfaces/rewards";
+import { CreateRewardDto, RewardDto } from "@/core/application/dtos/rewards";
+import { RegisterReward } from "@/core/application/interfaces/rewards";
 import { Reward } from "@/core/domain/rewards/reward.entity";
-import { IRewardRepository } from "@/core/domain/rewards/reward.repository";
+import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { IValidation } from "@/core/domain/validation/validation";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { Validation } from "@/core/domain/validation/validation.interface";
 
+export interface RegisterRewardDep {
+  rewardRepo: RewardRepository,
+  createRewardValidator: Validation<CreateRewardDto>,
+  rewardToDtoMapper: Mapper<Reward, RewardDto>,
+}
 
-export class RegisterRewardUseCase implements IRegisterReward {
-  constructor(
-    private readonly repo: IRewardRepository,
-    private readonly validator: IValidation<CreateRewardDto>
-  ) { }
+export class RegisterRewardUseCase implements RegisterReward {
+  private readonly rewardRepo: RewardRepository;
+  private readonly createRewardValidator: Validation<CreateRewardDto>;
+  private readonly rewardToDtoMapper: Mapper<Reward, RewardDto>;
 
-  async execute(data: CreateRewardDto): Promise<Reward> {
-    const errors = this.validator.validate(data);
+  constructor(deps: RegisterRewardDep) {
+    this.rewardRepo = deps.rewardRepo;
+    this.createRewardValidator = deps.createRewardValidator;
+    this.rewardToDtoMapper = deps.rewardToDtoMapper;
+  }
+
+  async execute(data: CreateRewardDto): Promise<RewardDto> {
+    const errors = this.createRewardValidator.validate(data);
     if (errors.length > 0) {
       throw new ValidationException(errors);
     }
@@ -24,8 +35,8 @@ export class RegisterRewardUseCase implements IRegisterReward {
       pointsRequired: data.pointsRequired,
     })
 
-    const reward = await this.repo.create(rewardCreate);
+    const reward = await this.rewardRepo.create(rewardCreate);
 
-    return reward;
+    return this.rewardToDtoMapper.map(reward);
   }
 }

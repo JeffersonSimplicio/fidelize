@@ -1,6 +1,6 @@
+import { RedeemedInFutureError } from "@/core/domain/customer-rewards/errors";
 import { LastVisitInFutureError } from "@/core/domain/customers/errors";
 import { CreationDateInFutureError } from "@/core/domain/shared/errors";
-import { RedeemedInFutureError } from "@/core/domain/customerRewards/errors";
 
 export function ensureDatesNotInFuture(
   param: {

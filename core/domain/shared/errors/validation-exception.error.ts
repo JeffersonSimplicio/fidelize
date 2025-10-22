@@ -1,5 +1,5 @@
-import { BaseError } from "@/core/domain/shared/errors";
-import { ValidationError } from "@/core/domain/validation/validation";
+import { BaseError } from "./base.error";
+import { ValidationError } from "@/core/domain/validation/validation.interface";
 
 
 export class ValidationException extends BaseError {

@@ -1,9 +1,9 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
+import { CustomerDto } from "@/core/application/dtos";
 import { AppButton } from "@/ui/components/app-button";
 import { View, Text, FlatList } from "react-native";
 
 interface Props {
-  customers: Customer[];
+  customers: CustomerDto[];
   onRedeem: (id: number) => void;
 }
 

@@ -1,10 +1,10 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { CustomerRedeemedRewardDto } from "@/core/application/dtos";
 import { AppButton } from "@/ui/components/app-button";
+import { formatDate } from "@/ui/utils/format-date";
 import { View, Text, FlatList } from "react-native";
 
 interface Props {
-  rewards: Reward[];
+  rewards: CustomerRedeemedRewardDto[];
   onUndoRedeem: (id: number) => void;
 }
 
@@ -14,13 +14,14 @@ export function RedeemedRewardsList({ rewards, onUndoRedeem }: Props) {
       <Text>Recompensas resgatadas</Text>
       <FlatList
         data={rewards}
-        keyExtractor={(reward) => reward.id!.toString()}
-        renderItem={({ item: reward }) => (
+        keyExtractor={(reward) => reward.reward.id!.toString()}
+        renderItem={({ item: {reward, redeemedAt} }) => (
           <View>
             <Text>
               {reward.name} - {reward.pointsRequired} pontos
             </Text>
-            {reward.isActive === RewardStatus.Active && (
+            <Text>Resgatado em: {formatDate(redeemedAt)}</Text>
+            {reward.isActive && (
               <AppButton onPress={() => onUndoRedeem(reward.id!)}>
                 <Text>Desfazer resgate</Text>
               </AppButton>

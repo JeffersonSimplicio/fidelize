@@ -1,9 +1,9 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
+import { RewardDto } from "@/core/application/dtos";
 import { AppButton } from "@/ui/components/app-button";
 import { View, Text, FlatList } from "react-native";
 
 interface Props {
-  rewards: Reward[];
+  rewards: RewardDto[];
   onRedeem: (id: number) => void;
 }
 

@@ -1,32 +1,36 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { View, Text, FlatList } from "react-native";
 import { AppButton } from "@/ui/components/app-button";
+import { CustomerRewardRedemptionDto } from "@/core/application/dtos/customer-rewards";
+import { formatDate } from "@/ui/utils/format-date";
 
 interface Props {
-  customers: Customer[];
+  customers: CustomerRewardRedemptionDto[];
   onUndoRedeem: (id: number) => void;
+  isActive: boolean;
 }
 
-export function CustomersWhoRedeemedList({ customers, onUndoRedeem }: Props) {
+export function CustomersWhoRedeemedList({
+  customers,
+  onUndoRedeem,
+  isActive,
+}: Props) {
   return (
     <View>
       <Text>Clientes que já resgataram</Text>
       <FlatList
         data={customers}
-        keyExtractor={(customer) => customer.id!.toString()}
-        renderItem={({ item: customer }) => (
+        keyExtractor={(customer) => customer.customer.id!.toString()}
+        renderItem={({ item: { customer, redeemedAt } }) => (
           <View>
             <Text>
               {customer.name} - {customer.points} pontos
             </Text>
-            <AppButton onPress={() => onUndoRedeem(customer.id!)}>
-              <Text>Desfazer resgate</Text>
-            </AppButton>
-            {/* {customer.isActive === RewardStatus.Active && (
+            <Text>Resgatado em {formatDate(redeemedAt)}</Text>
+            {isActive && (
               <AppButton onPress={() => onUndoRedeem(customer.id!)}>
                 <Text>Desfazer resgate</Text>
               </AppButton>
-            )} */}
+            )}
           </View>
         )}
         ListEmptyComponent={() => (

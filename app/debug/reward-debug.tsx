@@ -1,5 +1,3 @@
-import { listRewards } from "@/core/composition/rewards/queries/list-rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -10,13 +8,16 @@ import {
   Text,
   View,
 } from "react-native";
+import { makeListRewards } from "@/core/factories/reward";
+import { RewardDto } from "@/core/application/dtos/rewards";
+import { formatDate } from "@/ui/utils/format-date";
 
 export default function RewardsDebugScreen() {
-  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [rewards, setRewards] = useState<RewardDto[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchRewards = useCallback(async () => {
-    const rewards = await listRewards.execute();
+    const rewards = await makeListRewards().execute();
     setRewards(rewards);
   }, []);
 
@@ -48,10 +49,10 @@ export default function RewardsDebugScreen() {
               Points Required: {item.pointsRequired}
             </Text>
             <Text style={styles.field}>
-              Is Active: {item.isActive === 1 ? "Yes" : "No"}
+              Is Active: {item.isActive}
             </Text>
             <Text style={styles.field}>
-              Created At: {item.createdAt?.toLocaleString()}
+              Created At: {formatDate(item.createdAt)}
             </Text>
           </View>
         )}

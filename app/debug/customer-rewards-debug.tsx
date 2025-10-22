@@ -1,5 +1,3 @@
-import { listCustomerRewards } from "@/core/composition/customer-rewards/queries/list-customer-rewards";
-import { CustomerReward } from "@/core/domain/customerRewards/customerReward.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -10,13 +8,18 @@ import {
   Text,
   View,
 } from "react-native";
+import { makeListCustomerRewards } from "@/core/factories/customer-reward";
+import { CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
+import { formatDate } from "@/ui/utils/format-date";
 
 export default function CustomerRewardsDebugScreen() {
-  const [customerRewards, setCustomerRewards] = useState<CustomerReward[]>([]);
+  const [customerRewards, setCustomerRewards] = useState<CustomerRewardDto[]>(
+    []
+  );
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchCustomerRewards = useCallback(async () => {
-    const rewards = await listCustomerRewards.execute();
+    const rewards = await makeListCustomerRewards().execute();
     setCustomerRewards(rewards);
   }, []);
 
@@ -44,9 +47,7 @@ export default function CustomerRewardsDebugScreen() {
             <View style={styles.cardHeader}>
               <Text style={styles.cardId}>#{item.id}</Text>
               <Text style={styles.date}>
-                {item.redeemedAt
-                  ? item.redeemedAt.toISOString()
-                  : "Not redeemed"}
+                {formatDate(item.redeemedAt)}
               </Text>
             </View>
 

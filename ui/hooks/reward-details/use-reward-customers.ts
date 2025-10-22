@@ -1,30 +1,34 @@
-import {
-  listCustomersWhoRedeemedReward,
-  listEligibleCustomersForReward,
-  redeemReward,
-  undoRedeemReward
-} from "@/core/composition/customer-rewards";
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { useCallback, useState } from "react";
+import {
+  makeRedeemReward,
+  makeUndoRedeemReward,
+  makeListCustomersEligibleToRedeemReward,
+  makeListCustomersWhoRedeemedReward
+} from "@/core/factories/customer-reward";
+import { CustomerDto } from "@/core/application/dtos/customers";
+import { CustomerRewardRedemptionDto } from "@/core/application/dtos/customer-rewards";
+
 
 export function useRewardCustomers(rewardId: number) {
-  const [eligibleCustomers, setEligibleCustomers] = useState<Customer[]>([]);
-  const [customersWhoRedeemed, setCustomersWhoRedeemed] = useState<Customer[]>([]);
+  const [eligibleCustomers, setEligibleCustomers] = useState<CustomerDto[]>([]);
+  const [customersWhoRedeemed, setCustomersWhoRedeemed] = useState<
+    CustomerRewardRedemptionDto[]
+  >([]);
 
   const fetchEligibleCustomers = useCallback(async () => {
-    const data = await listEligibleCustomersForReward
+    const data = await makeListCustomersEligibleToRedeemReward()
       .execute(rewardId);
     setEligibleCustomers(data);
   }, [rewardId]);
 
   const fetchCustomersWhoRedeemed = useCallback(async () => {
-    const data = await listCustomersWhoRedeemedReward
+    const data = await makeListCustomersWhoRedeemedReward()
       .execute(rewardId);
     setCustomersWhoRedeemed(data);
   }, [rewardId]);
 
   const redeem = async (customerId: number) => {
-    await redeemReward.execute(customerId, rewardId);
+    await makeRedeemReward().execute({ customerId, rewardId });
     await Promise.all([
       fetchEligibleCustomers(),
       fetchCustomersWhoRedeemed()
@@ -32,7 +36,7 @@ export function useRewardCustomers(rewardId: number) {
   };
 
   const undoRedeem = async (customerId: number) => {
-    await undoRedeemReward.execute(customerId, rewardId);
+    await makeUndoRedeemReward().execute({ customerId, rewardId });
     await Promise.all([
       fetchEligibleCustomers(),
       fetchCustomersWhoRedeemed()

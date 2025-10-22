@@ -1,5 +1,3 @@
-import { listCustomers } from "@/core/composition/customers/queries/list-customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -10,13 +8,16 @@ import {
   Text,
   View,
 } from "react-native";
+import { makeListCustomers } from "@/core/factories/customer";
+import { CustomerDto } from "@/core/application/dtos/customers";
+import { formatDate } from "@/ui/utils/format-date";
 
 export default function CustomersDebugScreen() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<CustomerDto[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchCustomers = useCallback(async () => {
-    const customers = await listCustomers.execute();
+    const customers = await makeListCustomers().execute();
     setCustomers(customers);
   }, []);
 
@@ -46,10 +47,10 @@ export default function CustomersDebugScreen() {
             <Text style={styles.field}>Phone: {item.phone}</Text>
             <Text style={styles.field}>Points: {item.points}</Text>
             <Text style={styles.field}>
-              Created At: {item.createdAt.toLocaleString()}
+              Created At: {formatDate(item.createdAt)}
             </Text>
             <Text style={styles.field}>
-              Last Visit: {item.lastVisitAt.toLocaleString()}
+              Last Visit: {formatDate(item.lastVisitAt)}
             </Text>
           </View>
         )}

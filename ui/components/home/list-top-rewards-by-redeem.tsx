@@ -1,14 +1,9 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
+import { TopRewardDto } from "@/core/application/dtos/customer-rewards";
 import { Link } from "expo-router";
 import { FlatList, View, Text } from "react-native";
 
-interface TopRewardByRedeem {
-  reward: Reward;
-  amount: number;
-}
-
 type Props = {
-  topRewards: TopRewardByRedeem[];
+  topRewards: TopRewardDto[];
 };
 
 export function TopRewardsByRedeem({ topRewards }: Props) {
@@ -23,10 +18,10 @@ export function TopRewardsByRedeem({ topRewards }: Props) {
             <Text>
               {item.reward.name} - {item.reward.pointsRequired} pontos
             </Text>
-            {item.amount < 2 ? (
-              <Text>Foi resgatada {item.amount} vez.</Text>
+            {item.redeemedCount < 2 ? (
+              <Text>Foi resgatada {item.redeemedCount} vez.</Text>
             ) : (
-              <Text>Foi resgatada {item.amount} vezes.</Text>
+              <Text>Foi resgatada {item.redeemedCount} vezes.</Text>
             )}
           </Link>
         )}

@@ -68,6 +68,7 @@ export default function RewardDetailsScreen() {
         <CustomersWhoRedeemedList
           customers={customersWhoRedeemed}
           onUndoRedeem={undoRedeem}
+          isActive={reward.isActive}
         />
 
         <EntityActions

@@ -1,5 +1,3 @@
-import { editRewardDetail } from "@/core/composition/rewards/commands/edit-reward-detail";
-import { getRewardDetail } from "@/core/composition/rewards/queries/get-reward-detail";
 import { editRewardSchema } from "@/core/infrastructure/validation/zod/schemas";
 import { AppButton } from "@/ui/components/app-button";
 import { NumberInput } from "@/ui/components/number-input";
@@ -15,6 +13,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { makeGetRewardDetail, makeEditReward } from "@/core/factories/reward";
 
 const MIN_POINTS_REQUIRED = 1;
 
@@ -42,7 +41,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const fetchRewards = async () => {
-      const fetchedReward = await getRewardDetail.execute(
+      const fetchedReward = await makeGetRewardDetail().execute(
         parseInt(id as string, 10)
       );
       if (fetchedReward) {
@@ -60,7 +59,7 @@ export default function HomeScreen() {
   const handleSave = async () => {
     try {
       setLoading(true);
-      await editRewardDetail.execute(parseInt(id as string, 10), {
+      await makeEditReward().execute(parseInt(id as string, 10), {
         name: form.name,
         description: form.description,
         pointsRequired: form.pointsRequired,

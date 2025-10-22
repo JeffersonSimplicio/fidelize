@@ -1,18 +1,18 @@
-import { deleteCustomer, getCustomerDetail } from "@/core/composition/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
+import { makeDeleteCustomer, makeGetCustomerDetail } from "@/core/factories/customer";
+import { CustomerDto } from "@/core/application/dtos/customers";
 
 export function useCustomerData(customerId: number, onDeleteSuccess: () => void) {
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [customer, setCustomer] = useState<CustomerDto>();
 
   const fetchCustomer = useCallback(async () => {
-    const fetchedCustomer = await getCustomerDetail.execute(customerId);
-    setCustomer(fetchedCustomer ?? null);
+    const fetchedCustomer = await makeGetCustomerDetail().execute(customerId);
+    setCustomer(fetchedCustomer);
   }, [customerId]);
 
   const handleDelete = async () => {
-    await deleteCustomer.execute(customerId);
+    await makeDeleteCustomer().execute(customerId);
     Alert.alert("Cliente deletado com sucesso!");
     onDeleteSuccess();
   };

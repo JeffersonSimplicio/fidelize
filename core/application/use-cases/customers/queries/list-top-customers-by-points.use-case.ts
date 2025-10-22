@@ -1,22 +1,29 @@
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { CustomerDto } from "@/core/application/dtos";
+import { ListTopCustomersByPoints } from "@/core/application/interfaces/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { IListTopCustomersByPoints } from "@/core/application/interfaces/rewards";
+import { CustomerQueryRepository } from "@/core/domain/customers/customer.query.repository.interface";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 
-export class ListTopCustomersByPointsUseCase implements IListTopCustomersByPoints {
+export interface ListTopCustomersByPointsDep {
+  customerQueryRepo: CustomerQueryRepository,
+  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+}
+
+export class ListTopCustomersByPointsUseCase implements ListTopCustomersByPoints {
   private static MIN_LIMIT = 1;
+  private readonly customerQueryRepo: CustomerQueryRepository;
+  private readonly customerToDtoMapper: Mapper<Customer, CustomerDto>;
 
-  constructor(
-    private readonly repo: ICustomerRepository,
-  ) { }
+  constructor(deps: ListTopCustomersByPointsDep) {
+    this.customerQueryRepo = deps.customerQueryRepo;
+    this.customerToDtoMapper = deps.customerToDtoMapper
+  }
 
-  async execute(limit: number): Promise<Customer[]> {
-    const customerList = await this.repo.findAll();
-
-    const sortedCustomers = [...customerList];
-    sortedCustomers.sort((a, b) => b.points - a.points);
-
+  async execute(limit: number = 3): Promise<CustomerDto[]> {
     const effectiveLimit = Math.max(limit, ListTopCustomersByPointsUseCase.MIN_LIMIT);
 
-    return sortedCustomers.slice(0, effectiveLimit);
+    const topCustomers = await this.customerQueryRepo.findTopCustomersByPoints(effectiveLimit);
+
+    return topCustomers.map(this.customerToDtoMapper.map);
   }
 }

@@ -1,10 +1,10 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
 import { useListFilter } from "@/ui/hooks/use-list-filter";
 import { useCustomerSort } from "@/ui/hooks/customers/use-customer-sort";
 import { useMemo } from "react";
+import { CustomerDto } from "@/core/application/dtos/customers";
 
-export function useCustomerList(customers: Customer[]) {
-  const { searchTerm, setSearchTerm, filterList } = useListFilter<Customer>("name");
+export function useCustomerList(customers: CustomerDto[]) {
+  const { searchTerm, setSearchTerm, filterList } = useListFilter<CustomerDto>("name");
   const { sortOption, setSortOption, sortCustomers } = useCustomerSort();
 
   const filteredAndSorted = useMemo(() => {

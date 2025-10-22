@@ -1,11 +1,25 @@
-import { IGetCustomerDetail } from "@/core/application/interfaces/customers";
+import { GetCustomerDetail } from "@/core/application/interfaces/customers";
 import { Customer } from "@/core/domain/customers/customer.entity";
-import { ICustomerRepository } from "@/core/domain/customers/customer.repository";
+import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
+import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { CustomerDto } from "@/core/application/dtos/customers";
 
-export class GetCustomerDetailUseCase implements IGetCustomerDetail {
-  constructor(private readonly repo: ICustomerRepository) { }
+export interface GetCustomerDetailDep {
+  customerRepo: CustomerRepository,
+  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+}
 
-  async execute(id: number): Promise<Customer | null> {
-    return await this.repo.findById(id);
+export class GetCustomerDetailUseCase implements GetCustomerDetail {
+  private readonly customerRepo: CustomerRepository;
+  private readonly customerToDtoMapper: Mapper<Customer, CustomerDto>;
+
+  constructor(deps: GetCustomerDetailDep) {
+    this.customerRepo = deps.customerRepo;
+    this.customerToDtoMapper = deps.customerToDtoMapper
+  }
+
+  async execute(id: number): Promise<CustomerDto> {
+    const customer = await this.customerRepo.getById(id);
+    return this.customerToDtoMapper.map(customer);
   }
 }
