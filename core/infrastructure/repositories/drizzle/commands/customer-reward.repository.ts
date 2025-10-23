@@ -1,5 +1,6 @@
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
+import { CustomerRewardNotFoundError } from "@/core/domain/customer-rewards/errors";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import { CustomerRewardSelect, CustomerRewardTable } from "@/core/infrastructure/database/drizzle/types";
@@ -42,7 +43,7 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
       .get();
 
     if (result) return this.customerRewardToDomainMapper.map(result);
-    throw new Error("Resgate não encontrado")
+    throw new CustomerRewardNotFoundError();
   }
 
   async alreadyRedeemed(
@@ -64,10 +65,8 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.dbClient
+    await this.dbClient
       .delete(this.customerRewardTable)
       .where(eq(this.customerRewardTable.id, id));
-
-    if (result.changes === 0) throw new Error("Resgate não encontrado");
   }
 } 

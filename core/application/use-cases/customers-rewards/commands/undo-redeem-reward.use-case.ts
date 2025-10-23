@@ -3,6 +3,7 @@ import { CustomerRewardRepository } from "@/core/domain/customer-rewards/custome
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
 import { DeleteCustomerRewardDto } from "@/core/application/dtos/customer-rewards"
+import { CustomerRewardNotFoundError, InactiveRewardRedemptionError } from "@/core/domain/customer-rewards/errors";
 
 export interface UndoRedeemRewardDep {
   rewardRepo: RewardRepository,
@@ -24,13 +25,11 @@ export class UndoRedeemRewardUseCase implements UndoRedeemReward {
       rewardId
     );
 
-    if (!hasAlreadyRedeemed) throw new Error("Não é possível desfazer um resgate que não existe");
+    if (!hasAlreadyRedeemed) throw new CustomerRewardNotFoundError();
 
     const reward = await this.rewardRepo.getById(rewardId);
     if (reward.isActive === RewardStatus.Inactive) {
-      throw new Error(
-        "Não é possível reverter o resgate de uma recompensa desativada."
-      )
+      throw new InactiveRewardRedemptionError();
     }
 
     this.customerRewardRepo.delete(hasAlreadyRedeemed.id!)

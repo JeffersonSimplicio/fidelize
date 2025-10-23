@@ -13,6 +13,7 @@ export class DeleteRewardUseCase implements DeleteReward {
   }
 
   async execute(id: number): Promise<void> {
+    await this.rewardRepo.getById(id);
     return await this.rewardRepo.delete(id);
   }
 }

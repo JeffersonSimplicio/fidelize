@@ -2,6 +2,7 @@ import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/d
 import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
 import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
 import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
+import { InactiveRewardRedemptionError, InsufficientPointsError, RewardAlreadyRedeemedError } from "@/core/domain/customer-rewards/errors";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
 import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
 import { RewardStatus } from "@/core/domain/rewards/reward.status";
@@ -38,19 +39,27 @@ export class RedeemRewardUseCase implements RedeemReward {
 
     const reward = await this.rewardRepo.getById(rewardId);
 
-    if (reward.isActive === RewardStatus.Inactive) throw new Error("Não é possível resgatar uma recompensas desativadas.");
+    if (reward.isActive === RewardStatus.Inactive) {
+      throw new InactiveRewardRedemptionError();
+    }
 
-    if (customer.points < reward.pointsRequired) throw new Error(`${customer.name} não tem pontos suficientes para resgatar ${reward.name}.`);
+    if (customer.points < reward.pointsRequired) {
+      throw new InsufficientPointsError(customer.name, reward.name)
+    }
 
-    const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(customerId, rewardId);
+    const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(
+      customerId,
+      rewardId
+    );
 
-    if (hasAlreadyRedeemed) throw new Error(`${customer.name} já resgatou ${reward.name}.`);
+    if (hasAlreadyRedeemed) {
+      throw new RewardAlreadyRedeemedError(customer.name, reward.name);
+    }
 
     const newCustomerReward = new CustomerReward({ customerId, rewardId });
 
     const customerReward = await this.customerRewardRepo.create(newCustomerReward);
 
     return this.customerRewardToDtoMapper.map(customerReward);
-
   }
 }

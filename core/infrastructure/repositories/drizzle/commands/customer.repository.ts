@@ -1,5 +1,6 @@
 import { Customer } from "@/core/domain/customers/customer.entity";
 import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
+import { CustomerNotFoundError } from "@/core/domain/customers/errors";
 import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
 import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
 import {
@@ -50,7 +51,7 @@ export class CustomerRepositoryDrizzle implements CustomerRepository {
       eq(this.customerTable.id, id)
     );
     if (result) return result;
-    throw new Error("Cliente não encontrado")
+    throw new CustomerNotFoundError();
   }
 
   async findByPhone(phone: string): Promise<Customer | null> {
@@ -60,17 +61,13 @@ export class CustomerRepositoryDrizzle implements CustomerRepository {
   }
 
   async update(customer: Customer): Promise<Customer> {
-    if (!customer.id) {
-      throw new Error("Não é possível atualizar um cliente sem ID.");
-    }
-
     const { id, ...data } = customer.toPersistence();
 
     const [updated] = await this.dbClient
       .update(this.customerTable)
       .set(data)
       .where(
-        eq(this.customerTable.id, customer.id)
+        eq(this.customerTable.id, customer.id!)
       )
       .returning();
 
@@ -78,10 +75,8 @@ export class CustomerRepositoryDrizzle implements CustomerRepository {
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.dbClient
+    await this.dbClient
       .delete(this.customerTable)
       .where(eq(this.customerTable.id, id));
-
-    if (result.changes === 0) throw new Error("Cliente não encontrado");
   }
 }

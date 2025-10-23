@@ -7,6 +7,7 @@ import {
   RewardTable
 } from "@/core/infrastructure/database/drizzle/types";
 import { eq } from "drizzle-orm";
+import { RewardNotFoundError } from "@/core/domain/rewards/errors"
 
 export interface RewardRepositoryDrizzleDep {
   dbClient: drizzleClient,
@@ -43,30 +44,24 @@ export class RewardRepositoryDrizzle implements RewardRepository {
       .get();
 
     if (result) return this.rewardToDomainMapper.map(result);
-    throw new Error("Recompensa não encontrado")
+    throw new RewardNotFoundError()
   }
 
   async update(reward: Reward): Promise<Reward> {
-    if (!reward.id) {
-      throw new Error("Não é possível atualizar uma recompensa sem ID.");
-    }
-
     const { id, ...data } = reward.toPersistence();
 
     const [updated] = await this.dbClient
       .update(this.rewardTable)
       .set(data)
-      .where(eq(this.rewardTable.id, reward.id))
+      .where(eq(this.rewardTable.id, reward.id!))
       .returning();
 
     return this.rewardToDomainMapper.map(updated);
   }
 
   async delete(id: number): Promise<void> {
-    const result = await this.dbClient
+    await this.dbClient
       .delete(this.rewardTable)
       .where(eq(this.rewardTable.id, id));
-
-    if (result.changes === 0) throw new Error("Recompensa não encontrada");
   }
 }

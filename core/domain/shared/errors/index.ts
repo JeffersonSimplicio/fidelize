@@ -3,3 +3,4 @@ export * from './already-exists.error';
 export * from './creation-date-future.error';
 export * from './id-alread-defined.error';
 export * from './validation-exception.error';
+export * from "./not-found.error";
