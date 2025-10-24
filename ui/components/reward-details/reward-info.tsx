@@ -2,7 +2,7 @@ import { RewardDto } from "@/core/application/dtos";
 import { formatDate } from "@/ui/utils/format-date";
 import { View, Text } from "react-native";
 
-export function CustomerInfo({ reward }: { reward: RewardDto }) {
+export function RewardInfo({ reward }: { reward: RewardDto }) {
   return (
     <View>
       <Text>Recompensa</Text>

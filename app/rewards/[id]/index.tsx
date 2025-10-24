@@ -10,7 +10,7 @@ import { useRewardDetails } from "@/ui/hooks/reward-details/use-reward-details";
 import {
   CustomersWhoRedeemedList,
   EligibleCustomersList,
-  CustomerInfo,
+  RewardInfo,
 } from "@/ui/components/reward-details";
 import { EntityActions } from "@/ui/components/entity-actions";
 
@@ -58,7 +58,7 @@ export default function RewardDetailsScreen() {
         }}
       />
       <View>
-        <CustomerInfo reward={reward} />
+        <RewardInfo reward={reward} />
 
         <EligibleCustomersList
           customers={eligibleCustomers}
