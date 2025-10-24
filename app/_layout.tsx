@@ -3,6 +3,7 @@ import migrations from "@/core/drizzle/migrations";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { Stack } from "expo-router";
 import { Text, View } from "react-native";
+import "../ui/styles/global.css";
 
 export default function Layout() {
   const { success, error } = useMigrations(db, migrations);
