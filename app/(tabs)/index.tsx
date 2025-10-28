@@ -1,12 +1,11 @@
 import { TopCustomersByPoints, TopRewardsByRedeem } from "@/ui/components/home";
-import { Link, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { makeListTopCustomersByPoints } from "@/core/factories/customer";
 import { makeListTopRewardByRedeem } from "@/core/factories/customer-reward";
 import { CustomerDto } from "@/core/application/dtos/customers";
 import { TopRewardDto } from "@/core/application/dtos/customer-rewards";
-
 
 export default function HomeScreen() {
   const [customers, setCustomers] = useState<CustomerDto[]>([]);
@@ -30,18 +29,14 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
+    <View className="flex-1 bg-white p-4">
+      <Text className="text-2xl font-bold text-gray-800 mb-4">
+        Painel de Fidelidade
+      </Text>
+
       <TopCustomersByPoints customers={customers} />
+      <View className="h-4" />
       <TopRewardsByRedeem topRewards={topReward} />
-      <Link href={"/debug/customer-debug"}>Debug</Link>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});
