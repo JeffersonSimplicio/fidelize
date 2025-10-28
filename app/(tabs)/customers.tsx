@@ -1,6 +1,13 @@
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback } from "react";
-import { FlatList, RefreshControl, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useCustomers } from "@/ui/hooks/customers/use-customers";
@@ -23,8 +30,8 @@ export default function CustomersScreen() {
   );
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+    <View className="flex-1 bg-white px-4 pt-4">
+      <Text className="text-xl font-semibold mb-3 text-gray-900">
         Lista de Clientes
       </Text>
 
@@ -33,27 +40,16 @@ export default function CustomersScreen() {
         placeholder="Buscar por nome..."
         value={searchTerm}
         onChangeText={setSearchTerm}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 8,
-          borderRadius: 6,
-          marginBottom: 10,
-        }}
+        className="border border-gray-300 rounded-md px-3 py-2 mb-3 text-gray-900"
+        placeholderTextColor="#9CA3AF"
       />
 
       {/* Seletor de ordenação */}
-      <View
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 6,
-          marginBottom: 10,
-        }}
-      >
+      <View className="border border-gray-300 rounded-md mb-3 overflow-hidden">
         <Picker
           selectedValue={sortOption}
           onValueChange={(v) => setSortOption(v)}
+          dropdownIconColor="#2563EB"
         >
           <Picker.Item label="Mais novo" value="createdAt-desc" />
           <Picker.Item label="Mais antigo" value="createdAt-asc" />
@@ -66,27 +62,37 @@ export default function CustomersScreen() {
         </Picker>
       </View>
 
+      {/* Lista de clientes */}
       <FlatList
         data={filteredAndSorted}
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
-          <Link href={`/customers/${item.id}`}>
-            <Text>
-              {item.name} - {item.points} pontos
-            </Text>
+          <Link href={`/customers/${item.id}`} asChild>
+            <TouchableOpacity className="border border-gray-200 rounded-lg px-3 py-2 mb-2 bg-gray-50 active:bg-gray-100">
+              <Text className="text-gray-900 font-medium">
+                {item.name}{" "}
+                <Text className="text-gray-500 text-sm">
+                  — {item.points} pontos
+                </Text>
+              </Text>
+            </TouchableOpacity>
           </Link>
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={() => (
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Text>Nenhum cliente cadastrado.</Text>
+          <View className="items-center mt-6">
+            <Text className="text-gray-500">Nenhum cliente cadastrado.</Text>
           </View>
         )}
       />
-      <Link href={"/customers/create"}>
-        <AntDesign name="user-add" size={24} color="black" />
+
+      {/* Botão flutuante de adicionar cliente */}
+      <Link href="/customers/create" asChild>
+        <TouchableOpacity className="absolute bottom-6 right-6 bg-blue-600 p-4 rounded-full shadow-md active:bg-blue-700">
+          <AntDesign name="user-add" size={24} color="white" />
+        </TouchableOpacity>
       </Link>
     </View>
   );
