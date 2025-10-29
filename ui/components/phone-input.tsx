@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput } from "react-native";
 
 type PhoneInputProps = {
   value: string;
@@ -32,29 +32,16 @@ export function PhoneInput({ value, onChange, placeholder }: PhoneInputProps) {
   }, [value]);
 
   return (
-    <View style={styles.container}>
+    <View className="w-full my-2">
       <TextInput
-        style={styles.input}
+        className="border border-gray-300 rounded-lg p-3 text-base text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400"
         value={displayValue}
         onChangeText={handleChange}
         placeholder={placeholder || "(00) 00000-0000"}
         keyboardType="numeric"
         maxLength={15}
+        cursorColor="#007AFF"
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    marginVertical: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-  },
-});
