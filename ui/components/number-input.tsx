@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TextInput, Alert, StyleSheet } from "react-native";
+import { View, TextInput, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { AppButton } from "@/ui/components/app-button";
 
@@ -57,35 +57,27 @@ export function NumberInput({
   }
 
   return (
-    <View style={styles.container}>
-      <AppButton onPress={handleDecrement}>
-        <AntDesign name="minus" size={24} color="black" />
+    <View className="flex-row items-center justify-center space-x-4 mt-3 mb-3">
+      <AppButton
+        onPress={handleDecrement}
+        className="w-10 h-10 bg-gray-200 rounded-full justify-center items-center active:bg-gray-300"
+      >
+        <AntDesign name="minus" size={20} color="#333" />
       </AppButton>
+
       <TextInput
-        style={styles.input}
+        className="border border-gray-300 rounded-lg text-center text-base text-gray-800 px-3 py-2 w-16 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 mx-2"
         keyboardType="numeric"
         value={value.toString()}
         onChangeText={handleChange}
       />
-      <AppButton onPress={handleIncrement}>
-        <AntDesign name="plus" size={24} color="black" />
+
+      <AppButton
+        onPress={handleIncrement}
+        className="w-10 h-10 bg-gray-200 rounded-full justify-center items-center active:bg-gray-300"
+      >
+        <AntDesign name="plus" size={20} color="#333" />
       </AppButton>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  input: {
-    marginHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 5,
-    width: 60,
-    textAlign: "center",
-    borderRadius: 5,
-  },
-});

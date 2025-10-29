@@ -8,7 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -72,21 +72,28 @@ export default function NewRewardScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Cadastrar Recompensa",
-        }}
-      />
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
+      <Stack.Screen options={{ title: "Cadastrar Recompensa" }} />
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        className="flex-1 bg-white"
+      >
+        <ScrollView
+          contentContainerStyle={{ padding: 20 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <View>
-            <Text>Cadastro Nova Recompensa</Text>
+          {/* Título */}
+          <View className="mb-6">
+            <Text className="text-2xl font-bold text-gray-800">
+              Cadastro Nova Recompensa
+            </Text>
           </View>
-          <View>
-            <Text>Título:</Text>
+
+          {/* Campo Nome */}
+          <View className="mb-4">
+            <Text className="text-gray-700 mb-1 font-medium">Título</Text>
             <TextInput
+              className="border border-gray-300 rounded-lg p-3 text-base"
               placeholder="Digite o título da recompensa"
               value={form.name}
               onChangeText={(value) => {
@@ -95,11 +102,17 @@ export default function NewRewardScreen() {
               }}
             />
             {nameValidation.error && (
-              <Text style={{ color: "red" }}>{nameValidation.error}</Text>
+              <Text className="text-red-500 mt-1 text-sm">
+                {nameValidation.error}
+              </Text>
             )}
           </View>
-          <View>
-            <Text>Pontos necessários:</Text>
+
+          {/* Campo Pontos */}
+          <View className="mb-4">
+            <Text className="text-gray-700 mb-1 font-medium">
+              Pontos necessários
+            </Text>
             <NumberInput
               minValue={MIN_POINTS_REQUIRED}
               onValueChange={(value) => {
@@ -108,15 +121,20 @@ export default function NewRewardScreen() {
               }}
             />
             {pointsRequiredValidation.error && (
-              <Text style={{ color: "red" }}>
+              <Text className="text-red-500 mt-1 text-sm">
                 {pointsRequiredValidation.error}
               </Text>
             )}
           </View>
-          <View>
-            <Text>Descrição:</Text>
+
+          {/* Campo Descrição */}
+          <View className="mb-6">
+            <Text className="text-gray-700 mb-1 font-medium">Descrição</Text>
             <TextInput
+              className="border border-gray-300 rounded-lg p-3 text-base text-justify"
               placeholder="Digite a descrição da recompensa"
+              multiline
+              numberOfLines={4}
               value={form.description}
               onChangeText={(value) => {
                 setForm({ ...form, description: value });
@@ -124,39 +142,28 @@ export default function NewRewardScreen() {
               }}
             />
             {descriptionValidation.error && (
-              <Text style={{ color: "red" }}>
+              <Text className="text-red-500 mt-1 text-sm">
                 {descriptionValidation.error}
               </Text>
             )}
           </View>
+
+          {/* Botão */}
           <AppButton
             onPress={handleAddReward}
             disabled={loading || isFormInvalid}
-            style={({ pressed }) => [
-              styles.default,
-              (loading || isFormInvalid) && styles.disabled,
-              pressed && !(loading || isFormInvalid) && { opacity: 0.6 },
-            ]}
+            className={`p-4 rounded-lg ${
+              loading || isFormInvalid
+                ? "bg-gray-400"
+                : "bg-blue-600 active:opacity-80"
+            }`}
           >
-            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+            <Text className="text-white font-bold text-base">
               {loading ? "Cadastrando..." : "Cadastrar"}
             </Text>
           </AppButton>
-        </KeyboardAvoidingView>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 12,
-    borderRadius: 6,
-    backgroundColor: "#007AFF",
-  },
-  disabled: {
-    backgroundColor: "#ccc",
-  },
-});
