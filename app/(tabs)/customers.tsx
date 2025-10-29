@@ -90,7 +90,10 @@ export default function CustomersScreen() {
 
       {/* Botão flutuante de adicionar cliente */}
       <Link href="/customers/create" asChild>
-        <TouchableOpacity className="absolute bottom-6 right-6 bg-blue-600 p-4 rounded-full shadow-md active:bg-blue-700">
+        <TouchableOpacity
+          className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-80"
+          accessibilityLabel="Adicionar cliente"
+        >
           <AntDesign name="user-add" size={24} color="white" />
         </TouchableOpacity>
       </Link>

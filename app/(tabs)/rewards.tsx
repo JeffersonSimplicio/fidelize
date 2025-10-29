@@ -97,10 +97,10 @@ export default function RewardsScreen() {
       {/* Botão flutuante */}
       <Link href="/rewards/create" asChild>
         <TouchableOpacity
-          className="absolute bottom-6 right-6 bg-blue-600 p-4 rounded-full shadow-lg active:opacity-80"
+          className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-80"
           accessibilityLabel="Adicionar recompensa"
         >
-          <FontAwesome6 name="plus" size={20} color="white" />
+          <FontAwesome6 name="plus" size={24} color="white" />
         </TouchableOpacity>
       </Link>
     </View>
