@@ -40,8 +40,8 @@ export default function CustomersScreen() {
         placeholder="Buscar por nome..."
         value={searchTerm}
         onChangeText={setSearchTerm}
-        className="border border-gray-300 rounded-md px-3 py-2 mb-3 text-gray-900"
-        placeholderTextColor="#9CA3AF"
+        className="border border-gray-300 p-2 rounded-lg mb-3 text-gray-800"
+        placeholderTextColor="#888"
       />
 
       {/* Seletor de ordenação */}
@@ -68,13 +68,11 @@ export default function CustomersScreen() {
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
           <Link href={`/customers/${item.id}`} asChild>
-            <TouchableOpacity className="border border-gray-200 rounded-lg px-3 py-2 mb-2 bg-gray-50 active:bg-gray-100">
-              <Text className="text-gray-900 font-medium">
-                {item.name}{" "}
-                <Text className="text-gray-500 text-sm">
-                  — {item.points} pontos
-                </Text>
+            <TouchableOpacity className="p-3 mb-2 bg-gray-100 rounded-lg active:bg-gray-200">
+              <Text className="text-base font-semibold text-gray-800">
+                {item.name}
               </Text>
+              <Text className="text-gray-600">{item.points} pontos</Text>
             </TouchableOpacity>
           </Link>
         )}
