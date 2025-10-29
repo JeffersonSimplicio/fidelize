@@ -5,7 +5,7 @@ import {
   useRouter,
 } from "expo-router";
 import { useCallback } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, View, Text } from "react-native";
 import { useCustomerDetails } from "@/ui/hooks/customer-details/use-customer-details";
 import {
   AvailableRewardsList,
@@ -37,33 +37,45 @@ export default function CustomerDetailsScreen() {
   if (!customer) {
     return (
       <>
-        <Stack.Screen
-          options={{
-            title: "Detalhes",
-          }}
-        />
-        <View style={styles.container}>
-          <Text>Usuário não foi encontrado!</Text>
+        <Stack.Screen options={{ title: "Detalhes" }} />
+        <View className="flex-1 items-center justify-center bg-white">
+          <Text className="text-gray-600 text-base">
+            Usuário não foi encontrado!
+          </Text>
         </View>
       </>
     );
   }
 
-  return (
-    <>
-      <Stack.Screen
-        options={{
-          title: customer.name,
-        }}
-      />
-      <View style={styles.container}>
-        <CustomerInfo customer={customer} />
-
+  const sections = [
+    { key: "info", render: () => <CustomerInfo customer={customer} /> },
+    {
+      key: "available",
+      render: () => (
         <AvailableRewardsList rewards={availableRewards} onRedeem={redeem} />
-
+      ),
+    },
+    {
+      key: "redeemed",
+      render: () => (
         <RedeemedRewardsList
           rewards={redeemedRewards}
           onUndoRedeem={undoRedeem}
+        />
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <Stack.Screen options={{ title: customer.name }} />
+      <View className="flex-1 bg-white">
+        <FlatList
+          data={sections}
+          renderItem={({ item }) => <View className="p-4">{item.render()}</View>}
+          keyExtractor={(item) => item.key}
+          ListFooterComponent={<View className="h-28" />}
+          showsVerticalScrollIndicator={false}
         />
 
         <EntityActions
@@ -74,10 +86,3 @@ export default function CustomerDetailsScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});

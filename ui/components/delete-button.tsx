@@ -5,16 +5,9 @@ import { AppButton } from "@/ui/components/app-button";
 type Props = {
   onDelete: () => Promise<void> | void;
   confirm?: boolean;
-  size?: number;
-  color?: string;
 };
 
-export function DeleteButton({
-  onDelete,
-  confirm = true,
-  size = 30,
-  color = "black",
-}: Props) {
+export function DeleteButton({ onDelete, confirm = true }: Props) {
   const handlePress = async (e: GestureResponderEvent) => {
     if (confirm) {
       Alert.alert(
@@ -52,11 +45,9 @@ export function DeleteButton({
   return (
     <AppButton
       onPress={handlePress}
-      accessibilityLabel="Botão deletar"
-      accessibilityRole="button"
-      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      className="w-14 h-14 bg-red-600 rounded-full items-center justify-center shadow-md active:opacity-70"
     >
-      <FontAwesome name="trash" size={size} color={color} />
+      <FontAwesome name="trash" size={22} color="white" />
     </AppButton>
   );
 }

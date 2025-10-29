@@ -8,16 +8,27 @@ function formatPhone(phone: string): string {
 
 export function CustomerInfo({ customer }: { customer: CustomerDto }) {
   return (
-    <View>
-      <Text>Cliente</Text>
-      <Text>Name: {customer.name}</Text>
-      <Text>Telefone: {formatPhone(customer.phone)}</Text>
-      <Text>Pontos acumulados: {customer.points}</Text>
-      <Text>
-        Ultima visita: {formatDate(customer.lastVisitAt)}
+    <View className="bg-gray-50 p-4 rounded-xl shadow-sm mb-4">
+      <Text className="text-lg font-semibold text-gray-800 mb-2">Cliente</Text>
+
+      <Text className="text-gray-700">
+        <Text className="font-semibold">Nome:</Text> {customer.name}
       </Text>
-      <Text>
-        Criado em: {formatDate(customer.createdAt)}
+      <Text className="text-gray-700">
+        <Text className="font-semibold">Telefone:</Text>{" "}
+        {formatPhone(customer.phone)}
+      </Text>
+      <Text className="text-gray-700">
+        <Text className="font-semibold">Pontos acumulados:</Text>{" "}
+        {customer.points}
+      </Text>
+      <Text className="text-gray-700">
+        <Text className="font-semibold">Última visita:</Text>{" "}
+        {formatDate(customer.lastVisitAt)}
+      </Text>
+      <Text className="text-gray-700">
+        <Text className="font-semibold">Criado em:</Text>{" "}
+        {formatDate(customer.createdAt)}
       </Text>
     </View>
   );
