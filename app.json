@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "fidelize",
+    "name": "Fidelize",
     "slug": "fidelize",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -35,7 +35,7 @@
           "image": "./ui/assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#E6F4FE",
           "dark": {
             "backgroundColor": "#000000"
           }
