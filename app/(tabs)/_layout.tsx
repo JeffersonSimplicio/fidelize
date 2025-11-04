@@ -51,7 +51,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="settings"
         options={{
           title: "Configurações",
@@ -59,7 +59,7 @@ export default function TabLayout() {
             <FontAwesome size={24} name="cog" color={color} />
           ),
         }}
-      />
+      /> */}
     </Tabs>
   );
 }
