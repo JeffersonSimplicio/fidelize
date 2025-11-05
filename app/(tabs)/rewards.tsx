@@ -1,10 +1,17 @@
-import { FlatList, RefreshControl, Text, TextInput, View } from "react-native";
 import { useCallback } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { Link, useFocusEffect } from "expo-router";
+import { Picker } from "@react-native-picker/picker";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useRewards } from "@/ui/hooks/rewards/use-rewards";
 import { useRewardList } from "@/ui/hooks/rewards/use-reward-list";
-import { Picker } from "@react-native-picker/picker";
 
 export default function RewardsScreen() {
   const { rewards, refreshing, onRefresh, fetchRewards } = useRewards();
@@ -23,8 +30,9 @@ export default function RewardsScreen() {
   );
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+    <View className="flex-1 p-4 bg-white">
+      {/* Título */}
+      <Text className="text-xl font-bold mb-3 text-gray-800">
         Lista de Recompensas
       </Text>
 
@@ -33,24 +41,12 @@ export default function RewardsScreen() {
         placeholder="Buscar por nome..."
         value={searchTerm}
         onChangeText={setSearchTerm}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 8,
-          borderRadius: 6,
-          marginBottom: 10,
-        }}
+        className="border border-gray-300 p-2 rounded-lg mb-3 text-gray-800"
+        placeholderTextColor="#888"
       />
 
       {/* Seletor de ordenação */}
-      <View
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 6,
-          marginBottom: 10,
-        }}
-      >
+      <View className="border border-gray-300 rounded-lg mb-3">
         <Picker
           selectedValue={sortOption}
           onValueChange={(v) => setSortOption(v)}
@@ -70,27 +66,42 @@ export default function RewardsScreen() {
         </Picker>
       </View>
 
+      {/* Lista de recompensas */}
       <FlatList
         data={filteredAndSorted}
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
-          <Link href={`/rewards/${item.id}`}>
-            <Text>
-              {item.name} - {item.pointsRequired} pontos necessários
-            </Text>
+          <Link href={`/rewards/${item.id}`} asChild>
+            <TouchableOpacity className="p-3 mb-2 bg-gray-100 rounded-lg active:bg-gray-200">
+              <Text className="text-base font-semibold text-gray-800">
+                {item.name}
+              </Text>
+              <Text className="text-gray-600">
+                {item.pointsRequired} pontos necessários
+              </Text>
+            </TouchableOpacity>
           </Link>
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={() => (
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Text>Nenhuma recompensa cadastrada.</Text>
+          <View className="items-center mt-6">
+            <Text className="text-gray-600">
+              Nenhuma recompensa cadastrada.
+            </Text>
           </View>
         )}
       />
-      <Link href="/rewards/create">
-        <FontAwesome6 name="add" size={24} color="black" />
+
+      {/* Botão flutuante */}
+      <Link href="/rewards/create" asChild>
+        <TouchableOpacity
+          className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-80"
+          accessibilityLabel="Adicionar recompensa"
+        >
+          <FontAwesome6 name="plus" size={24} color="white" />
+        </TouchableOpacity>
       </Link>
     </View>
   );

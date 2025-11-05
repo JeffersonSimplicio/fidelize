@@ -1,15 +1,14 @@
 import { editCustomerSchema } from "@/core/infrastructure/validation/zod/schemas";
-import { AppButton } from "@/ui/components/app-button";
 import { NumberInput } from "@/ui/components/number-input";
 import { PhoneInput } from "@/ui/components/phone-input";
 import { useRealtimeFieldValidation } from "@/ui/hooks/use-realtime-form-validation";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -18,6 +17,7 @@ import {
   makeEditCustomer,
   makeGetCustomerDetail,
 } from "@/core/factories/customer";
+import { EditActions } from "@/ui/components/edit-actions";
 
 const MIN_POINTS = 0;
 
@@ -94,16 +94,25 @@ export default function CustomerEditScreen() {
           title: "Editar Cliente",
         }}
       />
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        className="flex-1 bg-white"
+      >
+        <ScrollView
+          className="flex-1 p-4"
+          contentContainerStyle={{ paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}
         >
-          <View>
-            <Text>Editar Cliente</Text>
-          </View>
-          <View>
-            <Text>Nome:</Text>
+          <Text className="text-xl font-semibold text-gray-800 mb-4">
+            Editar Cliente
+          </Text>
+
+          {/* Nome */}
+          <View className="mb-4">
+            <Text className="text-gray-700 mb-1">Nome:</Text>
             <TextInput
+              className="border border-gray-300 rounded-lg p-2 text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400"
               placeholder="Digite o nome do cliente"
               value={form.name}
               onChangeText={(value) => {
@@ -112,11 +121,15 @@ export default function CustomerEditScreen() {
               }}
             />
             {nameValidation.error && (
-              <Text style={{ color: "red" }}>{nameValidation.error}</Text>
+              <Text className="text-red-500 text-sm mt-1">
+                {nameValidation.error}
+              </Text>
             )}
           </View>
-          <View>
-            <Text>Telefone:</Text>
+
+          {/* Telefone */}
+          <View className="mb-4">
+            <Text className="text-gray-700 mb-1">Telefone:</Text>
             <PhoneInput
               value={form.phone}
               onChange={(value) => {
@@ -125,12 +138,15 @@ export default function CustomerEditScreen() {
               }}
             />
             {phoneValidation.error && (
-              <Text style={{ color: "red" }}>{phoneValidation.error}</Text>
+              <Text className="text-red-500 text-sm mt-1">
+                {phoneValidation.error}
+              </Text>
             )}
           </View>
 
-          <View>
-            <Text>Pontos:</Text>
+          {/* Pontos */}
+          <View className="mb-6">
+            <Text className="text-gray-700 mb-1">Pontos:</Text>
             <NumberInput
               minValue={MIN_POINTS}
               initValue={form.points}
@@ -140,20 +156,20 @@ export default function CustomerEditScreen() {
               }}
             />
             {pointsValidation.error && (
-              <Text style={{ color: "red" }}>{pointsValidation.error}</Text>
+              <Text className="text-red-500 text-sm mt-1">
+                {pointsValidation.error}
+              </Text>
             )}
           </View>
 
-          <View>
-            <AppButton disabled={loading} onPress={handleSave}>
-              <FontAwesome name="save" size={30} color="black" />
-            </AppButton>
-            <AppButton onPress={handleCancelEditing}>
-              <MaterialIcons name="cancel" size={30} color="black" />
-            </AppButton>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+          {/* Botões */}
+          <EditActions
+            isLoading={loading}
+            onSave={handleSave}
+            onCancel={handleCancelEditing}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }

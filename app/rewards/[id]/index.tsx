@@ -5,12 +5,12 @@ import {
   useRouter,
 } from "expo-router";
 import { useCallback } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { useRewardDetails } from "@/ui/hooks/reward-details/use-reward-details";
 import {
   CustomersWhoRedeemedList,
   EligibleCustomersList,
-  CustomerInfo,
+  RewardInfo,
 } from "@/ui/components/reward-details";
 import { EntityActions } from "@/ui/components/entity-actions";
 
@@ -38,17 +38,38 @@ export default function RewardDetailsScreen() {
   if (!reward) {
     return (
       <>
-        <Stack.Screen
-          options={{
-            title: "Detalhes",
-          }}
-        />
-        <View style={styles.container}>
-          <Text>A recompensa não foi encontrada!</Text>
+        <Stack.Screen options={{ title: "Detalhes" }} />
+        <View className="flex-1 items-center justify-center bg-white">
+          <Text className="text-gray-600 text-base">
+            Recompensa não foi encontrada!
+          </Text>
         </View>
       </>
     );
   }
+
+  const sections = [
+    { key: "info", render: () => <RewardInfo reward={reward} /> },
+    {
+      key: "eligible",
+      render: () => (
+        <EligibleCustomersList
+          customers={eligibleCustomers}
+          onRedeem={redeem}
+        />
+      ),
+    },
+    {
+      key: "redeemed",
+      render: () => (
+        <CustomersWhoRedeemedList
+          customers={customersWhoRedeemed}
+          onUndoRedeem={undoRedeem}
+          isActive={reward.isActive}
+        />
+      ),
+    },
+  ];
 
   return (
     <>
@@ -57,18 +78,15 @@ export default function RewardDetailsScreen() {
           title: reward.name,
         }}
       />
-      <View>
-        <CustomerInfo reward={reward} />
-
-        <EligibleCustomersList
-          customers={eligibleCustomers}
-          onRedeem={redeem}
-        />
-
-        <CustomersWhoRedeemedList
-          customers={customersWhoRedeemed}
-          onUndoRedeem={undoRedeem}
-          isActive={reward.isActive}
+      <View className="flex-1 bg-white">
+        <FlatList
+          data={sections}
+          renderItem={({ item }) => (
+            <View className="p-4">{item.render()}</View>
+          )}
+          keyExtractor={(item) => item.key}
+          ListFooterComponent={<View className="h-28" />}
+          showsVerticalScrollIndicator={false}
         />
 
         <EntityActions
@@ -79,10 +97,3 @@ export default function RewardDetailsScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});

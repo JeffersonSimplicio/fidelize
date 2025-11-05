@@ -8,7 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -17,11 +17,9 @@ import { makeRegisterCustomer } from "@/core/factories/customer";
 
 export default function NewCustomerScreen() {
   const router = useRouter();
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-  });
+  const [form, setForm] = useState({ name: "", phone: "" });
   const [loading, setLoading] = useState(false);
+
   const nameValidation = useRealtimeFieldValidation(
     registerCustomerSchema.shape.name,
     form.name
@@ -52,7 +50,7 @@ export default function NewCustomerScreen() {
       const errorMessage = e instanceof Error ? e.message : String(e);
       Alert.alert(
         "Erro",
-        `Não foi possível cadastrar o cliente.\n\n ${errorMessage}`
+        `Não foi possível cadastrar o cliente.\n\n${errorMessage}`
       );
     } finally {
       setLoading(false);
@@ -61,21 +59,26 @@ export default function NewCustomerScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          title: "Cadastrar Cliente",
-        }}
-      />
-      <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
+      <Stack.Screen options={{ title: "Cadastrar Cliente" }} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        className="flex-1 bg-white"
+      >
+        <ScrollView
+          contentContainerStyle={{ padding: 20 }}
+          keyboardShouldPersistTaps="handled"
         >
-          <View>
-            <Text>Cadastro Novo Cliente</Text>
+          <View className="mb-6">
+            <Text className="text-2xl font-bold text-gray-800">
+              Cadastro Novo Cliente
+            </Text>
           </View>
-          <View>
-            <Text>Nome:</Text>
+
+          {/* Campo Nome */}
+          <View className="mb-4">
+            <Text className="text-gray-700 mb-1 font-medium">Nome</Text>
             <TextInput
+              className="border border-gray-300 rounded-lg p-3 text-base"
               placeholder="Digite o nome do cliente"
               value={form.name}
               onChangeText={(value) => {
@@ -84,11 +87,15 @@ export default function NewCustomerScreen() {
               }}
             />
             {nameValidation.error && (
-              <Text style={{ color: "red" }}>{nameValidation.error}</Text>
+              <Text className="text-red-500 mt-1 text-sm">
+                {nameValidation.error}
+              </Text>
             )}
           </View>
-          <View>
-            <Text>Telefone:</Text>
+
+          {/* Campo Telefone */}
+          <View className="mb-6">
+            <Text className="text-gray-700 mb-1 font-medium">Telefone</Text>
             <PhoneInput
               value={form.phone}
               onChange={(value) => {
@@ -97,37 +104,28 @@ export default function NewCustomerScreen() {
               }}
             />
             {phoneValidation.error && (
-              <Text style={{ color: "red" }}>{phoneValidation.error}</Text>
+              <Text className="text-red-500 mt-1 text-sm">
+                {phoneValidation.error}
+              </Text>
             )}
           </View>
+
+          {/* Botão */}
           <AppButton
             onPress={handleAddCustomer}
             disabled={loading || isFormInvalid}
-            style={({ pressed }) => [
-              styles.default,
-              (loading || isFormInvalid) && styles.disabled,
-              pressed && !(loading || isFormInvalid) && { opacity: 0.6 },
-            ]}
+            className={`p-4 rounded-lg ${
+              loading || isFormInvalid
+                ? "bg-gray-400"
+                : "bg-blue-600 active:opacity-80"
+            }`}
           >
-            <Text style={{ color: "#fff", fontWeight: "bold" }}>
+            <Text className="text-white font-bold text-base">
               {loading ? "Cadastrando..." : "Cadastrar"}
             </Text>
           </AppButton>
-        </KeyboardAvoidingView>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  default: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 12,
-    borderRadius: 6,
-    backgroundColor: "#007AFF", // cor ativa
-  },
-  disabled: {
-    backgroundColor: "#ccc", // cor quando desabilitado
-  },
-});
