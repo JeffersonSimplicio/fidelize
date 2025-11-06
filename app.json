@@ -20,7 +20,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.fidelize"
+      "package": "com.jeffersonsimplicio.fidelize"
     },
     "web": {
       "output": "static",
@@ -47,6 +47,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "df26f3a8-eb3c-4e0f-b2f6-d7007e162bcb"
+      }
     }
   }
 }
