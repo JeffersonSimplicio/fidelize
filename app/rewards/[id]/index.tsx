@@ -11,7 +11,7 @@ import {
   CustomersWhoRedeemedList,
   EligibleCustomersList,
   RewardInfo,
-} from "@/ui/components/reward-details";
+} from "@/ui/features/reward";
 import { EntityActions } from "@/ui/components/entity-actions";
 
 export default function RewardDetailsScreen() {

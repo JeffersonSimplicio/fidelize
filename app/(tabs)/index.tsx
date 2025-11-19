@@ -1,4 +1,4 @@
-import { TopCustomersByPoints, TopRewardsByRedeem } from "@/ui/components/home";
+import { TopCustomersByPoints, TopRewardsByRedeem } from "@/ui/features/home";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
