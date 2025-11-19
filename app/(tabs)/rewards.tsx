@@ -51,6 +51,7 @@ export default function RewardsScreen() {
         <Picker
           selectedValue={sortOption}
           onValueChange={(v) => setSortOption(v)}
+          style={{ color: "black" }}
         >
           <Picker.Item label="Mais novo" value="createdAt-desc" />
           <Picker.Item label="Mais antigo" value="createdAt-asc" />
