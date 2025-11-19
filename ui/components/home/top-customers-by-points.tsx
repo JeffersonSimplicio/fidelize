@@ -1,6 +1,6 @@
 import { CustomerDto } from "@/core/application/dtos";
-import { Link } from "expo-router";
-import { FlatList, View, Text, TouchableOpacity } from "react-native";
+import { FlatList, View, Text } from "react-native";
+import { ListItemCard } from "@/ui/components/list-item-card";
 
 interface Props {
   customers: CustomerDto[];
@@ -17,12 +17,12 @@ export function TopCustomersByPoints({ customers }: Props) {
         data={customers}
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
-          <Link href={`/customers/${item.id}`} asChild>
-            <TouchableOpacity className="p-3 mb-2 bg-white rounded-lg border border-gray-200 active:bg-gray-100">
-              <Text className="text-gray-800 font-medium">{item.name}</Text>
-              <Text className="text-gray-600">{item.points} pontos</Text>
-            </TouchableOpacity>
-          </Link>
+          <ListItemCard
+            href={`/customers/${item.id}`}
+            title={item.name}
+            subtitle={`${item.points} pontos`}
+            variant="outlined"
+          />
         )}
         ListEmptyComponent={() => (
           <View className="items-center mt-3">

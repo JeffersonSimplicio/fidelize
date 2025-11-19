@@ -12,6 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useRewards } from "@/ui/hooks/rewards/use-rewards";
 import { useRewardList } from "@/ui/hooks/rewards/use-reward-list";
+import { ListItemCard } from "@/ui/components/list-item-card";
 
 export default function RewardsScreen() {
   const { rewards, refreshing, onRefresh, fetchRewards } = useRewards();
@@ -71,16 +72,11 @@ export default function RewardsScreen() {
         data={filteredAndSorted}
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
-          <Link href={`/rewards/${item.id}`} asChild>
-            <TouchableOpacity className="p-3 mb-2 bg-gray-100 rounded-lg active:bg-gray-200">
-              <Text className="text-base font-semibold text-gray-800">
-                {item.name}
-              </Text>
-              <Text className="text-gray-600">
-                {item.pointsRequired} pontos necessários
-              </Text>
-            </TouchableOpacity>
-          </Link>
+          <ListItemCard
+            href={`/rewards/${item.id}`}
+            title={item.name}
+            subtitle={`${item.pointsRequired} pontos necessários`}
+          />
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

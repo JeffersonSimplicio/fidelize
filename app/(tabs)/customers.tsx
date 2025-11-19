@@ -12,6 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useCustomers } from "@/ui/hooks/customers/use-customers";
 import { useCustomerList } from "@/ui/hooks/customers/use-customer-list";
+import { ListItemCard } from "@/ui/components/list-item-card";
 
 export default function CustomersScreen() {
   const { customers, refreshing, onRefresh, fetchCustomers } = useCustomers();
@@ -67,14 +68,11 @@ export default function CustomersScreen() {
         data={filteredAndSorted}
         keyExtractor={(item) => item.id!.toString()}
         renderItem={({ item }) => (
-          <Link href={`/customers/${item.id}`} asChild>
-            <TouchableOpacity className="p-3 mb-2 bg-gray-100 rounded-lg active:bg-gray-200">
-              <Text className="text-base font-semibold text-gray-800">
-                {item.name}
-              </Text>
-              <Text className="text-gray-600">{item.points} pontos</Text>
-            </TouchableOpacity>
-          </Link>
+          <ListItemCard
+            href={`/customers/${item.id}`}
+            title={item.name}
+            subtitle={`${item.points} pontos`}
+          />
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
