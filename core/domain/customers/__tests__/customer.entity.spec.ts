@@ -176,5 +176,18 @@ describe("Customer Entity", () => {
       expect(() => customer.updateLastVisit(invalidDate))
         .toThrow("Last visit cannot be before creation");
     });
+
+    it("should throw error if dates are in the future during creation", () => {
+      (ensureDatesNotInFuture as jest.Mock).mockImplementation(() => {
+        throw new Error("Dates cannot be in the future");
+      });
+
+      expect(() => new Customer({
+        name: "A",
+        phone: "1",
+        points: 0,
+        createdAt: new Date("2030-01-01T00:00:00Z")
+      })).toThrow("Dates cannot be in the future");
+    });
   });
 });
