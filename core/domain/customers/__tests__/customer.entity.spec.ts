@@ -52,5 +52,13 @@ describe("Customer Entity", () => {
       expect(customer.id).toBe(5);
       expect(ensureIdNotSet).toHaveBeenCalled();
     });
+
+    it("should update points", () => {
+      const customer = new Customer({ name: "A", phone: "1", points: 0 });
+      customer.setPoints(50);
+
+      expect(customer.points).toBe(50);
+      expect(ensureNonNegativePoint).toHaveBeenCalledWith(50, 0);
+    });
   });
 });
