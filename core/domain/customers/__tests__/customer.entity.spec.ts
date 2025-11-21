@@ -40,7 +40,7 @@ describe("Customer Entity", () => {
       expect(customer.createdAt).toEqual(fakeDate);
       expect(customer.lastVisitAt).toEqual(fakeDate);
 
-      expect(ensureNonNegativePoint).toHaveBeenCalledWith(100, 0);
+      expect(ensureNonNegativePoint).toHaveBeenCalledWith(100);
       expect(ensureLastVisitAfterCreation).toHaveBeenCalled();
       expect(ensureDatesNotInFuture).toHaveBeenCalled();
     });
@@ -58,7 +58,7 @@ describe("Customer Entity", () => {
       customer.setPoints(50);
 
       expect(customer.points).toBe(50);
-      expect(ensureNonNegativePoint).toHaveBeenCalledWith(50, 0);
+      expect(ensureNonNegativePoint).toHaveBeenCalledWith(50);
     });
 
     it("should update last visit date", () => {
