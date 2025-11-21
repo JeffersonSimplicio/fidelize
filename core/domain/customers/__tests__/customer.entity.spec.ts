@@ -44,5 +44,13 @@ describe("Customer Entity", () => {
       expect(ensureLastVisitAfterCreation).toHaveBeenCalled();
       expect(ensureDatesNotInFuture).toHaveBeenCalled();
     });
+
+    it("should set the customer id", () => {
+      const customer = new Customer({ name: "A", phone: "1", points: 0 });
+      customer.setId(5);
+
+      expect(customer.id).toBe(5);
+      expect(ensureIdNotSet).toHaveBeenCalled();
+    });
   });
 });
