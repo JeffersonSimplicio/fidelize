@@ -134,5 +134,19 @@ describe("Customer Entity", () => {
       expect(() => new Customer({ name: "A", phone: "1", points: -5 }))
         .toThrow("Points cannot be negative");
     });
+
+    it("should throw error if points are negative when updating", () => {
+      (ensureNonNegativePoint as jest.Mock)
+        .mockImplementationOnce(() => { })
+        .mockImplementationOnce(() => {
+          throw new Error("Points cannot be negative");
+        });
+
+      const customer = new Customer({ name: "A", phone: "1", points: 0 });
+
+      expect(() => customer.setPoints(-10))
+        .toThrow("Points cannot be negative");
+      expect(ensureNonNegativePoint).toHaveBeenCalledTimes(2);
+    });
   });
 });
