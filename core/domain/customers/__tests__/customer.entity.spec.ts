@@ -81,5 +81,16 @@ describe("Customer Entity", () => {
       expect(customer.points).toBe(20);
       expect(customer.lastVisitAt.getTime()).toBeGreaterThan(oldDate.getTime());
     });
+
+    it("should add points but not update visit if points did not increase", () => {
+      const customer = new Customer({ name: "A", phone: "1", points: 20 });
+      const oldDate = customer.lastVisitAt;
+
+      jest.advanceTimersByTime(1000);
+      customer.addPointsAndUpdateVisit(10);
+
+      expect(customer.points).toBe(10);
+      expect(customer.lastVisitAt.getTime()).toBe(oldDate.getTime());
+    });
   });
 });
