@@ -14,6 +14,7 @@ module.exports = {
     "!core/**/migrations/**",
     "!core/**/types/**",
     "!core/**/errors/**",
+    "!core/**/query-models/**",
     "!core/**/*.interface.ts",
     "!core/**/*.(spec|test).{ts,tsx,js}",
   ],
