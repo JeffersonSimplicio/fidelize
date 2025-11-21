@@ -60,5 +60,15 @@ describe("Customer Entity", () => {
       expect(customer.points).toBe(50);
       expect(ensureNonNegativePoint).toHaveBeenCalledWith(50, 0);
     });
+
+    it("should update last visit date", () => {
+      const customer = new Customer({ name: "A", phone: "1", points: 0 });
+      const newDate = new Date("2025-02-01T00:00:00Z");
+
+      customer.updateLastVisit(newDate);
+      expect(customer.lastVisitAt).toEqual(newDate);
+      expect(ensureLastVisitAfterCreation).toHaveBeenCalled();
+      expect(ensureDatesNotInFuture).toHaveBeenCalled();
+    });
   });
 });
