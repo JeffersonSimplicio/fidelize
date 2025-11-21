@@ -162,5 +162,19 @@ describe("Customer Entity", () => {
       expect(ensureIdNotSet).toHaveBeenCalledTimes(2);
       expect(customer.id).toBe(1);
     });
+
+    it("should throw error if last visit is before creation", () => {
+      (ensureLastVisitAfterCreation as jest.Mock)
+        .mockImplementationOnce(() => { })
+        .mockImplementationOnce(() => {
+          throw new Error("Last visit cannot be before creation");
+        });
+
+      const customer = new Customer({ name: "A", phone: "1", points: 0 });
+      const invalidDate = new Date("2024-12-31T00:00:00Z");
+
+      expect(() => customer.updateLastVisit(invalidDate))
+        .toThrow("Last visit cannot be before creation");
+    });
   });
 });
