@@ -108,4 +108,31 @@ describe("Customer Entity", () => {
       });
     });
   });
+
+  describe("Error cases", () => {
+    const fakeDate = new Date("2025-01-01T00:00:00Z");
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      jest.useFakeTimers().setSystemTime(fakeDate);
+
+      (ensureLastVisitAfterCreation as jest.Mock).mockImplementation(() => { });
+      (ensureNonNegativePoint as jest.Mock).mockImplementation(() => { });
+      (ensureDatesNotInFuture as jest.Mock).mockImplementation(() => { });
+      (ensureIdNotSet as jest.Mock).mockImplementation(() => { });
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it("should throw error if points are negative during creation", () => {
+      (ensureNonNegativePoint as jest.Mock).mockImplementation(() => {
+        throw new Error("Points cannot be negative");
+      });
+
+      expect(() => new Customer({ name: "A", phone: "1", points: -5 }))
+        .toThrow("Points cannot be negative");
+    });
+  });
 });
