@@ -92,5 +92,20 @@ describe("Customer Entity", () => {
       expect(customer.points).toBe(10);
       expect(customer.lastVisitAt.getTime()).toBe(oldDate.getTime());
     });
+
+    it("should return correct persistence object", () => {
+      const customer = new Customer({ name: "Jefferson", phone: "123", points: 5 });
+      customer.setId(1);
+
+      const persistence = customer.toPersistence();
+      expect(persistence).toEqual({
+        id: 1,
+        name: "Jefferson",
+        phone: "123",
+        points: 5,
+        createdAt: fakeDate,
+        lastVisitAt: fakeDate,
+      });
+    });
   });
 });
