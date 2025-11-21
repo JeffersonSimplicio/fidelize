@@ -148,5 +148,19 @@ describe("Customer Entity", () => {
         .toThrow("Points cannot be negative");
       expect(ensureNonNegativePoint).toHaveBeenCalledTimes(2);
     });
+
+    it("should throw error if id is already set", () => {
+      (ensureIdNotSet as jest.Mock)
+        .mockImplementationOnce(() => { })
+        .mockImplementationOnce(() => {
+          throw new Error("ID already set");
+        });
+
+      const customer = new Customer({ name: "A", phone: "1", points: 0 });
+      customer.setId(1);
+      expect(() => customer.setId(5)).toThrow("ID already set");
+      expect(ensureIdNotSet).toHaveBeenCalledTimes(2);
+      expect(customer.id).toBe(1);
+    });
   });
 });
