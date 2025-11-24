@@ -29,7 +29,7 @@ export class RewardQueryRepositoryDrizzle implements RewardQueryRepository {
       .from(this.rewardTable)
       .where(like(this.rewardTable.name, `%${name}%`));
 
-    return result.map(this.rewardToDomainMapper.map);
+    return result.map(c => this.rewardToDomainMapper.map(c));
   }
 
   async findAll(): Promise<Reward[]> {
@@ -37,7 +37,7 @@ export class RewardQueryRepositoryDrizzle implements RewardQueryRepository {
       .select()
       .from(this.rewardTable);
 
-    return dbRewards.map(this.rewardToDomainMapper.map);
+    return dbRewards.map(c => this.rewardToDomainMapper.map(c));
   }
 
   private async findAllStatus(status: RewardStatus): Promise<Reward[]> {
@@ -46,7 +46,7 @@ export class RewardQueryRepositoryDrizzle implements RewardQueryRepository {
       .from(this.rewardTable)
       .where(eq(this.rewardTable.isActive, status));
 
-    return dbRewards.map(this.rewardToDomainMapper.map);
+    return dbRewards.map(c => this.rewardToDomainMapper.map(c));
   }
 
   async findAllActive(): Promise<Reward[]> {

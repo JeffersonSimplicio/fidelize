@@ -20,6 +20,6 @@ export class ListRewardsActiveUseCase implements ListRewardsActive {
 
   async execute(): Promise<RewardDto[]> {
     const listRewardsActive = await this.rewardQueryRepo.findAllActive();
-    return listRewardsActive.map(this.rewardToDtoMapper.map);
+    return listRewardsActive.map(r => this.rewardToDtoMapper.map(r));
   }
 }

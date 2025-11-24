@@ -24,6 +24,6 @@ export class ListTopCustomersByPointsUseCase implements ListTopCustomersByPoints
 
     const topCustomers = await this.customerQueryRepo.findTopCustomersByPoints(effectiveLimit);
 
-    return topCustomers.map(this.customerToDtoMapper.map);
+    return topCustomers.map(c => this.customerToDtoMapper.map(c));
   }
 }

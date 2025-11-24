@@ -28,6 +28,6 @@ export class ListEligibleCustomersForRewardUseCase implements ListCustomersEligi
     const eligibleCustomers = await this.customerRewardQueryRepo
       .findCustomersEligibleToRedeemReward(rewardId);
 
-    return eligibleCustomers.map(this.customerToDtoMapper.map);
+    return eligibleCustomers.map(c => this.customerToDtoMapper.map(c));
   }
 }
