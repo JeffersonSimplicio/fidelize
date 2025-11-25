@@ -16,6 +16,7 @@ module.exports = {
     "!core/**/errors/**",
     "!core/**/query-models/**",
     "!core/**/constants/**",
+    "!core/**/factories/**",
     "!core/**/application/dtos/**",
     "!core/**/application/results/**",
     "!core/**/*.interface.ts",
