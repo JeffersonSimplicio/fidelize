@@ -17,6 +17,7 @@ module.exports = {
     "!core/**/query-models/**",
     "!core/**/constants/**",
     "!core/**/factories/**",
+    "!core/**/drizzle/**",
     "!core/**/application/dtos/**",
     "!core/**/application/results/**",
     "!core/**/*.interface.ts",
