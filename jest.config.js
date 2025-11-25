@@ -25,6 +25,7 @@ module.exports = {
     "!core/**/validation-field-labels.ts",
     "!core/**/reward.status.ts",
     "!core/**/usecase-result-handler.ts",
+    "!core/**/zod/schemas/**",
   ],
   coverageDirectory: "<rootDir>/coverage",
   coverageReporters: ["text", "lcov", "cobertura"],
