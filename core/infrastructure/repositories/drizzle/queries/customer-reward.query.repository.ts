@@ -151,7 +151,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
         )
       );
 
-    return result.map(this.rewardToDomainMapper.map);
+    return result.map(c => this.rewardToDomainMapper.map(c));
   }
 
   async findCustomersEligibleToRedeemReward(rewardId: number): Promise<Customer[]> {
