@@ -20,6 +20,6 @@ export class ListRewardsUseCase implements ListRewards {
 
   async execute(): Promise<RewardDto[]> {
     const allRewards = await this.rewardQueryRepo.findAll();
-    return allRewards.map(this.rewardToDtoMapper.map);
+    return allRewards.map(r => this.rewardToDtoMapper.map(r));
   }
 }

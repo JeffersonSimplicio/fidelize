@@ -32,6 +32,6 @@ export class UndoRedeemRewardUseCase implements UndoRedeemReward {
       throw new InactiveRewardRedemptionError();
     }
 
-    this.customerRewardRepo.delete(hasAlreadyRedeemed.id!)
+    await this.customerRewardRepo.delete(hasAlreadyRedeemed.id!)
   }
 }

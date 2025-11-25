@@ -15,7 +15,7 @@ export interface EditRewardDep {
 export class EditRewardUseCase implements EditReward {
   private readonly rewardRepo: RewardRepository;
   private readonly editRewardValidator: Validation<UpdateRewardDto>;
-  private readonly rewardToDtoMapper: Mapper<UpdateRewardDto, RewardDto>;
+  private readonly rewardToDtoMapper: Mapper<Reward, RewardDto>;
 
   constructor(deps: EditRewardDep) {
     this.rewardRepo = deps.rewardRepo;

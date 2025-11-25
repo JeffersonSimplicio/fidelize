@@ -12,8 +12,6 @@ export class Customer {
   private _createdAt: Date;
   private _lastVisitAt: Date;
 
-  private static MIN_POINTS = 0;
-
   constructor(params: {
     name: string;
     phone: string;
@@ -48,7 +46,7 @@ export class Customer {
   }
 
   setPoints(value: number) {
-    ensureNonNegativePoint(value, Customer.MIN_POINTS)
+    ensureNonNegativePoint(value)
     this._points = value;
   }
 

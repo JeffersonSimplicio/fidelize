@@ -57,7 +57,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       .select()
       .from(this.customerRewardTable);
 
-    return dbCustomerRewards.map(this.customerRewardToDomainMapper.map)
+    return dbCustomerRewards.map(c => this.customerRewardToDomainMapper.map(c));
   }
 
   async findTopRewardsByRedeem(limit: number): Promise<TopReward[]> {
@@ -151,7 +151,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
         )
       );
 
-    return result.map(this.rewardToDomainMapper.map);
+    return result.map(c => this.rewardToDomainMapper.map(c));
   }
 
   async findCustomersEligibleToRedeemReward(rewardId: number): Promise<Customer[]> {
@@ -186,7 +186,7 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
         )
       );
 
-    return result.map(this.customerToDomainMapper.map);
+    return result.map(c => this.customerToDomainMapper.map(c));
   }
 
   async findCustomersWhoRedeemedReward(

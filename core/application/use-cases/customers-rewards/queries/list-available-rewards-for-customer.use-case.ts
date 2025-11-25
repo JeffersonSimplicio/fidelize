@@ -28,6 +28,6 @@ export class ListAvailableRewardsForCustomerUseCase implements ListAvailableRewa
     const rewards = await this.customerRewardQueryRepo
       .findAvailableRewardsForCustomer(customerId);
 
-    return rewards.map(this.rewardToDtoMapper.map);
+    return rewards.map(r => this.rewardToDtoMapper.map(r));
   }
 }

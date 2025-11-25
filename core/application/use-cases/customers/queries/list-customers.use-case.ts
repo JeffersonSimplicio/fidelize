@@ -20,6 +20,6 @@ export class ListCustomersUseCase implements ListCustomers {
 
   async execute(): Promise<CustomerDto[]> {
     const allCustomers = await this.customerQueryRepo.findAll();
-    return allCustomers.map(this.customerToDtoMapper.map);
+    return allCustomers.map(c => this.customerToDtoMapper.map(c));
   }
 }

@@ -31,7 +31,7 @@ export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
       .from(this.customerTable)
       .where(like(this.customerTable.name, `%${name}%`));
 
-    return dbCustomers.map(this.customerToDomainMapper.map);
+    return dbCustomers.map(c => this.customerToDomainMapper.map(c));
   }
 
   async findAll(): Promise<Customer[]> {
@@ -39,7 +39,7 @@ export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
       .select()
       .from(this.customerTable);
 
-    return dbCustomers.map(this.customerToDomainMapper.map);
+    return dbCustomers.map(c => this.customerToDomainMapper.map(c));
   }
 
   async findTopCustomersByPoints(limit: number): Promise<Customer[]> {
@@ -49,6 +49,6 @@ export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
       .orderBy(desc(this.customerTable.points))
       .limit(limit);
 
-    return dbCustomers.map(this.customerToDomainMapper.map);
+    return dbCustomers.map(c => this.customerToDomainMapper.map(c));
   }
 }
