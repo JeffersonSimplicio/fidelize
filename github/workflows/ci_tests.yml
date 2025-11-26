@@ -1,0 +1,44 @@
+name: CI - Testes e Cobertura
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-tests-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar Dependências
+        run: npm install
+
+      - name: Executar Testes (Jest)
+        run: npm run test:ci
+
+      - name: Executar Teste de Cobertura
+        run: npm run test:coverage
+
+      - name: Publicar Resultados dos Testes
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: junit.xml
+        if: always()
+
+      - name: Publicar Cobertura de Código (Report Badge)
+        uses: irongut/react-native-jest-coverage@v1.2.0
+        with:
+          coverage-xml-path: ./coverage/cobertura-coverage.xml
