@@ -6,27 +6,37 @@ const prettierConfig = require('eslint-plugin-prettier/recommended');
 const eslintConfigPrettier = require('eslint-config-prettier');
 
 const typescriptEslint = require('@typescript-eslint/eslint-plugin');
+const typescriptParser = require('@typescript-eslint/parser');
 
 module.exports = defineConfig([
   expoConfig,
   eslintConfigPrettier,
   prettierConfig,
   {
-    parser: '@typescript-eslint/parser',
+    rules: {
+      'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+    },
     plugins: {
       '@typescript-eslint': typescriptEslint,
     },
-    extends: ['plugin:@typescript-eslint/recommended'],
     rules: {
-      'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-redeclare': 'error',
-      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { argsIgnorePattern: '^_' },
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/no-floating-promises': 'error',
       'import/order': [
