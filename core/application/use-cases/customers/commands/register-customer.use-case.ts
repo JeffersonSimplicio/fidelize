@@ -1,16 +1,19 @@
-import { CustomerDto, CreateCustomerDto } from "@/core/application/dtos/customers";
-import { RegisterCustomer } from "@/core/application/interfaces/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { ClientAlreadyExistsError } from "@/core/domain/customers/errors/client-already-exists.error";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
+import {
+  CustomerDto,
+  CreateCustomerDto,
+} from '@/core/application/dtos/customers';
+import { RegisterCustomer } from '@/core/application/interfaces/customers';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { ClientAlreadyExistsError } from '@/core/domain/customers/errors/client-already-exists.error';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
 
 export interface RegisterCustomerDep {
-  customerRepo: CustomerRepository,
-  createCustomerValidator: Validation<CreateCustomerDto>,
-  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+  customerRepo: CustomerRepository;
+  createCustomerValidator: Validation<CreateCustomerDto>;
+  customerToDtoMapper: Mapper<Customer, CustomerDto>;
 }
 
 export class RegisterCustomerUseCase implements RegisterCustomer {
@@ -39,7 +42,7 @@ export class RegisterCustomerUseCase implements RegisterCustomer {
       name: data.name,
       phone: data.phone,
       points: 0,
-    })
+    });
 
     const customer = await this.customerRepo.create(CustomerCreate);
 

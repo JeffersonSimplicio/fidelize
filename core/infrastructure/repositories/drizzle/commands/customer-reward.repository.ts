@@ -1,18 +1,24 @@
-import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
-import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
-import { CustomerRewardNotFoundError } from "@/core/domain/customer-rewards/errors";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
-import { CustomerRewardSelect, CustomerRewardTable } from "@/core/infrastructure/database/drizzle/types";
-import { and, eq } from "drizzle-orm";
+import { and, eq } from 'drizzle-orm';
+
+import { CustomerReward } from '@/core/domain/customer-rewards/customer-reward.entity';
+import { CustomerRewardRepository } from '@/core/domain/customer-rewards/customer-reward.repository.interface';
+import { CustomerRewardNotFoundError } from '@/core/domain/customer-rewards/errors';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { drizzleClient } from '@/core/infrastructure/database/drizzle/db';
+import {
+  CustomerRewardSelect,
+  CustomerRewardTable,
+} from '@/core/infrastructure/database/drizzle/types';
 
 export interface CustomerRewardRepositoryDrizzleDep {
-  dbClient: drizzleClient,
-  customerRewardTable: CustomerRewardTable,
-  customerRewardToDomainMapper: Mapper<CustomerRewardSelect, CustomerReward>,
+  dbClient: drizzleClient;
+  customerRewardTable: CustomerRewardTable;
+  customerRewardToDomainMapper: Mapper<CustomerRewardSelect, CustomerReward>;
 }
 
-export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository {
+export class CustomerRewardRepositoryDrizzle
+  implements CustomerRewardRepository
+{
   private readonly dbClient: drizzleClient;
   private readonly customerRewardTable: CustomerRewardTable;
   private readonly customerRewardToDomainMapper: Mapper<
@@ -32,7 +38,7 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
       .values(customerReward.toPersistence())
       .returning();
 
-    return this.customerRewardToDomainMapper.map(inserted)
+    return this.customerRewardToDomainMapper.map(inserted);
   }
 
   async getById(id: number): Promise<CustomerReward> {
@@ -48,7 +54,7 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
 
   async alreadyRedeemed(
     customerId: number,
-    rewardId: number
+    rewardId: number,
   ): Promise<CustomerReward | null> {
     const result = this.dbClient
       .select()
@@ -56,12 +62,12 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
       .where(
         and(
           eq(this.customerRewardTable.customerId, customerId),
-          eq(this.customerRewardTable.rewardId, rewardId)
-        )
+          eq(this.customerRewardTable.rewardId, rewardId),
+        ),
       )
       .get();
 
-    return result ? this.customerRewardToDomainMapper.map(result) : null
+    return result ? this.customerRewardToDomainMapper.map(result) : null;
   }
 
   async delete(id: number): Promise<void> {
@@ -69,4 +75,4 @@ export class CustomerRewardRepositoryDrizzle implements CustomerRewardRepository
       .delete(this.customerRewardTable)
       .where(eq(this.customerRewardTable.id, id));
   }
-} 
+}

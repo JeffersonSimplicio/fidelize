@@ -1,11 +1,11 @@
-import { GetRewardDetailUseCase } from "@/core/application/use-cases/rewards";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardDto } from "@/core/application/dtos/rewards";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { GetRewardDetailUseCase } from '@/core/application/use-cases/rewards';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardDto } from '@/core/application/dtos/rewards';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
 
-describe("GetRewardDetailUseCase", () => {
+describe('GetRewardDetailUseCase', () => {
   let rewardRepo: jest.Mocked<RewardRepository>;
   let mapper: jest.Mocked<Mapper<Reward, RewardDto>>;
   let useCase: GetRewardDetailUseCase;
@@ -28,24 +28,24 @@ describe("GetRewardDetailUseCase", () => {
     });
   });
 
-  it("should return reward detail DTO successfully", async () => {
+  it('should return reward detail DTO successfully', async () => {
     const reward = new Reward({
-      name: "Free Coffee",
-      description: "A simple reward",
+      name: 'Free Coffee',
+      description: 'A simple reward',
       pointsRequired: 10,
       isActive: RewardStatus.Active,
-      createdAt: new Date("2024-01-01"),
+      createdAt: new Date('2024-01-01'),
     });
 
     reward.setId(1);
 
     const dto: RewardDto = {
       id: 1,
-      name: "Free Coffee",
-      description: "A simple reward",
+      name: 'Free Coffee',
+      description: 'A simple reward',
       pointsRequired: 10,
       isActive: true,
-      createdAt: "2024-01-01",
+      createdAt: '2024-01-01',
     };
 
     rewardRepo.getById.mockResolvedValue(reward);
@@ -58,18 +58,18 @@ describe("GetRewardDetailUseCase", () => {
     expect(mapper.map).toHaveBeenCalledWith(reward);
   });
 
-  it("should throw if reward repository throws", async () => {
-    rewardRepo.getById.mockRejectedValue(new Error("Database error"));
+  it('should throw if reward repository throws', async () => {
+    rewardRepo.getById.mockRejectedValue(new Error('Database error'));
 
-    await expect(useCase.execute(1)).rejects.toThrow("Database error");
+    await expect(useCase.execute(1)).rejects.toThrow('Database error');
     expect(rewardRepo.getById).toHaveBeenCalledWith(1);
     expect(mapper.map).not.toHaveBeenCalled();
   });
 
-  it("should throw if mapper throws", async () => {
+  it('should throw if mapper throws', async () => {
     const reward = new Reward({
-      name: "VIP Pass",
-      description: "Exclusive reward",
+      name: 'VIP Pass',
+      description: 'Exclusive reward',
       pointsRequired: 50,
     });
 
@@ -77,19 +77,19 @@ describe("GetRewardDetailUseCase", () => {
 
     rewardRepo.getById.mockResolvedValue(reward);
     mapper.map.mockImplementation(() => {
-      throw new Error("Mapping failed");
+      throw new Error('Mapping failed');
     });
 
-    await expect(useCase.execute(10)).rejects.toThrow("Mapping failed");
+    await expect(useCase.execute(10)).rejects.toThrow('Mapping failed');
 
     expect(rewardRepo.getById).toHaveBeenCalledWith(10);
     expect(mapper.map).toHaveBeenCalledWith(reward);
   });
 
-  it("should pass exactly the returned entity to the mapper", async () => {
+  it('should pass exactly the returned entity to the mapper', async () => {
     const reward = new Reward({
-      name: "Gift Card",
-      description: "Reward description",
+      name: 'Gift Card',
+      description: 'Reward description',
       pointsRequired: 20,
     });
 
@@ -98,8 +98,8 @@ describe("GetRewardDetailUseCase", () => {
     rewardRepo.getById.mockResolvedValue(reward);
     mapper.map.mockReturnValue({
       id: 5,
-      name: "Gift Card",
-      description: "Reward description",
+      name: 'Gift Card',
+      description: 'Reward description',
       pointsRequired: 20,
       isActive: true,
       createdAt: reward.createdAt.toISOString(),

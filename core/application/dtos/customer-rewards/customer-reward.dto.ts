@@ -3,4 +3,4 @@ export type CustomerRewardDto = {
   customerId: number;
   rewardId: number;
   redeemedAt: string;
-}
+};

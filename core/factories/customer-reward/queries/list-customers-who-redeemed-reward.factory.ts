@@ -1,9 +1,9 @@
-import { ListCustomersWhoRedeemedRewardUseCase } from "@/core/application/use-cases/customers-rewards";
+import { ListCustomersWhoRedeemedRewardUseCase } from '@/core/application/use-cases/customers-rewards';
 import {
   makeCustomerRewardQueryRepositoryDrizzle,
-  makeRewardRepositoryDrizzle
-} from "@/core/factories/repositories";
-import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
+  makeRewardRepositoryDrizzle,
+} from '@/core/factories/repositories';
+import { CustomerEntityToDtoMapper } from '@/core/infrastructure/mappers';
 
 export function makeListCustomersWhoRedeemedReward() {
   const rewardRepo = makeRewardRepositoryDrizzle();

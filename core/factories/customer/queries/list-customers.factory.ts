@@ -1,7 +1,7 @@
-import { ListCustomers } from "@/core/application/interfaces/customers";
-import { ListCustomersUseCase } from "@/core/application/use-cases/customers";
-import { makeCustomerQueryRepositoryDrizzle } from "@/core/factories/repositories";
-import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
+import { ListCustomers } from '@/core/application/interfaces/customers';
+import { ListCustomersUseCase } from '@/core/application/use-cases/customers';
+import { makeCustomerQueryRepositoryDrizzle } from '@/core/factories/repositories';
+import { CustomerEntityToDtoMapper } from '@/core/infrastructure/mappers';
 
 export function makeListCustomers(): ListCustomers {
   const customerQueryRepo = makeCustomerQueryRepositoryDrizzle();
@@ -10,4 +10,4 @@ export function makeListCustomers(): ListCustomers {
     customerQueryRepo: customerQueryRepo,
     customerToDtoMapper: customerEntityToDtoMapper,
   });
-} 
+}

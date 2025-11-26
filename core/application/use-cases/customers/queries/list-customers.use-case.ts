@@ -1,12 +1,12 @@
-import { CustomerDto } from "@/core/application/dtos/customers";
-import { ListCustomers } from "@/core/application/interfaces/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerQueryRepository } from "@/core/domain/customers/customer.query.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { CustomerDto } from '@/core/application/dtos/customers';
+import { ListCustomers } from '@/core/application/interfaces/customers';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerQueryRepository } from '@/core/domain/customers/customer.query.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
 
 export interface ListCustomersDep {
-  customerQueryRepo: CustomerQueryRepository,
-  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+  customerQueryRepo: CustomerQueryRepository;
+  customerToDtoMapper: Mapper<Customer, CustomerDto>;
 }
 
 export class ListCustomersUseCase implements ListCustomers {
@@ -15,11 +15,11 @@ export class ListCustomersUseCase implements ListCustomers {
 
   constructor(deps: ListCustomersDep) {
     this.customerQueryRepo = deps.customerQueryRepo;
-    this.customerToDtoMapper = deps.customerToDtoMapper
+    this.customerToDtoMapper = deps.customerToDtoMapper;
   }
 
   async execute(): Promise<CustomerDto[]> {
     const allCustomers = await this.customerQueryRepo.findAll();
-    return allCustomers.map(c => this.customerToDtoMapper.map(c));
+    return allCustomers.map((c) => this.customerToDtoMapper.map(c));
   }
 }

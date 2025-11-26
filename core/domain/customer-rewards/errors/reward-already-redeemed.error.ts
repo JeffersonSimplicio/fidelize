@@ -1,11 +1,14 @@
-import { BaseError } from "@/core/domain/shared/errors/base.error";
+import { BaseError } from '@/core/domain/shared/errors/base.error';
 
 export class RewardAlreadyRedeemedError extends BaseError {
   constructor(customerName?: string, rewardName?: string) {
     super(RewardAlreadyRedeemedError.buildMessage(customerName, rewardName));
   }
 
-  private static buildMessage(customerName?: string, rewardName?: string): string {
+  private static buildMessage(
+    customerName?: string,
+    rewardName?: string,
+  ): string {
     if (customerName && rewardName) {
       return `${customerName} já resgatou ${rewardName}.`;
     }

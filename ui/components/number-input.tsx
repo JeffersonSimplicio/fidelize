@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { View, TextInput, Alert } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { AppButton } from "@/ui/components/app-button";
+import React, { useEffect, useState } from 'react';
+import { View, TextInput, Alert } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+
+import { AppButton } from '@/ui/components/app-button';
 
 interface NumberInputProps {
   minValue: number;
@@ -24,8 +25,8 @@ export function NumberInput({
 
   function showWarning() {
     Alert.alert(
-      "Aviso",
-      warningMessage || `O valor mínimo permitido é ${minValue}.`
+      'Aviso',
+      warningMessage || `O valor mínimo permitido é ${minValue}.`,
     );
   }
 
@@ -57,16 +58,16 @@ export function NumberInput({
   }
 
   return (
-    <View className="flex-row items-center justify-center space-x-4 mt-3 mb-3">
+    <View className="mb-3 mt-3 flex-row items-center justify-center space-x-4">
       <AppButton
         onPress={handleDecrement}
-        className="w-10 h-10 bg-gray-200 rounded-full justify-center items-center active:bg-gray-300"
+        className="h-10 w-10 items-center justify-center rounded-full bg-gray-200 active:bg-gray-300"
       >
         <AntDesign name="minus" size={20} color="#333" />
       </AppButton>
 
       <TextInput
-        className="border border-gray-300 rounded-lg text-center text-base text-gray-800 px-3 py-2 w-16 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 mx-2"
+        className="mx-2 w-16 rounded-lg border border-gray-300 px-3 py-2 text-center text-base text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400"
         keyboardType="numeric"
         value={value.toString()}
         onChangeText={handleChange}
@@ -74,7 +75,7 @@ export function NumberInput({
 
       <AppButton
         onPress={handleIncrement}
-        className="w-10 h-10 bg-gray-200 rounded-full justify-center items-center active:bg-gray-300"
+        className="h-10 w-10 items-center justify-center rounded-full bg-gray-200 active:bg-gray-300"
       >
         <AntDesign name="plus" size={20} color="#333" />
       </AppButton>

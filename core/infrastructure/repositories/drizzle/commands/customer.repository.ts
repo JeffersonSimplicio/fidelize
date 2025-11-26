@@ -1,18 +1,19 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { CustomerNotFoundError } from "@/core/domain/customers/errors";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
+import { eq, SQL } from 'drizzle-orm';
+
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { CustomerNotFoundError } from '@/core/domain/customers/errors';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { drizzleClient } from '@/core/infrastructure/database/drizzle/db';
 import {
   CustomerSelect,
-  CustomerTable
+  CustomerTable,
 } from '@/core/infrastructure/database/drizzle/types';
-import { eq, SQL } from "drizzle-orm";
 
 export interface CustomerRepositoryDrizzleDep {
-  dbClient: drizzleClient,
-  customerTable: CustomerTable,
-  customerToDomainMapper: Mapper<CustomerSelect, Customer>,
+  dbClient: drizzleClient;
+  customerTable: CustomerTable;
+  customerToDomainMapper: Mapper<CustomerSelect, Customer>;
 }
 
 export class CustomerRepositoryDrizzle implements CustomerRepository {
@@ -47,28 +48,22 @@ export class CustomerRepositoryDrizzle implements CustomerRepository {
   }
 
   async getById(id: number): Promise<Customer> {
-    const result = await this.findOneByCondition(
-      eq(this.customerTable.id, id)
-    );
+    const result = await this.findOneByCondition(eq(this.customerTable.id, id));
     if (result) return result;
     throw new CustomerNotFoundError();
   }
 
   async findByPhone(phone: string): Promise<Customer | null> {
-    return await this.findOneByCondition(
-      eq(this.customerTable.phone, phone)
-    );
+    return await this.findOneByCondition(eq(this.customerTable.phone, phone));
   }
 
   async update(customer: Customer): Promise<Customer> {
-    const { id, ...data } = customer.toPersistence();
+    const { id: _id, ...data } = customer.toPersistence();
 
     const [updated] = await this.dbClient
       .update(this.customerTable)
       .set(data)
-      .where(
-        eq(this.customerTable.id, customer.id!)
-      )
+      .where(eq(this.customerTable.id, customer.id!))
       .returning();
 
     return this.customerToDomainMapper.map(updated);

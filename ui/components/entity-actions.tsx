@@ -1,7 +1,8 @@
-import { View } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { AppButton } from "@/ui/components/app-button";
-import { DeleteButton } from "@/ui/components/delete-button";
+import { View } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
+import { AppButton } from '@/ui/components/app-button';
+import { DeleteButton } from '@/ui/components/delete-button';
 
 interface EntityActionsProps {
   onDelete: () => void;
@@ -18,7 +19,7 @@ export function EntityActions({ onDelete, onEdit }: EntityActionsProps) {
       <View className="absolute bottom-6 right-6">
         <AppButton
           onPress={onEdit}
-          className="w-14 h-14 bg-blue-600 rounded-full items-center justify-center shadow-md active:opacity-70"
+          className="h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-md active:opacity-70"
         >
           <FontAwesome name="edit" size={22} color="white" />
         </AppButton>

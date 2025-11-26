@@ -1,4 +1,4 @@
-import { RewardDto } from "@/core/application/dtos";
+import { RewardDto } from '@/core/application/dtos';
 
 export interface ListRewards {
   execute(): Promise<RewardDto[]>;

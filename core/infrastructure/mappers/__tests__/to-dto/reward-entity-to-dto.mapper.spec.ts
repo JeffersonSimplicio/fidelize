@@ -1,19 +1,19 @@
-import { RewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { RewardEntityToDtoMapper } from '@/core/infrastructure/mappers';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
 
-describe("RewardEntityToDtoMapper", () => {
+describe('RewardEntityToDtoMapper', () => {
   let mapper: RewardEntityToDtoMapper;
 
   beforeEach(() => {
     mapper = new RewardEntityToDtoMapper();
   });
 
-  it("should map a Reward entity to RewardDto (happy path)", () => {
-    const createdAt = new Date("2024-03-01T12:00:00.000Z");
+  it('should map a Reward entity to RewardDto', () => {
+    const createdAt = new Date('2024-03-01T12:00:00.000Z');
     const reward = new Reward({
-      name: "Test Reward",
-      description: "A great prize",
+      name: 'Test Reward',
+      description: 'A great prize',
       pointsRequired: 42,
       isActive: RewardStatus.Active,
       createdAt,
@@ -23,17 +23,17 @@ describe("RewardEntityToDtoMapper", () => {
     const dto = mapper.map(reward);
 
     expect(dto.id).toBe(123);
-    expect(dto.name).toBe("Test Reward");
-    expect(dto.description).toBe("A great prize");
+    expect(dto.name).toBe('Test Reward');
+    expect(dto.description).toBe('A great prize');
     expect(dto.pointsRequired).toBe(42);
     expect(dto.isActive).toBe(true);
     expect(dto.createdAt).toBe(createdAt.toISOString());
   });
 
-  it("should map isActive = false when Reward entity is Inactive", () => {
+  it('should map isActive = false when Reward entity is Inactive', () => {
     const reward = new Reward({
-      name: "Inactive Reward",
-      description: "Not available",
+      name: 'Inactive Reward',
+      description: 'Not available',
       pointsRequired: 5,
       isActive: RewardStatus.Inactive,
     });
@@ -43,14 +43,14 @@ describe("RewardEntityToDtoMapper", () => {
 
     expect(dto.isActive).toBe(false);
     expect(dto.id).toBe(7);
-    expect(dto.name).toBe("Inactive Reward");
+    expect(dto.name).toBe('Inactive Reward');
   });
 
-  it("should not mutate the original Reward entity when mapping", () => {
+  it('should not mutate the original Reward entity when mapping', () => {
     const createdAt = new Date();
     const reward = new Reward({
-      name: "Immutable",
-      description: "Should not mutate",
+      name: 'Immutable',
+      description: 'Should not mutate',
       pointsRequired: 1,
       isActive: RewardStatus.Active,
       createdAt,
@@ -78,17 +78,17 @@ describe("RewardEntityToDtoMapper", () => {
     expect(reward.createdAt.getTime()).toBe(before.createdAt.getTime());
   });
 
-  it("should map even if the entity id is not set (returns undefined id)", () => {
+  it('should map even if the entity id is not set (returns undefined id)', () => {
     const reward = new Reward({
-      name: "NoId",
-      description: "No id set",
+      name: 'NoId',
+      description: 'No id set',
       pointsRequired: 3,
       isActive: RewardStatus.Active,
     });
 
     const dto = mapper.map(reward as Reward);
 
-    expect(dto.name).toBe("NoId");
+    expect(dto.name).toBe('NoId');
     expect(dto.pointsRequired).toBe(3);
     expect(dto.isActive).toBe(true);
     expect(dto.createdAt).toBe(reward.createdAt.toISOString());

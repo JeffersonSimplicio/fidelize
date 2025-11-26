@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,14 @@ import {
   FlatList,
   RefreshControl,
   TouchableOpacity,
-} from "react-native";
-import { Link, useFocusEffect } from "expo-router";
-import { Picker } from "@react-native-picker/picker";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useRewards } from "@/ui/hooks/rewards/use-rewards";
-import { useRewardList } from "@/ui/hooks/rewards/use-reward-list";
-import { ListItemCard } from "@/ui/components/list-item-card";
+} from 'react-native';
+import { Link, useFocusEffect } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+
+import { useRewards } from '@/ui/hooks/rewards/use-rewards';
+import { useRewardList } from '@/ui/hooks/rewards/use-reward-list';
+import { ListItemCard } from '@/ui/components/list-item-card';
 
 export default function RewardsScreen() {
   const { rewards, refreshing, onRefresh, fetchRewards } = useRewards();
@@ -26,14 +27,14 @@ export default function RewardsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchRewards();
-    }, [fetchRewards])
+      void fetchRewards();
+    }, [fetchRewards]),
   );
 
   return (
-    <View className="flex-1 p-4 bg-white">
+    <View className="flex-1 bg-white p-4">
       {/* Título */}
-      <Text className="text-xl font-bold mb-3 text-gray-800">
+      <Text className="mb-3 text-xl font-bold text-gray-800">
         Lista de Recompensas
       </Text>
 
@@ -42,16 +43,16 @@ export default function RewardsScreen() {
         placeholder="Buscar por nome..."
         value={searchTerm}
         onChangeText={setSearchTerm}
-        className="border border-gray-300 p-2 rounded-lg mb-3 text-gray-800"
+        className="mb-3 rounded-lg border border-gray-300 p-2 text-gray-800"
         placeholderTextColor="#888"
       />
 
       {/* Seletor de ordenação */}
-      <View className="border border-gray-300 rounded-lg mb-3">
+      <View className="mb-3 rounded-lg border border-gray-300">
         <Picker
           selectedValue={sortOption}
           onValueChange={(v) => setSortOption(v)}
-          style={{ color: "black" }}
+          style={{ color: 'black' }}
         >
           <Picker.Item label="Mais novo" value="createdAt-desc" />
           <Picker.Item label="Mais antigo" value="createdAt-asc" />
@@ -83,7 +84,7 @@ export default function RewardsScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={() => (
-          <View className="items-center mt-6">
+          <View className="mt-6 items-center">
             <Text className="text-gray-600">
               Nenhuma recompensa cadastrada.
             </Text>
@@ -94,7 +95,7 @@ export default function RewardsScreen() {
       {/* Botão flutuante */}
       <Link href="/rewards/create" asChild>
         <TouchableOpacity
-          className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-80"
+          className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-lg active:opacity-80"
           accessibilityLabel="Adicionar recompensa"
         >
           <FontAwesome6 name="plus" size={24} color="white" />

@@ -1,15 +1,15 @@
-import { CreateRewardDto, RewardDto } from "@/core/application/dtos/rewards";
-import { RegisterReward } from "@/core/application/interfaces/rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
+import { CreateRewardDto, RewardDto } from '@/core/application/dtos/rewards';
+import { RegisterReward } from '@/core/application/interfaces/rewards';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
 
 export interface RegisterRewardDep {
-  rewardRepo: RewardRepository,
-  createRewardValidator: Validation<CreateRewardDto>,
-  rewardToDtoMapper: Mapper<Reward, RewardDto>,
+  rewardRepo: RewardRepository;
+  createRewardValidator: Validation<CreateRewardDto>;
+  rewardToDtoMapper: Mapper<Reward, RewardDto>;
 }
 
 export class RegisterRewardUseCase implements RegisterReward {
@@ -33,7 +33,7 @@ export class RegisterRewardUseCase implements RegisterReward {
       name: data.name,
       description: data.description,
       pointsRequired: data.pointsRequired,
-    })
+    });
 
     const reward = await this.rewardRepo.create(rewardCreate);
 

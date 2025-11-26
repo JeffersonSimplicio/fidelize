@@ -1,7 +1,8 @@
-import { CustomerRedeemedRewardDto } from "@/core/application/dtos";
-import { AppButton } from "@/ui/components/app-button";
-import { formatDate } from "@/ui/utils/format-date";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList } from 'react-native';
+
+import { CustomerRedeemedRewardDto } from '@/core/application/dtos';
+import { AppButton } from '@/ui/components/app-button';
+import { formatDate } from '@/ui/utils/format-date';
 
 interface Props {
   rewards: CustomerRedeemedRewardDto[];
@@ -10,8 +11,8 @@ interface Props {
 
 export function RedeemedRewardsList({ rewards, onUndoRedeem }: Props) {
   return (
-    <View className="bg-gray-50 p-4 rounded-xl shadow-sm mb-4">
-      <Text className="text-lg font-semibold text-gray-800 mb-3">
+    <View className="mb-4 rounded-xl bg-gray-50 p-4 shadow-sm">
+      <Text className="mb-3 text-lg font-semibold text-gray-800">
         🪙 Recompensas resgatadas
       </Text>
 
@@ -19,20 +20,20 @@ export function RedeemedRewardsList({ rewards, onUndoRedeem }: Props) {
         data={rewards}
         keyExtractor={(r) => r.reward.id!.toString()}
         renderItem={({ item: { reward, redeemedAt } }) => (
-          <View className="bg-white p-3 rounded-lg border border-gray-200 mb-2">
-            <Text className="text-gray-800 font-medium">{reward.name}</Text>
-            <Text className="text-gray-600 mb-1">
+          <View className="mb-2 rounded-lg border border-gray-200 bg-white p-3">
+            <Text className="font-medium text-gray-800">{reward.name}</Text>
+            <Text className="mb-1 text-gray-600">
               {reward.pointsRequired} pontos
             </Text>
-            <Text className="text-gray-500 mb-2">
+            <Text className="mb-2 text-gray-500">
               Resgatado em {formatDate(redeemedAt)}
             </Text>
             {reward.isActive && (
               <AppButton
                 onPress={() => onUndoRedeem(reward.id!)}
-                className="bg-red-600 py-2 px-4 rounded-lg"
+                className="rounded-lg bg-red-600 px-4 py-2"
               >
-                <Text className="text-white font-semibold">
+                <Text className="font-semibold text-white">
                   Desfazer resgate
                 </Text>
               </AppButton>
@@ -40,7 +41,7 @@ export function RedeemedRewardsList({ rewards, onUndoRedeem }: Props) {
           </View>
         )}
         ListEmptyComponent={() => (
-          <View className="items-center mt-4">
+          <View className="mt-4 items-center">
             <Text className="text-gray-500">
               Nenhuma recompensa foi resgatada.
             </Text>

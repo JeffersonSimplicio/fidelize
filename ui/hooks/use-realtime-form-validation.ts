@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { z, ZodError } from "zod";
+import { useState, useEffect } from 'react';
+import { z, ZodError } from 'zod';
 
 export function useRealtimeFieldValidation<T>(
   schema: z.ZodType<T>,
   value: T,
-  delay = 500
+  delay = 500,
 ) {
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
@@ -18,7 +18,7 @@ export function useRealtimeFieldValidation<T>(
         setError(null);
       } catch (err) {
         if (err instanceof ZodError) {
-          setError(err.errors[0]?.message || "Valor inválido");
+          setError(err.errors[0]?.message || 'Valor inválido');
         }
       }
     }, delay);

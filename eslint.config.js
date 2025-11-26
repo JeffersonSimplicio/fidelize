@@ -31,7 +31,7 @@ module.exports = defineConfig([
     rules: {
       'no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/require-await': 'error',
+      '@typescript-eslint/require-await': 'warn',
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-redeclare': 'error',
       '@typescript-eslint/no-unused-vars': [
@@ -55,6 +55,21 @@ module.exports = defineConfig([
       ],
     },
   },
+  // {
+  //   rules: {
+  //     'max-len': [
+  //       'error',
+  //       {
+  //         code: 80,
+  //         ignoreUrls: true,
+  //         ignoreStrings: true,
+  //         ignoreTemplateLiterals: true,
+  //         ignoreRegExpLiterals: true,
+  //         ignoreComments: true,
+  //       },
+  //     ],
+  //   },
+  // },
   {
     ignores: [
       'dist/*',

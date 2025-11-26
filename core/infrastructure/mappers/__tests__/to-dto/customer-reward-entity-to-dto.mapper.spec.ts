@@ -1,16 +1,20 @@
-import { CustomerRewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
-import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
+import { CustomerRewardEntityToDtoMapper } from '@/core/infrastructure/mappers';
+import { CustomerReward } from '@/core/domain/customer-rewards/customer-reward.entity';
 
-describe("CustomerRewardEntityToDtoMapper", () => {
+describe('CustomerRewardEntityToDtoMapper', () => {
   let mapper: CustomerRewardEntityToDtoMapper;
 
   beforeEach(() => {
     mapper = new CustomerRewardEntityToDtoMapper();
   });
 
-  it("should map a CustomerReward entity to CustomerRewardDto", () => {
-    const redeemedAt = new Date("2024-04-01T10:00:00.000Z");
-    const entity = new CustomerReward({ customerId: 11, rewardId: 22, redeemedAt });
+  it('should map a CustomerReward entity to CustomerRewardDto', () => {
+    const redeemedAt = new Date('2024-04-01T10:00:00.000Z');
+    const entity = new CustomerReward({
+      customerId: 11,
+      rewardId: 22,
+      redeemedAt,
+    });
     entity.setId(123);
 
     const dto = mapper.map(entity);
@@ -21,9 +25,13 @@ describe("CustomerRewardEntityToDtoMapper", () => {
     expect(dto.redeemedAt).toBe(redeemedAt.toISOString());
   });
 
-  it("should map when id is not set (runtime undefined id)", () => {
+  it('should map when id is not set (runtime undefined id)', () => {
     const now = new Date();
-    const entity = new CustomerReward({ customerId: 7, rewardId: 8, redeemedAt: now });
+    const entity = new CustomerReward({
+      customerId: 7,
+      rewardId: 8,
+      redeemedAt: now,
+    });
 
     const dto = mapper.map(entity as CustomerReward);
 
@@ -33,9 +41,13 @@ describe("CustomerRewardEntityToDtoMapper", () => {
     expect(dto.redeemedAt).toBe(now.toISOString());
   });
 
-  it("should not mutate the original entity when mapping", () => {
+  it('should not mutate the original entity when mapping', () => {
     const redeemedAt = new Date();
-    const entity = new CustomerReward({ customerId: 3, rewardId: 4, redeemedAt });
+    const entity = new CustomerReward({
+      customerId: 3,
+      rewardId: 4,
+      redeemedAt,
+    });
     entity.setId(555);
 
     const before = {
@@ -58,9 +70,13 @@ describe("CustomerRewardEntityToDtoMapper", () => {
     expect(entity.redeemedAt.getTime()).toBe(before.redeemedAt);
   });
 
-  it("should map correctly when redeemedAt equals now (edge equality)", () => {
+  it('should map correctly when redeemedAt equals now (edge equality)', () => {
     const now = new Date();
-    const entity = new CustomerReward({ customerId: 99, rewardId: 100, redeemedAt: new Date(now.getTime()) });
+    const entity = new CustomerReward({
+      customerId: 99,
+      rewardId: 100,
+      redeemedAt: new Date(now.getTime()),
+    });
     entity.setId(1);
 
     const dto = mapper.map(entity);

@@ -1,20 +1,20 @@
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
+import { eq } from 'drizzle-orm';
+
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { drizzleClient } from '@/core/infrastructure/database/drizzle/db';
 import {
   RewardSelect,
-  RewardTable
-} from "@/core/infrastructure/database/drizzle/types";
-import { eq } from "drizzle-orm";
-import { RewardNotFoundError } from "@/core/domain/rewards/errors"
+  RewardTable,
+} from '@/core/infrastructure/database/drizzle/types';
+import { RewardNotFoundError } from '@/core/domain/rewards/errors';
 
 export interface RewardRepositoryDrizzleDep {
-  dbClient: drizzleClient,
-  rewardTable: RewardTable,
-  rewardToDomainMapper: Mapper<RewardSelect, Reward>,
+  dbClient: drizzleClient;
+  rewardTable: RewardTable;
+  rewardToDomainMapper: Mapper<RewardSelect, Reward>;
 }
-
 
 export class RewardRepositoryDrizzle implements RewardRepository {
   private readonly dbClient: drizzleClient;
@@ -44,11 +44,11 @@ export class RewardRepositoryDrizzle implements RewardRepository {
       .get();
 
     if (result) return this.rewardToDomainMapper.map(result);
-    throw new RewardNotFoundError()
+    throw new RewardNotFoundError();
   }
 
   async update(reward: Reward): Promise<Reward> {
-    const { id, ...data } = reward.toPersistence();
+    const { id: _id, ...data } = reward.toPersistence();
 
     const [updated] = await this.dbClient
       .update(this.rewardTable)

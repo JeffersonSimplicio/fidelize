@@ -1,5 +1,5 @@
-import { Link, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { Link, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -7,10 +7,11 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import { makeListCustomers } from "@/core/factories/customer";
-import { CustomerDto } from "@/core/application/dtos/customers";
-import { formatDate } from "@/ui/utils/format-date";
+} from 'react-native';
+
+import { makeListCustomers } from '@/core/factories/customer';
+import { CustomerDto } from '@/core/application/dtos/customers';
+import { formatDate } from '@/ui/utils/format-date';
 
 export default function CustomersDebugScreen() {
   const [customers, setCustomers] = useState<CustomerDto[]>([]);
@@ -23,8 +24,8 @@ export default function CustomersDebugScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchCustomers();
-    }, [fetchCustomers])
+      void fetchCustomers();
+    }, [fetchCustomers]),
   );
 
   const onRefresh = async () => {
@@ -58,8 +59,8 @@ export default function CustomersDebugScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={() => (
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Text style={{ color: "#666" }}>Nenhum cliente cadastrado.</Text>
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <Text style={{ color: '#666' }}>Nenhum cliente cadastrado.</Text>
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -68,16 +69,16 @@ export default function CustomersDebugScreen() {
       <View style={styles.nav}>
         <Text style={styles.navTitle}>🔗 Navegação</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Link href={"/"} style={styles.navLink}>
+          <Link href={'/'} style={styles.navLink}>
             <Text style={styles.navText}>Home</Text>
           </Link>
-          <Link href={"/debug/customer-debug"} style={styles.navLink}>
+          <Link href={'/debug/customer-debug'} style={styles.navLink}>
             <Text style={styles.navText}>Customers</Text>
           </Link>
-          <Link href={"/debug/reward-debug"} style={styles.navLink}>
+          <Link href={'/debug/reward-debug'} style={styles.navLink}>
             <Text style={styles.navText}>Rewards</Text>
           </Link>
-          <Link href={"/debug/customer-rewards-debug"} style={styles.navLink}>
+          <Link href={'/debug/customer-rewards-debug'} style={styles.navLink}>
             <Text style={styles.navText}>CustomerRewards</Text>
           </Link>
         </ScrollView>
@@ -90,51 +91,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: '#F8F9FA',
   },
   title: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 12,
-    textAlign: "center",
-    color: "#333",
+    textAlign: 'center',
+    color: '#333',
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
+    borderColor: '#ddd',
+    shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 3,
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 6,
-    color: "#222",
+    color: '#222',
   },
   field: {
     fontSize: 14,
-    color: "#444",
+    color: '#444',
     marginBottom: 2,
   },
   nav: {
     marginTop: 10,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#ddd",
+    borderTopColor: '#ddd',
   },
   navTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 6,
-    color: "#333",
+    color: '#333',
   },
   navLink: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: '#e0e0e0',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
@@ -142,6 +143,6 @@ const styles = StyleSheet.create({
   },
   navText: {
     fontSize: 14,
-    color: "#000",
+    color: '#000',
   },
 });

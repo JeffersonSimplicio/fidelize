@@ -1,6 +1,7 @@
 import { sqliteTable, integer, uniqueIndex } from 'drizzle-orm/sqlite-core';
-import { customers } from "./customers";
-import { rewards } from "./rewards";
+
+import { customers } from './customers';
+import { rewards } from './rewards';
 
 export const customerRewards = sqliteTable(
   'customer_rewards',
@@ -15,9 +16,6 @@ export const customerRewards = sqliteTable(
     redeemedAt: integer('redeemed_at', { mode: 'timestamp' }).notNull(),
   },
   (table) => [
-    uniqueIndex('unique_customer_reward').on(
-      table.customerId,
-      table.rewardId
-    )
-  ]
+    uniqueIndex('unique_customer_reward').on(table.customerId, table.rewardId),
+  ],
 );

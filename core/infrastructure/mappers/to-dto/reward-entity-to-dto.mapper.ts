@@ -1,13 +1,10 @@
-import { RewardDto } from "@/core/application/dtos/rewards";
-import { Reward as RewardEntity } from "@/core/domain/rewards/reward.entity";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { RewardDto } from '@/core/application/dtos/rewards';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
 
-export class RewardEntityToDtoMapper implements Mapper<
-  RewardEntity,
-  RewardDto
-> {
-  map(input: RewardEntity): RewardDto {
+export class RewardEntityToDtoMapper implements Mapper<Reward, RewardDto> {
+  map(input: Reward): RewardDto {
     return {
       id: input.id!,
       name: input.name,
@@ -15,6 +12,6 @@ export class RewardEntityToDtoMapper implements Mapper<
       pointsRequired: input.pointsRequired,
       isActive: input.isActive === RewardStatus.Active,
       createdAt: input.createdAt.toISOString(),
-    }
+    };
   }
 }

@@ -1,13 +1,16 @@
-import { CustomerDto, CreateCustomerDto } from "@/core/application/dtos/customers";
-import { RegisterCustomerUseCase } from "@/core/application/use-cases/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { ClientAlreadyExistsError } from "@/core/domain/customers/errors/client-already-exists.error";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
+import {
+  CustomerDto,
+  CreateCustomerDto,
+} from '@/core/application/dtos/customers';
+import { RegisterCustomerUseCase } from '@/core/application/use-cases/customers';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { ClientAlreadyExistsError } from '@/core/domain/customers/errors/client-already-exists.error';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
 
-describe("RegisterCustomerUseCase", () => {
+describe('RegisterCustomerUseCase', () => {
   let useCase: RegisterCustomerUseCase;
 
   let customerRepo: jest.Mocked<CustomerRepository>;
@@ -15,8 +18,8 @@ describe("RegisterCustomerUseCase", () => {
   let customerToDtoMapper: jest.Mocked<Mapper<Customer, CustomerDto>>;
 
   const validInput: CreateCustomerDto = {
-    name: "John Doe",
-    phone: "55999999999"
+    name: 'John Doe',
+    phone: '55999999999',
   };
 
   const mockCustomerEntity = new Customer({
@@ -31,7 +34,7 @@ describe("RegisterCustomerUseCase", () => {
     phone: validInput.phone,
     points: 0,
     createdAt: new Date().toISOString(),
-    lastVisitAt: new Date().toISOString()
+    lastVisitAt: new Date().toISOString(),
   };
 
   beforeEach(() => {
@@ -44,46 +47,46 @@ describe("RegisterCustomerUseCase", () => {
     };
 
     createCustomerValidator = {
-      validate: jest.fn()
+      validate: jest.fn(),
     };
 
     customerToDtoMapper = {
-      map: jest.fn()
+      map: jest.fn(),
     };
 
     useCase = new RegisterCustomerUseCase({
       customerRepo,
       createCustomerValidator,
-      customerToDtoMapper
+      customerToDtoMapper,
     });
   });
 
-  it("should throw ValidationException when validator returns errors", async () => {
+  it('should throw ValidationException when validator returns errors', async () => {
     createCustomerValidator.validate.mockReturnValue([
-      { field: "phone", message: "Phone is invalid" }
+      { field: 'phone', message: 'Phone is invalid' },
     ]);
 
-    await expect(useCase.execute(validInput))
-      .rejects
-      .toBeInstanceOf(ValidationException);
+    await expect(useCase.execute(validInput)).rejects.toBeInstanceOf(
+      ValidationException,
+    );
 
     expect(createCustomerValidator.validate).toHaveBeenCalledWith(validInput);
     expect(customerRepo.findByPhone).not.toHaveBeenCalled();
   });
 
-  it("should throw ClientAlreadyExistsError if customer already exists", async () => {
+  it('should throw ClientAlreadyExistsError if customer already exists', async () => {
     createCustomerValidator.validate.mockReturnValue([]);
     customerRepo.findByPhone.mockResolvedValue(mockCustomerEntity);
 
-    await expect(useCase.execute(validInput))
-      .rejects
-      .toBeInstanceOf(ClientAlreadyExistsError);
+    await expect(useCase.execute(validInput)).rejects.toBeInstanceOf(
+      ClientAlreadyExistsError,
+    );
 
     expect(customerRepo.findByPhone).toHaveBeenCalledWith(validInput.phone);
     expect(customerRepo.create).not.toHaveBeenCalled();
   });
 
-  it("should create a customer and return a mapped DTO", async () => {
+  it('should create a customer and return a mapped DTO', async () => {
     createCustomerValidator.validate.mockReturnValue([]);
     customerRepo.findByPhone.mockResolvedValue(null);
     customerRepo.create.mockResolvedValue(mockCustomerEntity);
@@ -99,11 +102,12 @@ describe("RegisterCustomerUseCase", () => {
     expect(result).toEqual(mockOutputDto);
   });
 
-  it("should construct a Customer entity with initial points = 0", async () => {
+  it('should construct a Customer entity with initial points = 0', async () => {
     createCustomerValidator.validate.mockReturnValue([]);
     customerRepo.findByPhone.mockResolvedValue(null);
 
-    const createSpy = jest.spyOn(customerRepo, "create")
+    const createSpy = jest
+      .spyOn(customerRepo, 'create')
       .mockResolvedValue(mockCustomerEntity);
 
     customerToDtoMapper.map.mockReturnValue(mockOutputDto);
@@ -118,27 +122,23 @@ describe("RegisterCustomerUseCase", () => {
     expect(createdEntity.points).toBe(0);
   });
 
-  it("should throw if repository.create throws", async () => {
+  it('should throw if repository.create throws', async () => {
     createCustomerValidator.validate.mockReturnValue([]);
     customerRepo.findByPhone.mockResolvedValue(null);
-    customerRepo.create.mockRejectedValue(new Error("Database error"));
+    customerRepo.create.mockRejectedValue(new Error('Database error'));
 
-    await expect(useCase.execute(validInput))
-      .rejects
-      .toThrow("Database error");
+    await expect(useCase.execute(validInput)).rejects.toThrow('Database error');
   });
 
-  it("should throw if mapper.map throws", async () => {
+  it('should throw if mapper.map throws', async () => {
     createCustomerValidator.validate.mockReturnValue([]);
     customerRepo.findByPhone.mockResolvedValue(null);
     customerRepo.create.mockResolvedValue(mockCustomerEntity);
 
     customerToDtoMapper.map.mockImplementation(() => {
-      throw new Error("Mapper failure");
+      throw new Error('Mapper failure');
     });
 
-    await expect(useCase.execute(validInput))
-      .rejects
-      .toThrow("Mapper failure");
+    await expect(useCase.execute(validInput)).rejects.toThrow('Mapper failure');
   });
 });

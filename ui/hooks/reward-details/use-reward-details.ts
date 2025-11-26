@@ -1,11 +1,15 @@
-import { useRewardData } from "@/ui/hooks/reward-details/use-reward-data";
-import { useRewardCustomers } from "@/ui/hooks/reward-details/use-reward-customers";
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-export function useRewardDetails(rewardId: number, onDeleteSuccess: () => void) {
+import { useRewardData } from '@/ui/hooks/reward-details/use-reward-data';
+import { useRewardCustomers } from '@/ui/hooks/reward-details/use-reward-customers';
+
+export function useRewardDetails(
+  rewardId: number,
+  onDeleteSuccess: () => void,
+) {
   const { reward, fetchReward, handleDelete } = useRewardData(
     rewardId,
-    onDeleteSuccess
+    onDeleteSuccess,
   );
 
   const {
@@ -14,13 +18,13 @@ export function useRewardDetails(rewardId: number, onDeleteSuccess: () => void) 
     customersWhoRedeemed,
     fetchCustomersWhoRedeemed,
     redeem,
-    undoRedeem
+    undoRedeem,
   } = useRewardCustomers(rewardId);
 
   const reloadAll = useCallback(() => {
-    fetchReward();
-    fetchEligibleCustomers();
-    fetchCustomersWhoRedeemed();
+    void fetchReward();
+    void fetchEligibleCustomers();
+    void fetchCustomersWhoRedeemed();
   }, [fetchReward, fetchEligibleCustomers, fetchCustomersWhoRedeemed]);
 
   return {
@@ -30,6 +34,6 @@ export function useRewardDetails(rewardId: number, onDeleteSuccess: () => void) 
     reloadAll,
     handleDelete,
     redeem,
-    undoRedeem
+    undoRedeem,
   };
 }

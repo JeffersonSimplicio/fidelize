@@ -1,18 +1,25 @@
-import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
-import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
-import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
-import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
-import { InactiveRewardRedemptionError, InsufficientPointsError, RewardAlreadyRedeemedError } from "@/core/domain/customer-rewards/errors";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import {
+  CreateCustomerRewardDto,
+  CustomerRewardDto,
+} from '@/core/application/dtos/customer-rewards';
+import { RedeemReward } from '@/core/application/interfaces/customers-rewards';
+import { CustomerReward } from '@/core/domain/customer-rewards/customer-reward.entity';
+import { CustomerRewardRepository } from '@/core/domain/customer-rewards/customer-reward.repository.interface';
+import {
+  InactiveRewardRedemptionError,
+  InsufficientPointsError,
+  RewardAlreadyRedeemedError,
+} from '@/core/domain/customer-rewards/errors';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
 
 export interface RedeemRewardDep {
-  rewardRepo: RewardRepository,
-  customerRepo: CustomerRepository,
-  customerRewardRepo: CustomerRewardRepository,
-  customerRewardToDtoMapper: Mapper<CustomerReward, CustomerRewardDto>,
+  rewardRepo: RewardRepository;
+  customerRepo: CustomerRepository;
+  customerRewardRepo: CustomerRewardRepository;
+  customerRewardToDtoMapper: Mapper<CustomerReward, CustomerRewardDto>;
 }
 
 export class RedeemRewardUseCase implements RedeemReward {
@@ -28,12 +35,12 @@ export class RedeemRewardUseCase implements RedeemReward {
     this.rewardRepo = deps.rewardRepo;
     this.customerRepo = deps.customerRepo;
     this.customerRewardRepo = deps.customerRewardRepo;
-    this.customerRewardToDtoMapper = deps.customerRewardToDtoMapper
+    this.customerRewardToDtoMapper = deps.customerRewardToDtoMapper;
   }
 
   async execute({
     customerId,
-    rewardId
+    rewardId,
   }: CreateCustomerRewardDto): Promise<CustomerRewardDto> {
     const customer = await this.customerRepo.getById(customerId);
 
@@ -44,12 +51,12 @@ export class RedeemRewardUseCase implements RedeemReward {
     }
 
     if (customer.points < reward.pointsRequired) {
-      throw new InsufficientPointsError(customer.name, reward.name)
+      throw new InsufficientPointsError(customer.name, reward.name);
     }
 
     const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(
       customerId,
-      rewardId
+      rewardId,
     );
 
     if (hasAlreadyRedeemed) {
@@ -58,7 +65,8 @@ export class RedeemRewardUseCase implements RedeemReward {
 
     const newCustomerReward = new CustomerReward({ customerId, rewardId });
 
-    const customerReward = await this.customerRewardRepo.create(newCustomerReward);
+    const customerReward =
+      await this.customerRewardRepo.create(newCustomerReward);
 
     return this.customerRewardToDtoMapper.map(customerReward);
   }

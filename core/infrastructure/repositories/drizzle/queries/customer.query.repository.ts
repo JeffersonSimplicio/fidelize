@@ -1,17 +1,18 @@
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerQueryRepository } from "@/core/domain/customers/customer.query.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
+import { desc, like } from 'drizzle-orm';
+
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerQueryRepository } from '@/core/domain/customers/customer.query.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { drizzleClient } from '@/core/infrastructure/database/drizzle/db';
 import {
   CustomerSelect,
-  CustomerTable
+  CustomerTable,
 } from '@/core/infrastructure/database/drizzle/types';
-import { desc, like } from "drizzle-orm";
 
 export interface CustomerQueryRepositoryDrizzleDep {
-  dbClient: drizzleClient,
-  customerTable: CustomerTable,
-  customerToDomainMapper: Mapper<CustomerSelect, Customer>,
+  dbClient: drizzleClient;
+  customerTable: CustomerTable;
+  customerToDomainMapper: Mapper<CustomerSelect, Customer>;
 }
 
 export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
@@ -31,15 +32,13 @@ export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
       .from(this.customerTable)
       .where(like(this.customerTable.name, `%${name}%`));
 
-    return dbCustomers.map(c => this.customerToDomainMapper.map(c));
+    return dbCustomers.map((c) => this.customerToDomainMapper.map(c));
   }
 
   async findAll(): Promise<Customer[]> {
-    const dbCustomers = await this.dbClient
-      .select()
-      .from(this.customerTable);
+    const dbCustomers = await this.dbClient.select().from(this.customerTable);
 
-    return dbCustomers.map(c => this.customerToDomainMapper.map(c));
+    return dbCustomers.map((c) => this.customerToDomainMapper.map(c));
   }
 
   async findTopCustomersByPoints(limit: number): Promise<Customer[]> {
@@ -49,6 +48,6 @@ export class CustomerQueryRepositoryDrizzle implements CustomerQueryRepository {
       .orderBy(desc(this.customerTable.points))
       .limit(limit);
 
-    return dbCustomers.map(c => this.customerToDomainMapper.map(c));
+    return dbCustomers.map((c) => this.customerToDomainMapper.map(c));
   }
 }

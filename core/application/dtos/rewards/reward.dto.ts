@@ -5,4 +5,4 @@ export type RewardDto = {
   description: string;
   isActive: boolean;
   createdAt: string;
-}
+};

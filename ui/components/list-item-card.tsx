@@ -1,12 +1,12 @@
-import { Link, LinkProps } from "expo-router";
-import { TouchableOpacity, Text } from "react-native";
+import { Link, LinkProps } from 'expo-router';
+import { TouchableOpacity, Text } from 'react-native';
 
 type Props = {
-  href: LinkProps["href"];
+  href: LinkProps['href'];
   title: string;
   subtitle?: string;
   extra?: string;
-  variant?: "filled" | "outlined";
+  variant?: 'filled' | 'outlined';
 };
 
 export function ListItemCard({
@@ -14,13 +14,13 @@ export function ListItemCard({
   title,
   subtitle,
   extra,
-  variant = "filled",
+  variant = 'filled',
 }: Props) {
-  const base = "p-3 mb-2 rounded-lg active:bg-gray-200";
+  const base = 'p-3 mb-2 rounded-lg active:bg-gray-200';
 
   const variants = {
-    filled: "bg-gray-100",
-    outlined: "bg-white border border-gray-200 active:bg-gray-100",
+    filled: 'bg-gray-100',
+    outlined: 'bg-white border border-gray-200 active:bg-gray-100',
   };
 
   return (
@@ -30,7 +30,7 @@ export function ListItemCard({
 
         {subtitle && <Text className="text-gray-600">{subtitle}</Text>}
 
-        {extra && <Text className="text-gray-500 text-sm">{extra}</Text>}
+        {extra && <Text className="text-sm text-gray-500">{extra}</Text>}
       </TouchableOpacity>
     </Link>
   );

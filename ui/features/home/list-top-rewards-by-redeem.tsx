@@ -1,6 +1,7 @@
-import { TopRewardDto } from "@/core/application/dtos/customer-rewards";
-import { FlatList, View, Text } from "react-native";
-import { ListItemCard } from "@/ui/components/list-item-card";
+import { FlatList, View, Text } from 'react-native';
+
+import { TopRewardDto } from '@/core/application/dtos/customer-rewards';
+import { ListItemCard } from '@/ui/components/list-item-card';
 
 type Props = {
   topRewards: TopRewardDto[];
@@ -8,8 +9,8 @@ type Props = {
 
 export function TopRewardsByRedeem({ topRewards }: Props) {
   return (
-    <View className="bg-gray-50 rounded-xl p-4 shadow-sm">
-      <Text className="text-lg font-semibold text-gray-800 mb-3">
+    <View className="rounded-xl bg-gray-50 p-4 shadow-sm">
+      <Text className="mb-3 text-lg font-semibold text-gray-800">
         🎉 Top 3 recompensas mais resgatadas
       </Text>
 
@@ -22,13 +23,13 @@ export function TopRewardsByRedeem({ topRewards }: Props) {
             title={item.reward.name}
             subtitle={`${item.reward.pointsRequired} pontos necessários`}
             extra={`${item.redeemedCount} ${
-              item.redeemedCount === 1 ? "resgate" : "resgates"
+              item.redeemedCount === 1 ? 'resgate' : 'resgates'
             }`}
             variant="outlined"
           />
         )}
         ListEmptyComponent={() => (
-          <View className="items-center mt-3">
+          <View className="mt-3 items-center">
             <Text className="text-gray-500">
               Nenhuma recompensa cadastrada.
             </Text>

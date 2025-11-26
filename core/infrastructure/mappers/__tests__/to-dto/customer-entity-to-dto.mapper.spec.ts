@@ -1,20 +1,20 @@
-import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
-import { Customer } from "@/core/domain/customers/customer.entity";
+import { CustomerEntityToDtoMapper } from '@/core/infrastructure/mappers';
+import { Customer } from '@/core/domain/customers/customer.entity';
 
-describe("CustomerEntityToDtoMapper", () => {
+describe('CustomerEntityToDtoMapper', () => {
   let mapper: CustomerEntityToDtoMapper;
 
   beforeEach(() => {
     mapper = new CustomerEntityToDtoMapper();
   });
 
-  it("should map a Customer entity to CustomerDto", () => {
-    const createdAt = new Date("2024-01-01T10:00:00.000Z");
-    const lastVisitAt = new Date("2024-01-05T15:30:00.000Z");
+  it('should map a Customer entity to CustomerDto', () => {
+    const createdAt = new Date('2024-01-01T10:00:00.000Z');
+    const lastVisitAt = new Date('2024-01-05T15:30:00.000Z');
 
     const entity = new Customer({
-      name: "John Doe",
-      phone: "555-9999",
+      name: 'John Doe',
+      phone: '555-9999',
       points: 120,
       createdAt,
       lastVisitAt,
@@ -25,18 +25,18 @@ describe("CustomerEntityToDtoMapper", () => {
     const dto = mapper.map(entity);
 
     expect(dto.id).toBe(10);
-    expect(dto.name).toBe("John Doe");
-    expect(dto.phone).toBe("555-9999");
+    expect(dto.name).toBe('John Doe');
+    expect(dto.phone).toBe('555-9999');
     expect(dto.points).toBe(120);
     expect(dto.createdAt).toBe(createdAt.toISOString());
     expect(dto.lastVisitAt).toBe(lastVisitAt.toISOString());
   });
 
-  it("should map even if id is not set", () => {
-    const createdAt = new Date("2023-03-01T12:00:00.000Z");
+  it('should map even if id is not set', () => {
+    const createdAt = new Date('2023-03-01T12:00:00.000Z');
     const entity = new Customer({
-      name: "Alice",
-      phone: "99999-0000",
+      name: 'Alice',
+      phone: '99999-0000',
       points: 50,
       createdAt,
     });
@@ -44,20 +44,20 @@ describe("CustomerEntityToDtoMapper", () => {
     const dto = mapper.map(entity);
 
     expect(dto.id).toBeUndefined();
-    expect(dto.name).toBe("Alice");
-    expect(dto.phone).toBe("99999-0000");
+    expect(dto.name).toBe('Alice');
+    expect(dto.phone).toBe('99999-0000');
     expect(dto.points).toBe(50);
     expect(dto.createdAt).toBe(createdAt.toISOString());
-    expect(typeof dto.lastVisitAt).toBe("string");
+    expect(typeof dto.lastVisitAt).toBe('string');
   });
 
-  it("should not mutate the original Customer entity", () => {
-    const createdAt = new Date("2024-04-01T08:00:00.000Z");
-    const lastVisitAt = new Date("2024-04-02T10:00:00.000Z");
+  it('should not mutate the original Customer entity', () => {
+    const createdAt = new Date('2024-04-01T08:00:00.000Z');
+    const lastVisitAt = new Date('2024-04-02T10:00:00.000Z');
 
     const entity = new Customer({
-      name: "Bob",
-      phone: "4444-2222",
+      name: 'Bob',
+      phone: '4444-2222',
       points: 10,
       createdAt,
       lastVisitAt,
@@ -84,11 +84,11 @@ describe("CustomerEntityToDtoMapper", () => {
     expect(entity.lastVisitAt.getTime()).toBe(snapshotBefore.lastVisitAt);
   });
 
-  it("should map correctly when createdAt and lastVisitAt are the same moment", () => {
+  it('should map correctly when createdAt and lastVisitAt are the same moment', () => {
     const now = new Date();
     const entity = new Customer({
-      name: "Same Time",
-      phone: "7777-7777",
+      name: 'Same Time',
+      phone: '7777-7777',
       points: 0,
       createdAt: new Date(now),
       lastVisitAt: new Date(now),
