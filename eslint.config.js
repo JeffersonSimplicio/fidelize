@@ -2,9 +2,57 @@
 const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
 
+const prettierConfig = require('eslint-plugin-prettier/recommended');
+const eslintConfigPrettier = require('eslint-config-prettier');
+
+const typescriptEslint = require('@typescript-eslint/eslint-plugin');
+
 module.exports = defineConfig([
   expoConfig,
+  eslintConfigPrettier,
+  prettierConfig,
   {
-    ignores: ['dist/*'],
+    parser: '@typescript-eslint/parser',
+    plugins: {
+      '@typescript-eslint': typescriptEslint,
+    },
+    extends: ['plugin:@typescript-eslint/recommended'],
+    rules: {
+      'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/require-await': 'error',
+      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-redeclare': 'error',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-floating-promises': 'error',
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
+          'newlines-between': 'always',
+        },
+      ],
+    },
+  },
+  {
+    ignores: [
+      'dist/*',
+      'node_modules/',
+      '.expo/',
+      '**/*.config.js',
+      '**/*.d.ts',
+      '.prettierrc.js',
+    ],
   },
 ]);
