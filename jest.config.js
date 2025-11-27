@@ -29,5 +29,12 @@ module.exports = {
   ],
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['text', 'lcov', 'cobertura', 'json-summary'],
-  reporters: ['default', 'github-actions'],
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      { outputDirectory: 'reports', outputName: 'jest-junit.xml' },
+    ],
+    'github-actions',
+  ],
 };
