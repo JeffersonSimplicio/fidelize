@@ -20,6 +20,7 @@ jobs:
     steps:
       - name: Checkout do Código
         uses: actions/checkout@v6
+
       - name: Configurar Node.js
         uses: actions/setup-node@v6
         with:
@@ -31,7 +32,7 @@ jobs:
 
       - name: Executar Testes e Cobertura
         id: coverage
-        run: npm run test:coverage
+        run: npm run ci:report
 
       - name: Publicar Lista Detalhada de Testes
         uses: dorny/test-reporter@v2
@@ -53,3 +54,35 @@ jobs:
           junitxml-title: "Resumo dos Testes"
           hide-summary: false
           create-new-comment: false
+      
+      - name: Gerar tabela Markdown
+        run: |
+          echo "### Resultados dos Testes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Arquivo | Describe | Teste (it) | Resultado |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|----------|------------|-----------|" >> $GITHUB_STEP_SUMMARY
+
+          node << 'EOF'
+          const fs = require("fs");
+          const data = JSON.parse(fs.readFileSync("./jest-results.json", "utf8"));
+
+          data.testResults.forEach(testFile => {
+            const fileName = testFile.name.split("/").pop();
+
+            testFile.assertionResults.forEach(assert => {
+              const describe = assert.ancestorTitles.join(" > ") || "(sem describe)";
+              const it = assert.title;
+
+              const result = assert.status === "passed" ? "✔️ Passou" : "❌ Falhou";
+
+              // Escapar pipes
+              const safeDescribe = describe.replace(/\|/g, "\\|");
+              const safeIt = it.replace(/\|/g, "\\|");
+              const safeFile = fileName.replace(/\|/g, "\\|");
+
+              console.log(
+                `echo "| ${safeFile} | ${safeDescribe} | ${safeIt} | ${result} |" >> $GITHUB_STEP_SUMMARY`
+              );
+            });
+          });
+          EOF
