@@ -43,10 +43,9 @@ jobs:
 
           node << 'EOF' >> test-table.md
           const fs = require("fs");
-          // Verifica se o arquivo existe antes de ler (boa prática)
           const resultsPath = "./jest-results.json";
           if (!fs.existsSync(resultsPath)) {
-            console.error(\`Arquivo de resultados Jest não encontrado: \${resultsPath}\`);
+            console.error('Arquivo de resultados Jest não encontrado: ' + resultsPath);
             process.exit(1);
           }
           const data = JSON.parse(fs.readFileSync(resultsPath, "utf8"));
@@ -60,12 +59,10 @@ jobs:
 
               const result = assert.status === "passed" ? "✔️ Passou" : "❌ Falhou";
 
-              // Escapar pipes para Markdown
               const safeDescribe = describe.replace(/\|/g, "\\|");
               const safeIt = it.replace(/\|/g, "\\|");
               const safeFile = fileName.replace(/\|/g, "\\|");
 
-              // Imprime a linha da tabela que será adicionada ao arquivo test-table.md
               console.log(
                 `| ${safeFile} | ${safeDescribe} | ${safeIt} | ${result} |`
               );
