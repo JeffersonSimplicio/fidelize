@@ -34,6 +34,55 @@ jobs:
         id: coverage
         run: npm run ci:report
 
+      - name: Gerar tabela Markdown (em arquivo)
+        run: |
+          echo "### 📊 Resultados Detalhados dos Testes" > test-table.md
+          echo "" >> test-table.md
+          echo "| Arquivo | Describe | Teste (it) | Resultado |" >> test-table.md
+          echo "|---------|----------|------------|-----------|" >> test-table.md
+
+          node << 'EOF' >> test-table.md
+          const fs = require("fs");
+          // Verifica se o arquivo existe antes de ler (boa prática)
+          const resultsPath = "./jest-results.json";
+          if (!fs.existsSync(resultsPath)) {
+            console.error(\`Arquivo de resultados Jest não encontrado: \${resultsPath}\`);
+            process.exit(1);
+          }
+          const data = JSON.parse(fs.readFileSync(resultsPath, "utf8"));
+
+          data.testResults.forEach(testFile => {
+            const fileName = testFile.name.split("/").pop();
+
+            testFile.assertionResults.forEach(assert => {
+              const describe = assert.ancestorTitles.join(" > ") || "(sem describe)";
+              const it = assert.title;
+
+              const result = assert.status === "passed" ? "✔️ Passou" : "❌ Falhou";
+
+              // Escapar pipes para Markdown
+              const safeDescribe = describe.replace(/\|/g, "\\|");
+              const safeIt = it.replace(/\|/g, "\\|");
+              const safeFile = fileName.replace(/\|/g, "\\|");
+
+              // Imprime a linha da tabela que será adicionada ao arquivo test-table.md
+              console.log(
+                `| ${safeFile} | ${safeDescribe} | ${safeIt} | ${result} |`
+              );
+            });
+          });
+          EOF
+
+      - name: Ler Tabela Markdown e Definir Output
+        id: read-table
+        run: |
+          # O output será o conteúdo do arquivo test-table.md
+          CUSTOM_TABLE=$(cat test-table.md)
+          # Define o output que será usado no passo de Publicação de Comentário
+          echo "custom_table<<EOF" >> $GITHUB_OUTPUT
+          echo "$CUSTOM_TABLE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Publicar Lista Detalhada de Testes
         uses: dorny/test-reporter@v2
         if: always()
@@ -54,35 +103,4 @@ jobs:
           junitxml-title: "Resumo dos Testes"
           hide-summary: false
           create-new-comment: false
-      
-      - name: Gerar tabela Markdown
-        run: |
-          echo "### Resultados dos Testes" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Arquivo | Describe | Teste (it) | Resultado |" >> $GITHUB_STEP_SUMMARY
-          echo "|---------|----------|------------|-----------|" >> $GITHUB_STEP_SUMMARY
-
-          node << 'EOF'
-          const fs = require("fs");
-          const data = JSON.parse(fs.readFileSync("./jest-results.json", "utf8"));
-
-          data.testResults.forEach(testFile => {
-            const fileName = testFile.name.split("/").pop();
-
-            testFile.assertionResults.forEach(assert => {
-              const describe = assert.ancestorTitles.join(" > ") || "(sem describe)";
-              const it = assert.title;
-
-              const result = assert.status === "passed" ? "✔️ Passou" : "❌ Falhou";
-
-              // Escapar pipes
-              const safeDescribe = describe.replace(/\|/g, "\\|");
-              const safeIt = it.replace(/\|/g, "\\|");
-              const safeFile = fileName.replace(/\|/g, "\\|");
-
-              console.log(
-                `echo "| ${safeFile} | ${safeDescribe} | ${safeIt} | ${result} |" >> $GITHUB_STEP_SUMMARY`
-              );
-            });
-          });
-          EOF
+          custom-summary: ${{ steps.read-table.outputs.custom_table }}
