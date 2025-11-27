@@ -1,6 +1,6 @@
-import { BaseError } from "./base.error";
-import { ValidationError } from "@/core/domain/validation/validation.interface";
+import { ValidationError } from '@/core/domain/validation/validation.interface';
 
+import { BaseError } from './base.error';
 
 export class ValidationException extends BaseError {
   public readonly errors: ValidationError[];
@@ -25,10 +25,10 @@ export class ValidationException extends BaseError {
       .map(([field, messages]) => {
         const formattedMessages = messages
           .map((msg) => `  - ${msg}`)
-          .join("\n");
+          .join('\n');
         return `${field}:\n${formattedMessages}`;
       })
-      .join("\n\n");
+      .join('\n\n');
 
     return `Foram encontrados problemas nos dados enviados:\n\n${problems}`;
   }

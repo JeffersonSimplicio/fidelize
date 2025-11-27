@@ -1,12 +1,11 @@
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Customer as CustomerEntity } from '@/core/domain/customers/customer.entity';
-import { CustomerDto } from "@/core/application/dtos/customers";
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerDto } from '@/core/application/dtos/customers';
 
-export class CustomerEntityToDtoMapper implements Mapper<
-  CustomerEntity,
-  CustomerDto
-> {
-  map(input: CustomerEntity): CustomerDto {
+export class CustomerEntityToDtoMapper
+  implements Mapper<Customer, CustomerDto>
+{
+  map(input: Customer): CustomerDto {
     return {
       id: input.id!,
       name: input.name,
@@ -14,6 +13,6 @@ export class CustomerEntityToDtoMapper implements Mapper<
       points: input.points,
       createdAt: input.createdAt.toISOString(),
       lastVisitAt: input.lastVisitAt.toISOString(),
-    }
+    };
   }
 }

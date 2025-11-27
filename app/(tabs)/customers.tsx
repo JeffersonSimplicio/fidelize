@@ -1,5 +1,5 @@
-import { Link, useFocusEffect } from "expo-router";
-import { useCallback } from "react";
+import { Link, useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -7,12 +7,13 @@ import {
   TextInput,
   View,
   TouchableOpacity,
-} from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useCustomers } from "@/ui/hooks/customers/use-customers";
-import { useCustomerList } from "@/ui/hooks/customers/use-customer-list";
-import { ListItemCard } from "@/ui/components/list-item-card";
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
+import { useCustomers } from '@/ui/hooks/customers/use-customers';
+import { useCustomerList } from '@/ui/hooks/customers/use-customer-list';
+import { ListItemCard } from '@/ui/components/list-item-card';
 
 export default function CustomersScreen() {
   const { customers, refreshing, onRefresh, fetchCustomers } = useCustomers();
@@ -26,13 +27,13 @@ export default function CustomersScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchCustomers();
-    }, [fetchCustomers])
+      void fetchCustomers();
+    }, [fetchCustomers]),
   );
 
   return (
     <View className="flex-1 bg-white px-4 pt-4">
-      <Text className="text-xl font-semibold mb-3 text-gray-900">
+      <Text className="mb-3 text-xl font-semibold text-gray-900">
         Lista de Clientes
       </Text>
 
@@ -41,16 +42,16 @@ export default function CustomersScreen() {
         placeholder="Buscar por nome..."
         value={searchTerm}
         onChangeText={setSearchTerm}
-        className="border border-gray-300 p-2 rounded-lg mb-3 text-gray-800"
+        className="mb-3 rounded-lg border border-gray-300 p-2 text-gray-800"
         placeholderTextColor="#888"
       />
 
       {/* Seletor de ordenação */}
-      <View className="border border-gray-300 rounded-md mb-3 overflow-hidden">
+      <View className="mb-3 overflow-hidden rounded-md border border-gray-300">
         <Picker
           selectedValue={sortOption}
           onValueChange={(v) => setSortOption(v)}
-          style={{ color: "black" }}
+          style={{ color: 'black' }}
         >
           <Picker.Item label="Mais novo" value="createdAt-desc" />
           <Picker.Item label="Mais antigo" value="createdAt-asc" />
@@ -78,7 +79,7 @@ export default function CustomersScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={() => (
-          <View className="items-center mt-6">
+          <View className="mt-6 items-center">
             <Text className="text-gray-500">Nenhum cliente cadastrado.</Text>
           </View>
         )}
@@ -87,7 +88,7 @@ export default function CustomersScreen() {
       {/* Botão flutuante de adicionar cliente */}
       <Link href="/customers/create" asChild>
         <TouchableOpacity
-          className="absolute bottom-6 right-6 bg-blue-600 w-14 h-14 rounded-full items-center justify-center shadow-lg active:opacity-80"
+          className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-lg active:opacity-80"
           accessibilityLabel="Adicionar cliente"
         >
           <AntDesign name="user-add" size={24} color="white" />

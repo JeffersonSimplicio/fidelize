@@ -1,4 +1,4 @@
-import { Pressable, PressableProps } from "react-native";
+import { Pressable, PressableProps } from 'react-native';
 
 interface AppButtonProps extends PressableProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface AppButtonProps extends PressableProps {
 export function AppButton({ children, className, ...props }: AppButtonProps) {
   return (
     <Pressable
-      className={`justify-center items-center ${className ?? ""}`}
+      className={`items-center justify-center ${className ?? ''}`}
       {...props}
     >
       {children}

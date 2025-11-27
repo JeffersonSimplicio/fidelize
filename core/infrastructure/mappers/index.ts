@@ -1,2 +1,2 @@
-export * from "./to-domain";
-export * from "./to-dto";
+export * from './to-domain';
+export * from './to-dto';

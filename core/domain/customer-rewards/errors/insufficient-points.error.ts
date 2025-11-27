@@ -1,12 +1,18 @@
-import { BaseError } from "@/core/domain/shared/errors/base.error";
+import { BaseError } from '@/core/domain/shared/errors/base.error';
 
 export class InsufficientPointsError extends BaseError {
   constructor(customerName?: string, rewardName?: string) {
-    const message = InsufficientPointsError.buildMessage(customerName, rewardName);
+    const message = InsufficientPointsError.buildMessage(
+      customerName,
+      rewardName,
+    );
     super(message);
   }
 
-  private static buildMessage(customerName?: string, rewardName?: string): string {
+  private static buildMessage(
+    customerName?: string,
+    rewardName?: string,
+  ): string {
     if (customerName && rewardName) {
       return `${customerName} não tem pontos suficientes para resgatar ${rewardName}.`;
     }

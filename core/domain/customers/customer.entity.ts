@@ -1,8 +1,11 @@
 import {
   ensureLastVisitAfterCreation,
   ensureNonNegativePoint,
-} from "@/core/domain/customers/rules"
-import { ensureIdNotSet, ensureDatesNotInFuture } from "@/core/domain/shared/rules"
+} from '@/core/domain/customers/rules';
+import {
+  ensureIdNotSet,
+  ensureDatesNotInFuture,
+} from '@/core/domain/shared/rules';
 
 export class Customer {
   private _id?: number;
@@ -32,21 +35,33 @@ export class Customer {
   }
 
   // --- Getters ---
-  get id() { return this._id; }
-  get name() { return this._name; }
-  get phone() { return this._phone; }
-  get points() { return this._points; }
-  get createdAt() { return this._createdAt; }
-  get lastVisitAt() { return this._lastVisitAt; }
+  get id() {
+    return this._id;
+  }
+  get name() {
+    return this._name;
+  }
+  get phone() {
+    return this._phone;
+  }
+  get points() {
+    return this._points;
+  }
+  get createdAt() {
+    return this._createdAt;
+  }
+  get lastVisitAt() {
+    return this._lastVisitAt;
+  }
 
   // --- Business rules ---
   setId(id: number) {
-    ensureIdNotSet(this._id)
+    ensureIdNotSet(this._id);
     this._id = id;
   }
 
   setPoints(value: number) {
-    ensureNonNegativePoint(value)
+    ensureNonNegativePoint(value);
     this._points = value;
   }
 
@@ -64,14 +79,14 @@ export class Customer {
   }
 
   private ensureLastVisitAfterCreation() {
-    ensureLastVisitAfterCreation(this._lastVisitAt, this.createdAt)
+    ensureLastVisitAfterCreation(this._lastVisitAt, this.createdAt);
   }
 
   private ensureDatesNotInFuture() {
     ensureDatesNotInFuture({
       createdAt: this._createdAt,
-      lastVisitAt: this._lastVisitAt
-    })
+      lastVisitAt: this._lastVisitAt,
+    });
   }
 
   private ensureValidTimeline() {

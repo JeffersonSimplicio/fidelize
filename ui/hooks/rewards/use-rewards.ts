@@ -1,6 +1,7 @@
-import { makeListRewardsActive } from "@/core/factories/reward";
-import { RewardDto } from "@/core/application/dtos/rewards";
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
+
+import { makeListRewardsActive } from '@/core/factories/reward';
+import { RewardDto } from '@/core/application/dtos/rewards';
 
 export function useRewards() {
   const [rewards, setRewards] = useState<RewardDto[]>([]);

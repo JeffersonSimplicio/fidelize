@@ -1,9 +1,9 @@
-import { UndoRedeemReward } from "@/core/application/interfaces/customers-rewards";
-import { UndoRedeemRewardUseCase } from "@/core/application/use-cases";
+import { UndoRedeemReward } from '@/core/application/interfaces/customers-rewards';
+import { UndoRedeemRewardUseCase } from '@/core/application/use-cases';
 import {
   makeCustomerRewardRepositoryDrizzle,
-  makeRewardRepositoryDrizzle
-} from "@/core/factories/repositories";
+  makeRewardRepositoryDrizzle,
+} from '@/core/factories/repositories';
 
 export function makeUndoRedeemReward(): UndoRedeemReward {
   const rewardRepo = makeRewardRepositoryDrizzle();
@@ -12,6 +12,6 @@ export function makeUndoRedeemReward(): UndoRedeemReward {
 
   return new UndoRedeemRewardUseCase({
     rewardRepo: rewardRepo,
-    customerRewardRepo: customerRewardRepo
+    customerRewardRepo: customerRewardRepo,
   });
 }

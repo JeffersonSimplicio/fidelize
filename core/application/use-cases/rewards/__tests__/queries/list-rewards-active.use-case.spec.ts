@@ -1,11 +1,11 @@
-import { ListRewardsActiveUseCase } from "@/core/application/use-cases/rewards";
-import { RewardQueryRepository } from "@/core/domain/rewards/reward.query.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardDto } from "@/core/application/dtos/rewards";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { ListRewardsActiveUseCase } from '@/core/application/use-cases/rewards';
+import { RewardQueryRepository } from '@/core/domain/rewards/reward.query.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardDto } from '@/core/application/dtos/rewards';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
 
-describe("ListRewardsActiveUseCase", () => {
+describe('ListRewardsActiveUseCase', () => {
   let rewardQueryRepo: jest.Mocked<RewardQueryRepository>;
   let rewardToDtoMapper: jest.Mocked<Mapper<Reward, RewardDto>>;
   let useCase: ListRewardsActiveUseCase;
@@ -28,18 +28,18 @@ describe("ListRewardsActiveUseCase", () => {
     });
   });
 
-  it("should return mapped DTOs for active rewards (happy path)", async () => {
+  it('should return mapped DTOs for active rewards (happy path)', async () => {
     const r1 = new Reward({
-      name: "Reward A",
-      description: "Desc A",
+      name: 'Reward A',
+      description: 'Desc A',
       pointsRequired: 10,
       isActive: RewardStatus.Active,
     });
     r1.setId(1);
 
     const r2 = new Reward({
-      name: "Reward B",
-      description: "Desc B",
+      name: 'Reward B',
+      description: 'Desc B',
       pointsRequired: 20,
       isActive: RewardStatus.Active,
     });
@@ -47,17 +47,17 @@ describe("ListRewardsActiveUseCase", () => {
 
     const dto1: RewardDto = {
       id: 1,
-      name: "Reward A",
+      name: 'Reward A',
       pointsRequired: 10,
-      description: "Desc A",
+      description: 'Desc A',
       isActive: true,
       createdAt: r1.createdAt.toISOString(),
     };
     const dto2: RewardDto = {
       id: 2,
-      name: "Reward B",
+      name: 'Reward B',
       pointsRequired: 20,
-      description: "Desc B",
+      description: 'Desc B',
       isActive: true,
       createdAt: r2.createdAt.toISOString(),
     };
@@ -74,7 +74,7 @@ describe("ListRewardsActiveUseCase", () => {
     expect(result).toEqual([dto1, dto2]);
   });
 
-  it("should return an empty array when there are no active rewards", async () => {
+  it('should return an empty array when there are no active rewards', async () => {
     rewardQueryRepo.findAllActive.mockResolvedValue([]);
 
     const result = await useCase.execute();
@@ -84,19 +84,19 @@ describe("ListRewardsActiveUseCase", () => {
     expect(result).toEqual([]);
   });
 
-  it("should propagate error when repository.findAllActive throws", async () => {
-    rewardQueryRepo.findAllActive.mockRejectedValue(new Error("DB failure"));
+  it('should propagate error when repository.findAllActive throws', async () => {
+    rewardQueryRepo.findAllActive.mockRejectedValue(new Error('DB failure'));
 
-    await expect(useCase.execute()).rejects.toThrow("DB failure");
+    await expect(useCase.execute()).rejects.toThrow('DB failure');
 
     expect(rewardQueryRepo.findAllActive).toHaveBeenCalledTimes(1);
     expect(rewardToDtoMapper.map).not.toHaveBeenCalled();
   });
 
-  it("should propagate error when mapper.map throws for an item", async () => {
+  it('should propagate error when mapper.map throws for an item', async () => {
     const r = new Reward({
-      name: "X",
-      description: "x",
+      name: 'X',
+      description: 'x',
       pointsRequired: 5,
       isActive: RewardStatus.Active,
     });
@@ -104,19 +104,19 @@ describe("ListRewardsActiveUseCase", () => {
 
     rewardQueryRepo.findAllActive.mockResolvedValue([r]);
     rewardToDtoMapper.map.mockImplementation(() => {
-      throw new Error("Mapping failed");
+      throw new Error('Mapping failed');
     });
 
-    await expect(useCase.execute()).rejects.toThrow("Mapping failed");
+    await expect(useCase.execute()).rejects.toThrow('Mapping failed');
 
     expect(rewardQueryRepo.findAllActive).toHaveBeenCalledTimes(1);
     expect(rewardToDtoMapper.map).toHaveBeenCalledWith(r);
   });
 
-  it("should only call findAllActive and not other query methods", async () => {
+  it('should only call findAllActive and not other query methods', async () => {
     const r = new Reward({
-      name: "Only",
-      description: "only",
+      name: 'Only',
+      description: 'only',
       pointsRequired: 1,
       isActive: RewardStatus.Active,
     });
@@ -125,9 +125,9 @@ describe("ListRewardsActiveUseCase", () => {
     rewardQueryRepo.findAllActive.mockResolvedValue([r]);
     rewardToDtoMapper.map.mockReturnValue({
       id: 3,
-      name: "Only",
+      name: 'Only',
       pointsRequired: 1,
-      description: "only",
+      description: 'only',
       isActive: true,
       createdAt: r.createdAt.toISOString(),
     });
@@ -140,18 +140,34 @@ describe("ListRewardsActiveUseCase", () => {
     expect(rewardQueryRepo.findAllInactive).not.toHaveBeenCalled();
   });
 
-  it("should preserve order of mapped results", async () => {
-    const a = new Reward({ name: "A", description: "a", pointsRequired: 1 });
+  it('should preserve order of mapped results', async () => {
+    const a = new Reward({ name: 'A', description: 'a', pointsRequired: 1 });
     a.setId(10);
-    const b = new Reward({ name: "B", description: "b", pointsRequired: 2 });
+    const b = new Reward({ name: 'B', description: 'b', pointsRequired: 2 });
     b.setId(11);
 
     rewardQueryRepo.findAllActive.mockResolvedValue([a, b]);
 
-    const dtoA: RewardDto = { id: 10, name: "A", pointsRequired: 1, description: "a", isActive: true, createdAt: a.createdAt.toISOString() };
-    const dtoB: RewardDto = { id: 11, name: "B", pointsRequired: 2, description: "b", isActive: true, createdAt: b.createdAt.toISOString() };
+    const dtoA: RewardDto = {
+      id: 10,
+      name: 'A',
+      pointsRequired: 1,
+      description: 'a',
+      isActive: true,
+      createdAt: a.createdAt.toISOString(),
+    };
+    const dtoB: RewardDto = {
+      id: 11,
+      name: 'B',
+      pointsRequired: 2,
+      description: 'b',
+      isActive: true,
+      createdAt: b.createdAt.toISOString(),
+    };
 
-    rewardToDtoMapper.map.mockImplementation((r) => (r.id === 10 ? dtoA : dtoB));
+    rewardToDtoMapper.map.mockImplementation((r) =>
+      r.id === 10 ? dtoA : dtoB,
+    );
 
     const result = await useCase.execute();
 

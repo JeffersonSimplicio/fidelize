@@ -1,6 +1,7 @@
-import { CustomerDto } from "@/core/application/dtos";
-import { FlatList, View, Text } from "react-native";
-import { ListItemCard } from "@/ui/components/list-item-card";
+import { FlatList, View, Text } from 'react-native';
+
+import { CustomerDto } from '@/core/application/dtos';
+import { ListItemCard } from '@/ui/components/list-item-card';
 
 interface Props {
   customers: CustomerDto[];
@@ -8,8 +9,8 @@ interface Props {
 
 export function TopCustomersByPoints({ customers }: Props) {
   return (
-    <View className="bg-gray-50 rounded-xl p-4 shadow-sm">
-      <Text className="text-lg font-semibold text-gray-800 mb-3">
+    <View className="rounded-xl bg-gray-50 p-4 shadow-sm">
+      <Text className="mb-3 text-lg font-semibold text-gray-800">
         🏅 Top 3 clientes mais fiéis
       </Text>
 
@@ -25,7 +26,7 @@ export function TopCustomersByPoints({ customers }: Props) {
           />
         )}
         ListEmptyComponent={() => (
-          <View className="items-center mt-3">
+          <View className="mt-3 items-center">
             <Text className="text-gray-500">Nenhum cliente cadastrado.</Text>
           </View>
         )}

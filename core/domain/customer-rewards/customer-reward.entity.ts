@@ -1,4 +1,7 @@
-import { ensureIdNotSet, ensureDatesNotInFuture } from "@/core/domain/shared/rules"
+import {
+  ensureIdNotSet,
+  ensureDatesNotInFuture,
+} from '@/core/domain/shared/rules';
 
 export class CustomerReward {
   private _id?: number;
@@ -16,25 +19,33 @@ export class CustomerReward {
 
     const now = new Date();
     this._redeemedAt = param.redeemedAt ?? now;
-    this.ensureDatesNotInFuture()
+    this.ensureDatesNotInFuture();
   }
 
   // --- Getters ---
-  get id() { return this._id; }
-  get customerId() { return this._customerId; }
-  get rewardId() { return this._rewardId; }
-  get redeemedAt() { return this._redeemedAt; }
+  get id() {
+    return this._id;
+  }
+  get customerId() {
+    return this._customerId;
+  }
+  get rewardId() {
+    return this._rewardId;
+  }
+  get redeemedAt() {
+    return this._redeemedAt;
+  }
 
   // --- Business rules ---
   setId(id: number) {
-    ensureIdNotSet(this._id)
+    ensureIdNotSet(this._id);
     this._id = id;
   }
 
   private ensureDatesNotInFuture() {
     ensureDatesNotInFuture({
       redeemedAt: this.redeemedAt,
-    })
+    });
   }
 
   toPersistence() {

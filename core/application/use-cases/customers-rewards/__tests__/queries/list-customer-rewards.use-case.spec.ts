@@ -1,12 +1,14 @@
-import { ListCustomerRewardsUseCase } from "@/core/application/use-cases/customers-rewards";
-import { CustomerRewardQueryRepository } from "@/core/domain/customer-rewards/customer-reward.query.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
-import { CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
+import { ListCustomerRewardsUseCase } from '@/core/application/use-cases/customers-rewards';
+import { CustomerRewardQueryRepository } from '@/core/domain/customer-rewards/customer-reward.query.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { CustomerReward } from '@/core/domain/customer-rewards/customer-reward.entity';
+import { CustomerRewardDto } from '@/core/application/dtos/customer-rewards';
 
-describe("ListCustomerRewardsUseCase", () => {
+describe('ListCustomerRewardsUseCase', () => {
   let customerRewardQueryRepo: jest.Mocked<CustomerRewardQueryRepository>;
-  let customerRewardToDtoMapper: jest.Mocked<Mapper<CustomerReward, CustomerRewardDto>>;
+  let customerRewardToDtoMapper: jest.Mocked<
+    Mapper<CustomerReward, CustomerRewardDto>
+  >;
   let useCase: ListCustomerRewardsUseCase;
 
   beforeEach(() => {
@@ -29,7 +31,7 @@ describe("ListCustomerRewardsUseCase", () => {
     });
   });
 
-  it("should return mapped customer reward DTOs (happy path)", async () => {
+  it('should return mapped customer reward DTOs (happy path)', async () => {
     const cr1 = new CustomerReward({ customerId: 1, rewardId: 10 });
     cr1.setId(100);
     const cr2 = new CustomerReward({ customerId: 2, rewardId: 11 });
@@ -49,7 +51,9 @@ describe("ListCustomerRewardsUseCase", () => {
     };
 
     customerRewardQueryRepo.findAll.mockResolvedValue([cr1, cr2]);
-    customerRewardToDtoMapper.map.mockImplementation((c) => (c.id === 100 ? dto1 : dto2));
+    customerRewardToDtoMapper.map.mockImplementation((c) =>
+      c.id === 100 ? dto1 : dto2,
+    );
 
     const result = await useCase.execute();
 
@@ -60,7 +64,7 @@ describe("ListCustomerRewardsUseCase", () => {
     expect(result).toEqual([dto1, dto2]);
   });
 
-  it("should return an empty array when repository returns no customer rewards", async () => {
+  it('should return an empty array when repository returns no customer rewards', async () => {
     customerRewardQueryRepo.findAll.mockResolvedValue([]);
 
     const result = await useCase.execute();
@@ -70,46 +74,65 @@ describe("ListCustomerRewardsUseCase", () => {
     expect(result).toEqual([]);
   });
 
-  it("should propagate error when repository.findAll throws", async () => {
-    customerRewardQueryRepo.findAll.mockRejectedValue(new Error("DB read failed"));
+  it('should propagate error when repository.findAll throws', async () => {
+    customerRewardQueryRepo.findAll.mockRejectedValue(
+      new Error('DB read failed'),
+    );
 
-    await expect(useCase.execute()).rejects.toThrow("DB read failed");
+    await expect(useCase.execute()).rejects.toThrow('DB read failed');
 
     expect(customerRewardQueryRepo.findAll).toHaveBeenCalledTimes(1);
     expect(customerRewardToDtoMapper.map).not.toHaveBeenCalled();
   });
 
-  it("should propagate error when mapper.map throws for an item", async () => {
+  it('should propagate error when mapper.map throws for an item', async () => {
     const cr = new CustomerReward({ customerId: 3, rewardId: 12 });
     cr.setId(102);
 
     customerRewardQueryRepo.findAll.mockResolvedValue([cr]);
-    customerRewardToDtoMapper.map.mockImplementation(() => { throw new Error("Mapping failed"); });
+    customerRewardToDtoMapper.map.mockImplementation(() => {
+      throw new Error('Mapping failed');
+    });
 
-    await expect(useCase.execute()).rejects.toThrow("Mapping failed");
+    await expect(useCase.execute()).rejects.toThrow('Mapping failed');
 
     expect(customerRewardQueryRepo.findAll).toHaveBeenCalledTimes(1);
     expect(customerRewardToDtoMapper.map).toHaveBeenCalledWith(cr);
   });
 
-  it("should preserve repository order in mapped results", async () => {
-    const a = new CustomerReward({ customerId: 4, rewardId: 20 }); a.setId(200);
-    const b = new CustomerReward({ customerId: 5, rewardId: 21 }); b.setId(201);
+  it('should preserve repository order in mapped results', async () => {
+    const a = new CustomerReward({ customerId: 4, rewardId: 20 });
+    a.setId(200);
+    const b = new CustomerReward({ customerId: 5, rewardId: 21 });
+    b.setId(201);
 
     customerRewardQueryRepo.findAll.mockResolvedValue([a, b]);
 
-    const dtoA: CustomerRewardDto = { id: 200, customerId: 4, rewardId: 20, redeemedAt: a.redeemedAt.toISOString() };
-    const dtoB: CustomerRewardDto = { id: 201, customerId: 5, rewardId: 21, redeemedAt: b.redeemedAt.toISOString() };
+    const dtoA: CustomerRewardDto = {
+      id: 200,
+      customerId: 4,
+      rewardId: 20,
+      redeemedAt: a.redeemedAt.toISOString(),
+    };
+    const dtoB: CustomerRewardDto = {
+      id: 201,
+      customerId: 5,
+      rewardId: 21,
+      redeemedAt: b.redeemedAt.toISOString(),
+    };
 
-    customerRewardToDtoMapper.map.mockImplementation((c) => (c.id === 200 ? dtoA : dtoB));
+    customerRewardToDtoMapper.map.mockImplementation((c) =>
+      c.id === 200 ? dtoA : dtoB,
+    );
 
     const result = await useCase.execute();
 
     expect(result).toEqual([dtoA, dtoB]);
   });
 
-  it("should only call findAll and not other query methods", async () => {
-    const cr = new CustomerReward({ customerId: 6, rewardId: 30 }); cr.setId(300);
+  it('should only call findAll and not other query methods', async () => {
+    const cr = new CustomerReward({ customerId: 6, rewardId: 30 });
+    cr.setId(300);
     customerRewardQueryRepo.findAll.mockResolvedValue([cr]);
     customerRewardToDtoMapper.map.mockReturnValue({
       id: 300,
@@ -121,11 +144,20 @@ describe("ListCustomerRewardsUseCase", () => {
     await useCase.execute();
 
     expect(customerRewardQueryRepo.findAll).toHaveBeenCalledTimes(1);
-    expect(customerRewardQueryRepo.findTopRewardsByRedeem).not.toHaveBeenCalled();
-    expect(customerRewardQueryRepo.findRewardsRedeemedByCustomer).not.toHaveBeenCalled();
-    expect(customerRewardQueryRepo.findAvailableRewardsForCustomer)
-      .not.toHaveBeenCalled();
-    expect(customerRewardQueryRepo.findCustomersEligibleToRedeemReward).not.toHaveBeenCalled();
-    expect(customerRewardQueryRepo.findCustomersWhoRedeemedReward).not.toHaveBeenCalled();
+    expect(
+      customerRewardQueryRepo.findTopRewardsByRedeem,
+    ).not.toHaveBeenCalled();
+    expect(
+      customerRewardQueryRepo.findRewardsRedeemedByCustomer,
+    ).not.toHaveBeenCalled();
+    expect(
+      customerRewardQueryRepo.findAvailableRewardsForCustomer,
+    ).not.toHaveBeenCalled();
+    expect(
+      customerRewardQueryRepo.findCustomersEligibleToRedeemReward,
+    ).not.toHaveBeenCalled();
+    expect(
+      customerRewardQueryRepo.findCustomersWhoRedeemedReward,
+    ).not.toHaveBeenCalled();
   });
 });

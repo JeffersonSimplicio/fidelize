@@ -3,16 +3,17 @@ import {
   useFocusEffect,
   useLocalSearchParams,
   useRouter,
-} from "expo-router";
-import { useCallback } from "react";
-import { FlatList, Text, View } from "react-native";
-import { useRewardDetails } from "@/ui/hooks/reward-details/use-reward-details";
+} from 'expo-router';
+import { useCallback } from 'react';
+import { FlatList, Text, View } from 'react-native';
+
+import { useRewardDetails } from '@/ui/hooks/reward-details/use-reward-details';
 import {
   CustomersWhoRedeemedList,
   EligibleCustomersList,
   RewardInfo,
-} from "@/ui/features/reward";
-import { EntityActions } from "@/ui/components/entity-actions";
+} from '@/ui/features/reward';
+import { EntityActions } from '@/ui/components/entity-actions';
 
 export default function RewardDetailsScreen() {
   const router = useRouter();
@@ -32,15 +33,15 @@ export default function RewardDetailsScreen() {
   useFocusEffect(
     useCallback(() => {
       reloadAll();
-    }, [reloadAll])
+    }, [reloadAll]),
   );
 
   if (!reward) {
     return (
       <>
-        <Stack.Screen options={{ title: "Detalhes" }} />
+        <Stack.Screen options={{ title: 'Detalhes' }} />
         <View className="flex-1 items-center justify-center bg-white">
-          <Text className="text-gray-600 text-base">
+          <Text className="text-base text-gray-600">
             Recompensa não foi encontrada!
           </Text>
         </View>
@@ -49,9 +50,9 @@ export default function RewardDetailsScreen() {
   }
 
   const sections = [
-    { key: "info", render: () => <RewardInfo reward={reward} /> },
+    { key: 'info', render: () => <RewardInfo reward={reward} /> },
     {
-      key: "eligible",
+      key: 'eligible',
       render: () => (
         <EligibleCustomersList
           customers={eligibleCustomers}
@@ -60,7 +61,7 @@ export default function RewardDetailsScreen() {
       ),
     },
     {
-      key: "redeemed",
+      key: 'redeemed',
       render: () => (
         <CustomersWhoRedeemedList
           customers={customersWhoRedeemed}

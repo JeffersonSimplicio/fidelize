@@ -1,9 +1,8 @@
-
 export function resolveLastVisit(
   currentPoints: number,
   newPoints: number | undefined,
   currentLastVisit: Date,
-  newLastVisit?: Date
+  newLastVisit?: Date,
 ): Date {
   if (newLastVisit) return newLastVisit;
 

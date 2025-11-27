@@ -1,6 +1,7 @@
-import { Alert, GestureResponderEvent } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { AppButton } from "@/ui/components/app-button";
+import { Alert, GestureResponderEvent } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
+import { AppButton } from '@/ui/components/app-button';
 
 type Props = {
   onDelete: () => Promise<void> | void;
@@ -8,16 +9,16 @@ type Props = {
 };
 
 export function DeleteButton({ onDelete, confirm = true }: Props) {
-  const handlePress = async (e: GestureResponderEvent) => {
+  const handlePress = async (_e: GestureResponderEvent) => {
     if (confirm) {
       Alert.alert(
-        "Confirmar exclusão",
-        "Tem certeza que quer deletar?",
+        'Confirmar exclusão',
+        'Tem certeza que quer deletar?',
         [
-          { text: "Cancelar", style: "cancel" },
+          { text: 'Cancelar', style: 'cancel' },
           {
-            text: "Deletar",
-            style: "destructive",
+            text: 'Deletar',
+            style: 'destructive',
             onPress: async () => {
               try {
                 await onDelete();
@@ -27,15 +28,15 @@ export function DeleteButton({ onDelete, confirm = true }: Props) {
             },
           },
         ],
-        { cancelable: true }
+        { cancelable: true },
       );
     } else {
       try {
         await onDelete();
       } catch (err) {
         Alert.alert(
-          "Erro",
-          "Não foi possível deletar. Tente novamente mais tarde."
+          'Erro',
+          'Não foi possível deletar. Tente novamente mais tarde.',
         );
         console.error(err);
       }
@@ -45,7 +46,7 @@ export function DeleteButton({ onDelete, confirm = true }: Props) {
   return (
     <AppButton
       onPress={handlePress}
-      className="w-14 h-14 bg-red-600 rounded-full items-center justify-center shadow-md active:opacity-70"
+      className="h-14 w-14 items-center justify-center rounded-full bg-red-600 shadow-md active:opacity-70"
     >
       <FontAwesome name="trash" size={22} color="white" />
     </AppButton>

@@ -1,4 +1,4 @@
-import { BaseError } from "@/core/domain/shared/errors/base.error";
+import { BaseError } from '@/core/domain/shared/errors/base.error';
 
 export class AlreadyExistsError extends BaseError {
   constructor(resource: string, identifier?: string) {

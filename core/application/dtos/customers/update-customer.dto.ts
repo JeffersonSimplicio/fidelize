@@ -3,4 +3,4 @@ export type UpdateCustomerDto = {
   phone?: string;
   points?: number;
   lastVisitAt?: Date;
-}
+};

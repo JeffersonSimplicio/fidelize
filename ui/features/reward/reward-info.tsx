@@ -1,11 +1,12 @@
-import { RewardDto } from "@/core/application/dtos";
-import { formatDate } from "@/ui/utils/format-date";
-import { View, Text } from "react-native";
+import { View, Text } from 'react-native';
+
+import { RewardDto } from '@/core/application/dtos';
+import { formatDate } from '@/ui/utils/format-date';
 
 export function RewardInfo({ reward }: { reward: RewardDto }) {
   return (
-    <View className="bg-gray-50 p-4 rounded-xl shadow-sm mb-4">
-      <Text className="text-lg font-semibold text-gray-800 mb-2">
+    <View className="mb-4 rounded-xl bg-gray-50 p-4 shadow-sm">
+      <Text className="mb-2 text-lg font-semibold text-gray-800">
         Recompensa
       </Text>
       <Text className="text-gray-700">

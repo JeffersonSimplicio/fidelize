@@ -1,21 +1,21 @@
-import { RegisterRewardUseCase } from "@/core/application/use-cases/rewards";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { CreateRewardDto, RewardDto } from "@/core/application/dtos/rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
+import { RegisterRewardUseCase } from '@/core/application/use-cases/rewards';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { CreateRewardDto, RewardDto } from '@/core/application/dtos/rewards';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
 
-describe("RegisterRewardUseCase", () => {
+describe('RegisterRewardUseCase', () => {
   let useCase: RegisterRewardUseCase;
   let rewardRepo: jest.Mocked<RewardRepository>;
   let createRewardValidator: jest.Mocked<Validation<CreateRewardDto>>;
   let rewardToDtoMapper: jest.Mocked<Mapper<Reward, RewardDto>>;
 
   const validInput: CreateRewardDto = {
-    name: "Free Coffee",
-    description: "One free coffee at partner shops",
+    name: 'Free Coffee',
+    description: 'One free coffee at partner shops',
     pointsRequired: 100,
   };
 
@@ -42,19 +42,24 @@ describe("RegisterRewardUseCase", () => {
     });
   });
 
-  it("should throw ValidationException when validator returns errors", async () => {
+  it('should throw ValidationException when validator returns errors', async () => {
     createRewardValidator.validate.mockReturnValue([
-      { field: "pointsRequired", message: "Points required must be at least 1" },
+      {
+        field: 'pointsRequired',
+        message: 'Points required must be at least 1',
+      },
     ]);
 
-    await expect(useCase.execute(validInput)).rejects.toBeInstanceOf(ValidationException);
+    await expect(useCase.execute(validInput)).rejects.toBeInstanceOf(
+      ValidationException,
+    );
 
     expect(createRewardValidator.validate).toHaveBeenCalledWith(validInput);
     expect(rewardRepo.create).not.toHaveBeenCalled();
     expect(rewardToDtoMapper.map).not.toHaveBeenCalled();
   });
 
-  it("should create a Reward and return mapped DTO (happy path)", async () => {
+  it('should create a Reward and return mapped DTO (happy path)', async () => {
     createRewardValidator.validate.mockReturnValue([]);
 
     const createdReward = new Reward({
@@ -93,18 +98,20 @@ describe("RegisterRewardUseCase", () => {
     expect(result).toEqual(expectedDto);
   });
 
-  it("should propagate error when repository.create throws", async () => {
+  it('should propagate error when repository.create throws', async () => {
     createRewardValidator.validate.mockReturnValue([]);
-    rewardRepo.create.mockRejectedValue(new Error("DB create failed"));
+    rewardRepo.create.mockRejectedValue(new Error('DB create failed'));
 
-    await expect(useCase.execute(validInput)).rejects.toThrow("DB create failed");
+    await expect(useCase.execute(validInput)).rejects.toThrow(
+      'DB create failed',
+    );
 
     expect(createRewardValidator.validate).toHaveBeenCalledWith(validInput);
     expect(rewardRepo.create).toHaveBeenCalled();
     expect(rewardToDtoMapper.map).not.toHaveBeenCalled();
   });
 
-  it("should propagate error when mapper.map throws", async () => {
+  it('should propagate error when mapper.map throws', async () => {
     createRewardValidator.validate.mockReturnValue([]);
 
     const createdReward = new Reward({
@@ -116,10 +123,10 @@ describe("RegisterRewardUseCase", () => {
 
     rewardRepo.create.mockResolvedValue(createdReward);
     rewardToDtoMapper.map.mockImplementation(() => {
-      throw new Error("Mapper failure");
+      throw new Error('Mapper failure');
     });
 
-    await expect(useCase.execute(validInput)).rejects.toThrow("Mapper failure");
+    await expect(useCase.execute(validInput)).rejects.toThrow('Mapper failure');
 
     expect(rewardRepo.create).toHaveBeenCalled();
     expect(rewardToDtoMapper.map).toHaveBeenCalledWith(createdReward);

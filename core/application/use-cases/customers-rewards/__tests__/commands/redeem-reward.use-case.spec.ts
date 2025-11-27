@@ -1,20 +1,29 @@
-import { RedeemRewardUseCase } from "@/core/application/use-cases/customers-rewards";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
-import { CreateCustomerRewardDto, CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
-import { InactiveRewardRedemptionError, InsufficientPointsError, RewardAlreadyRedeemedError } from "@/core/domain/customer-rewards/errors";
+import { RedeemRewardUseCase } from '@/core/application/use-cases/customers-rewards';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { CustomerRewardRepository } from '@/core/domain/customer-rewards/customer-reward.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerReward } from '@/core/domain/customer-rewards/customer-reward.entity';
+import {
+  CreateCustomerRewardDto,
+  CustomerRewardDto,
+} from '@/core/application/dtos/customer-rewards';
+import {
+  InactiveRewardRedemptionError,
+  InsufficientPointsError,
+  RewardAlreadyRedeemedError,
+} from '@/core/domain/customer-rewards/errors';
 
-describe("RedeemRewardUseCase", () => {
+describe('RedeemRewardUseCase', () => {
   let rewardRepo: jest.Mocked<RewardRepository>;
   let customerRepo: jest.Mocked<CustomerRepository>;
   let customerRewardRepo: jest.Mocked<CustomerRewardRepository>;
-  let customerRewardToDtoMapper: jest.Mocked<Mapper<CustomerReward, CustomerRewardDto>>;
+  let customerRewardToDtoMapper: jest.Mocked<
+    Mapper<CustomerReward, CustomerRewardDto>
+  >;
   let useCase: RedeemRewardUseCase;
 
   beforeEach(() => {
@@ -52,10 +61,14 @@ describe("RedeemRewardUseCase", () => {
     });
   });
 
-  it("should redeem a reward successfully (happy path)", async () => {
+  it('should redeem a reward successfully (happy path)', async () => {
     const input: CreateCustomerRewardDto = { customerId: 1, rewardId: 2 };
-    const customer = new Customer({ name: "Alice", phone: "123", points: 100 });
-    const reward = new Reward({ name: "Reward1", description: "Desc", pointsRequired: 50 });
+    const customer = new Customer({ name: 'Alice', phone: '123', points: 100 });
+    const reward = new Reward({
+      name: 'Reward1',
+      description: 'Desc',
+      pointsRequired: 50,
+    });
     reward.setId(2);
 
     const customerReward = new CustomerReward({ customerId: 1, rewardId: 2 });
@@ -84,64 +97,94 @@ describe("RedeemRewardUseCase", () => {
     expect(result).toEqual(dto);
   });
 
-  it("should throw InactiveRewardRedemptionError if reward is inactive", async () => {
+  it('should throw InactiveRewardRedemptionError if reward is inactive', async () => {
     const input: CreateCustomerRewardDto = { customerId: 1, rewardId: 2 };
-    const customer = new Customer({ name: "Alice", phone: "123", points: 100 });
-    const reward = new Reward({ name: "Reward1", description: "Desc", pointsRequired: 50, isActive: RewardStatus.Inactive });
+    const customer = new Customer({ name: 'Alice', phone: '123', points: 100 });
+    const reward = new Reward({
+      name: 'Reward1',
+      description: 'Desc',
+      pointsRequired: 50,
+      isActive: RewardStatus.Inactive,
+    });
     reward.setId(2);
 
     customerRepo.getById.mockResolvedValue(customer);
     rewardRepo.getById.mockResolvedValue(reward);
 
-    await expect(useCase.execute(input)).rejects.toBeInstanceOf(InactiveRewardRedemptionError);
+    await expect(useCase.execute(input)).rejects.toBeInstanceOf(
+      InactiveRewardRedemptionError,
+    );
     expect(customerRewardRepo.alreadyRedeemed).not.toHaveBeenCalled();
   });
 
-  it("should throw InsufficientPointsError if customer has not enough points", async () => {
+  it('should throw InsufficientPointsError if customer has not enough points', async () => {
     const input: CreateCustomerRewardDto = { customerId: 1, rewardId: 2 };
-    const customer = new Customer({ name: "Alice", phone: "123", points: 10 });
-    const reward = new Reward({ name: "Reward1", description: "Desc", pointsRequired: 50 });
+    const customer = new Customer({ name: 'Alice', phone: '123', points: 10 });
+    const reward = new Reward({
+      name: 'Reward1',
+      description: 'Desc',
+      pointsRequired: 50,
+    });
     reward.setId(2);
 
     customerRepo.getById.mockResolvedValue(customer);
     rewardRepo.getById.mockResolvedValue(reward);
 
-    await expect(useCase.execute(input)).rejects.toBeInstanceOf(InsufficientPointsError);
+    await expect(useCase.execute(input)).rejects.toBeInstanceOf(
+      InsufficientPointsError,
+    );
     expect(customerRewardRepo.alreadyRedeemed).not.toHaveBeenCalled();
   });
 
-  it("should throw RewardAlreadyRedeemedError if customer already redeemed the reward", async () => {
+  it('should throw RewardAlreadyRedeemedError if customer already redeemed the reward', async () => {
     const input: CreateCustomerRewardDto = { customerId: 1, rewardId: 2 };
-    const customer = new Customer({ name: "Alice", phone: "123", points: 100 });
-    const reward = new Reward({ name: "Reward1", description: "Desc", pointsRequired: 50 });
+    const customer = new Customer({ name: 'Alice', phone: '123', points: 100 });
+    const reward = new Reward({
+      name: 'Reward1',
+      description: 'Desc',
+      pointsRequired: 50,
+    });
     reward.setId(2);
-    const existingCustomerReward = new CustomerReward({ customerId: 1, rewardId: 2 });
+    const existingCustomerReward = new CustomerReward({
+      customerId: 1,
+      rewardId: 2,
+    });
 
     customerRepo.getById.mockResolvedValue(customer);
     rewardRepo.getById.mockResolvedValue(reward);
-    customerRewardRepo.alreadyRedeemed.mockResolvedValue(existingCustomerReward);
+    customerRewardRepo.alreadyRedeemed.mockResolvedValue(
+      existingCustomerReward,
+    );
 
-    await expect(useCase.execute(input)).rejects.toBeInstanceOf(RewardAlreadyRedeemedError);
+    await expect(useCase.execute(input)).rejects.toBeInstanceOf(
+      RewardAlreadyRedeemedError,
+    );
     expect(customerRewardRepo.create).not.toHaveBeenCalled();
   });
 
-  it("should propagate repository or mapper errors", async () => {
+  it('should propagate repository or mapper errors', async () => {
     const input: CreateCustomerRewardDto = { customerId: 1, rewardId: 2 };
-    const customer = new Customer({ name: "Alice", phone: "123", points: 100 });
-    const reward = new Reward({ name: "Reward1", description: "Desc", pointsRequired: 50 });
+    const customer = new Customer({ name: 'Alice', phone: '123', points: 100 });
+    const reward = new Reward({
+      name: 'Reward1',
+      description: 'Desc',
+      pointsRequired: 50,
+    });
     reward.setId(2);
 
     customerRepo.getById.mockResolvedValue(customer);
     rewardRepo.getById.mockResolvedValue(reward);
     customerRewardRepo.alreadyRedeemed.mockResolvedValue(null);
-    customerRewardRepo.create.mockRejectedValue(new Error("DB error"));
+    customerRewardRepo.create.mockRejectedValue(new Error('DB error'));
 
-    await expect(useCase.execute(input)).rejects.toThrow("DB error");
+    await expect(useCase.execute(input)).rejects.toThrow('DB error');
 
     const customerReward = new CustomerReward({ customerId: 1, rewardId: 2 });
     customerRewardRepo.create.mockResolvedValue(customerReward);
-    customerRewardToDtoMapper.map.mockImplementation(() => { throw new Error("Mapping failed"); });
+    customerRewardToDtoMapper.map.mockImplementation(() => {
+      throw new Error('Mapping failed');
+    });
 
-    await expect(useCase.execute(input)).rejects.toThrow("Mapping failed");
+    await expect(useCase.execute(input)).rejects.toThrow('Mapping failed');
   });
 });

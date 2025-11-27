@@ -1,9 +1,12 @@
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
-import { ensurePointsRequiredIsValid } from "@/core/domain/rewards/rules";
-import { ensureDatesNotInFuture, ensureIdNotSet } from "@/core/domain/shared/rules";
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
+import { ensurePointsRequiredIsValid } from '@/core/domain/rewards/rules';
+import {
+  ensureDatesNotInFuture,
+  ensureIdNotSet,
+} from '@/core/domain/shared/rules';
 
 export class Reward {
-  private _id?: number;  // It will be defined by the database
+  private _id?: number; // It will be defined by the database
   private _name!: string;
   private _pointsRequired!: number;
   private _description!: string;
@@ -27,34 +30,50 @@ export class Reward {
     this._isActive = params.isActive ?? RewardStatus.Active;
 
     this._createdAt = params.createdAt ?? new Date();
-    this.ensureDatesNotInFuture()
+    this.ensureDatesNotInFuture();
   }
 
   // --- Getters ---
-  get id() { return this._id }
-  get name() { return this._name }
-  get pointsRequired() { return this._pointsRequired }
-  get description() { return this._description }
-  get isActive() { return this._isActive }
-  get createdAt() { return this._createdAt }
+  get id() {
+    return this._id;
+  }
+  get name() {
+    return this._name;
+  }
+  get pointsRequired() {
+    return this._pointsRequired;
+  }
+  get description() {
+    return this._description;
+  }
+  get isActive() {
+    return this._isActive;
+  }
+  get createdAt() {
+    return this._createdAt;
+  }
 
   // --- Business rules ---
   setId(id: number) {
-    ensureIdNotSet(this._id)
+    ensureIdNotSet(this._id);
     this._id = id;
   }
 
   setPoints(value: number) {
-    ensurePointsRequiredIsValid(value, Reward.MIN_POINTS_REQUIRED)
+    ensurePointsRequiredIsValid(value, Reward.MIN_POINTS_REQUIRED);
     this._pointsRequired = value;
   }
 
-  activate() { this._isActive = RewardStatus.Active }
+  activate() {
+    this._isActive = RewardStatus.Active;
+  }
 
-  deactivate() { this._isActive = RewardStatus.Inactive }
+  deactivate() {
+    this._isActive = RewardStatus.Inactive;
+  }
 
   private ensureDatesNotInFuture() {
-    ensureDatesNotInFuture({ createdAt: this._createdAt })
+    ensureDatesNotInFuture({ createdAt: this._createdAt });
   }
 
   toPersistence() {

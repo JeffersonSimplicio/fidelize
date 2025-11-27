@@ -1,7 +1,9 @@
-import { CustomerRewardQueryRepository } from "@/core/domain/customer-rewards/customer-reward.query.repository.interface";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { drizzleClient } from "@/core/infrastructure/database/drizzle/db";
+import { eq, desc, sql, and, gte, isNull } from 'drizzle-orm';
+
+import { CustomerRewardQueryRepository } from '@/core/domain/customer-rewards/customer-reward.query.repository.interface';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { drizzleClient } from '@/core/infrastructure/database/drizzle/db';
 import {
   RewardSelect,
   RewardTable,
@@ -9,28 +11,29 @@ import {
   CustomerTable,
   CustomerRewardSelect,
   CustomerRewardTable,
-} from "@/core/infrastructure/database/drizzle/types";
-import { eq, desc, sql, and, gte, isNull } from "drizzle-orm";
+} from '@/core/infrastructure/database/drizzle/types';
 import {
   TopReward,
   CustomerRedeemedReward,
   CustomerRewardRedemption,
-} from "@/core/domain/customer-rewards/query-models"
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerReward } from "@/core/domain/customer-rewards/customer-reward.entity";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
+} from '@/core/domain/customer-rewards/query-models';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerReward } from '@/core/domain/customer-rewards/customer-reward.entity';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
 
 export interface CustomerRewardQueryRepositoryDrizzleDep {
-  dbClient: drizzleClient,
-  rewardTable: RewardTable,
-  rewardToDomainMapper: Mapper<RewardSelect, Reward>,
-  customerTable: CustomerTable
-  customerToDomainMapper: Mapper<CustomerSelect, Customer>,
-  customerRewardTable: CustomerRewardTable,
-  customerRewardToDomainMapper: Mapper<CustomerRewardSelect, CustomerReward>,
+  dbClient: drizzleClient;
+  rewardTable: RewardTable;
+  rewardToDomainMapper: Mapper<RewardSelect, Reward>;
+  customerTable: CustomerTable;
+  customerToDomainMapper: Mapper<CustomerSelect, Customer>;
+  customerRewardTable: CustomerRewardTable;
+  customerRewardToDomainMapper: Mapper<CustomerRewardSelect, CustomerReward>;
 }
 
-export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQueryRepository {
+export class CustomerRewardQueryRepositoryDrizzle
+  implements CustomerRewardQueryRepository
+{
   private readonly dbClient: drizzleClient;
   private readonly rewardTable: RewardTable;
   private readonly rewardToDomainMapper: Mapper<RewardSelect, Reward>;
@@ -57,7 +60,9 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       .select()
       .from(this.customerRewardTable);
 
-    return dbCustomerRewards.map(c => this.customerRewardToDomainMapper.map(c));
+    return dbCustomerRewards.map((c) =>
+      this.customerRewardToDomainMapper.map(c),
+    );
   }
 
   async findTopRewardsByRedeem(limit: number): Promise<TopReward[]> {
@@ -69,27 +74,25 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       .from(this.customerRewardTable)
       .innerJoin(
         this.rewardTable,
-        eq(
-          this.customerRewardTable.rewardId,
-          this.rewardTable.id
-        )
+        eq(this.customerRewardTable.rewardId, this.rewardTable.id),
       )
       .groupBy(this.customerRewardTable.rewardId)
       .orderBy(desc(sql`COUNT(${this.customerRewardTable.id})`))
       .limit(limit);
 
-    const mapped = result.map(item =>
-      new TopReward(
-        this.rewardToDomainMapper.map(item.reward),
-        item.redeemedCount
-      )
+    const mapped = result.map(
+      (item) =>
+        new TopReward(
+          this.rewardToDomainMapper.map(item.reward),
+          item.redeemedCount,
+        ),
     );
 
     return mapped;
   }
 
   async findRewardsRedeemedByCustomer(
-    customerId: number
+    customerId: number,
   ): Promise<CustomerRedeemedReward[]> {
     const result = await this.dbClient
       .select({
@@ -99,23 +102,16 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       .from(this.customerRewardTable)
       .innerJoin(
         this.rewardTable,
-        eq(
-          this.rewardTable.id,
-          this.customerRewardTable.rewardId
-        )
+        eq(this.rewardTable.id, this.customerRewardTable.rewardId),
       )
-      .where(
-        eq(
-          this.customerRewardTable.customerId,
-          customerId
-        )
-      )
+      .where(eq(this.customerRewardTable.customerId, customerId));
 
-    const mapped = result.map(item =>
-      new CustomerRedeemedReward(
-        this.rewardToDomainMapper.map(item.reward),
-        item.redeemedAt
-      )
+    const mapped = result.map(
+      (item) =>
+        new CustomerRedeemedReward(
+          this.rewardToDomainMapper.map(item.reward),
+          item.redeemedAt,
+        ),
     );
 
     return mapped;
@@ -134,27 +130,29 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       .from(this.rewardTable)
       .innerJoin(
         this.customerTable,
-        gte(this.customerTable.points, this.rewardTable.pointsRequired)
+        gte(this.customerTable.points, this.rewardTable.pointsRequired),
       )
       .leftJoin(
         this.customerRewardTable,
         and(
           eq(this.customerRewardTable.rewardId, this.rewardTable.id),
-          eq(this.customerRewardTable.customerId, customerId)
-        )
+          eq(this.customerRewardTable.customerId, customerId),
+        ),
       )
       .where(
         and(
           eq(this.customerTable.id, customerId),
           eq(this.rewardTable.isActive, RewardStatus.Active),
-          isNull(this.customerRewardTable.id)
-        )
+          isNull(this.customerRewardTable.id),
+        ),
       );
 
-    return result.map(c => this.rewardToDomainMapper.map(c));
+    return result.map((c) => this.rewardToDomainMapper.map(c));
   }
 
-  async findCustomersEligibleToRedeemReward(rewardId: number): Promise<Customer[]> {
+  async findCustomersEligibleToRedeemReward(
+    rewardId: number,
+  ): Promise<Customer[]> {
     const result = await this.dbClient
       .select({
         id: this.customerTable.id,
@@ -167,56 +165,46 @@ export class CustomerRewardQueryRepositoryDrizzle implements CustomerRewardQuery
       .from(this.rewardTable)
       .innerJoin(
         this.customerTable,
-        gte(
-          this.customerTable.points,
-          this.rewardTable.pointsRequired
-        )
+        gte(this.customerTable.points, this.rewardTable.pointsRequired),
       )
       .leftJoin(
         this.customerRewardTable,
         and(
           eq(this.customerRewardTable.customerId, this.customerTable.id),
-          eq(this.customerRewardTable.rewardId, rewardId)
-        )
+          eq(this.customerRewardTable.rewardId, rewardId),
+        ),
       )
       .where(
         and(
           eq(this.rewardTable.id, rewardId),
-          isNull(this.customerRewardTable.id)
-        )
+          isNull(this.customerRewardTable.id),
+        ),
       );
 
-    return result.map(c => this.customerToDomainMapper.map(c));
+    return result.map((c) => this.customerToDomainMapper.map(c));
   }
 
   async findCustomersWhoRedeemedReward(
-    rewardId: number
+    rewardId: number,
   ): Promise<CustomerRewardRedemption[]> {
     const result = await this.dbClient
       .select({
         customer: this.customerTable,
-        redeemedAt: this.customerRewardTable.redeemedAt
+        redeemedAt: this.customerRewardTable.redeemedAt,
       })
       .from(this.customerTable)
       .innerJoin(
         this.customerRewardTable,
-        eq(
-          this.customerRewardTable.customerId,
-          this.customerTable.id
-        )
+        eq(this.customerRewardTable.customerId, this.customerTable.id),
       )
-      .where(
-        eq(
-          this.customerRewardTable.rewardId,
-          rewardId
-        )
-      )
+      .where(eq(this.customerRewardTable.rewardId, rewardId));
 
-    const mapped = result.map(item =>
-      new CustomerRewardRedemption(
-        this.customerToDomainMapper.map(item.customer),
-        item.redeemedAt
-      )
+    const mapped = result.map(
+      (item) =>
+        new CustomerRewardRedemption(
+          this.customerToDomainMapper.map(item.customer),
+          item.redeemedAt,
+        ),
     );
 
     return mapped;

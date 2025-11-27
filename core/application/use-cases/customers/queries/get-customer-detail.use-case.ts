@@ -1,12 +1,12 @@
-import { GetCustomerDetail } from "@/core/application/interfaces/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { CustomerDto } from "@/core/application/dtos/customers";
+import { GetCustomerDetail } from '@/core/application/interfaces/customers';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { CustomerDto } from '@/core/application/dtos/customers';
 
 export interface GetCustomerDetailDep {
-  customerRepo: CustomerRepository,
-  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+  customerRepo: CustomerRepository;
+  customerToDtoMapper: Mapper<Customer, CustomerDto>;
 }
 
 export class GetCustomerDetailUseCase implements GetCustomerDetail {
@@ -15,7 +15,7 @@ export class GetCustomerDetailUseCase implements GetCustomerDetail {
 
   constructor(deps: GetCustomerDetailDep) {
     this.customerRepo = deps.customerRepo;
-    this.customerToDtoMapper = deps.customerToDtoMapper
+    this.customerToDtoMapper = deps.customerToDtoMapper;
   }
 
   async execute(id: number): Promise<CustomerDto> {

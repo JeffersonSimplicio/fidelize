@@ -1,11 +1,15 @@
-import { useCustomerData } from "@/ui/hooks/customer-details/use-customer-data";
-import { useCustomerRewards } from "@/ui/hooks/customer-details/use-customer-rewards";
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-export function useCustomerDetails(customerId: number, onDeleteSuccess: () => void) {
+import { useCustomerData } from '@/ui/hooks/customer-details/use-customer-data';
+import { useCustomerRewards } from '@/ui/hooks/customer-details/use-customer-rewards';
+
+export function useCustomerDetails(
+  customerId: number,
+  onDeleteSuccess: () => void,
+) {
   const { customer, fetchCustomer, handleDelete } = useCustomerData(
     customerId,
-    onDeleteSuccess
+    onDeleteSuccess,
   );
   const {
     availableRewards,
@@ -17,9 +21,9 @@ export function useCustomerDetails(customerId: number, onDeleteSuccess: () => vo
   } = useCustomerRewards(customerId);
 
   const reloadAll = useCallback(() => {
-    fetchCustomer();
-    fetchAvailableRewards();
-    fetchRedeemedRewards();
+    void fetchCustomer();
+    void fetchAvailableRewards();
+    void fetchRedeemedRewards();
   }, [fetchCustomer, fetchAvailableRewards, fetchRedeemedRewards]);
 
   return {

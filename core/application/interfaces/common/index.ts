@@ -1,1 +1,1 @@
-export * from "./usecase-result-handler.interface";
+export * from './usecase-result-handler.interface';

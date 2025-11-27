@@ -1,16 +1,19 @@
-import { UpdateCustomerDto, CustomerDto } from "@/core/application/dtos/customers";
-import { EditCustomer } from "@/core/application/interfaces/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { resolveLastVisit } from "@/core/domain/customers/rules";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
+import {
+  UpdateCustomerDto,
+  CustomerDto,
+} from '@/core/application/dtos/customers';
+import { EditCustomer } from '@/core/application/interfaces/customers';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { resolveLastVisit } from '@/core/domain/customers/rules';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
 
 export interface EditCustomerDep {
-  customerRepo: CustomerRepository,
-  editCustomerValidator: Validation<UpdateCustomerDto>,
-  customerToDtoMapper: Mapper<Customer, CustomerDto>,
+  customerRepo: CustomerRepository;
+  editCustomerValidator: Validation<UpdateCustomerDto>;
+  customerToDtoMapper: Mapper<Customer, CustomerDto>;
 }
 
 export class EditCustomerUseCase implements EditCustomer {
@@ -20,8 +23,8 @@ export class EditCustomerUseCase implements EditCustomer {
 
   constructor(deps: EditCustomerDep) {
     this.customerRepo = deps.customerRepo;
-    this.editCustomerValidator = deps.editCustomerValidator
-    this.customerToDtoMapper = deps.customerToDtoMapper
+    this.editCustomerValidator = deps.editCustomerValidator;
+    this.customerToDtoMapper = deps.customerToDtoMapper;
   }
 
   async execute(id: number, data: UpdateCustomerDto): Promise<CustomerDto> {
@@ -40,7 +43,7 @@ export class EditCustomerUseCase implements EditCustomer {
       existing.points,
       data.points,
       existing.lastVisitAt,
-      data.lastVisitAt
+      data.lastVisitAt,
     );
 
     const updatedCustomer = new Customer({

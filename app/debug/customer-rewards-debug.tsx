@@ -1,5 +1,5 @@
-import { Link, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { Link, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -7,14 +7,15 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import { makeListCustomerRewards } from "@/core/factories/customer-reward";
-import { CustomerRewardDto } from "@/core/application/dtos/customer-rewards";
-import { formatDate } from "@/ui/utils/format-date";
+} from 'react-native';
+
+import { makeListCustomerRewards } from '@/core/factories/customer-reward';
+import { CustomerRewardDto } from '@/core/application/dtos/customer-rewards';
+import { formatDate } from '@/ui/utils/format-date';
 
 export default function CustomerRewardsDebugScreen() {
   const [customerRewards, setCustomerRewards] = useState<CustomerRewardDto[]>(
-    []
+    [],
   );
   const [refreshing, setRefreshing] = useState(false);
 
@@ -25,8 +26,8 @@ export default function CustomerRewardsDebugScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchCustomerRewards();
-    }, [fetchCustomerRewards])
+      void fetchCustomerRewards();
+    }, [fetchCustomerRewards]),
   );
 
   const onRefresh = async () => {
@@ -46,9 +47,7 @@ export default function CustomerRewardsDebugScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardId}>#{item.id}</Text>
-              <Text style={styles.date}>
-                {formatDate(item.redeemedAt)}
-              </Text>
+              <Text style={styles.date}>{formatDate(item.redeemedAt)}</Text>
             </View>
 
             <View style={styles.section}>
@@ -66,8 +65,8 @@ export default function CustomerRewardsDebugScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={() => (
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Text style={{ color: "#666" }}>
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <Text style={{ color: '#666' }}>
               Nenhuma relação de recompensa encontrada.
             </Text>
           </View>
@@ -78,16 +77,16 @@ export default function CustomerRewardsDebugScreen() {
       <View style={styles.nav}>
         <Text style={styles.navTitle}>🔗 Navegação</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Link href={"/"} style={styles.navLink}>
+          <Link href={'/'} style={styles.navLink}>
             <Text style={styles.navText}>Home</Text>
           </Link>
-          <Link href={"/debug/customer-debug"} style={styles.navLink}>
+          <Link href={'/debug/customer-debug'} style={styles.navLink}>
             <Text style={styles.navText}>Customers</Text>
           </Link>
-          <Link href={"/debug/reward-debug"} style={styles.navLink}>
+          <Link href={'/debug/reward-debug'} style={styles.navLink}>
             <Text style={styles.navText}>Rewards</Text>
           </Link>
-          <Link href={"/debug/customer-rewards-debug"} style={styles.navLink}>
+          <Link href={'/debug/customer-rewards-debug'} style={styles.navLink}>
             <Text style={styles.navText}>CustomerRewards</Text>
           </Link>
         </ScrollView>
@@ -100,70 +99,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: '#F8F9FA',
   },
   title: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 12,
-    textAlign: "center",
-    color: "#333",
+    textAlign: 'center',
+    color: '#333',
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 12,
     borderRadius: 10,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
+    borderColor: '#ddd',
+    shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 3,
   },
   cardHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 6,
   },
   cardId: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 15,
-    color: "#333",
+    color: '#333',
   },
   date: {
     fontSize: 12,
-    color: "#777",
+    color: '#777',
   },
   section: {
     marginTop: 6,
-    backgroundColor: "#f1f3f5",
+    backgroundColor: '#f1f3f5',
     padding: 8,
     borderRadius: 6,
   },
   sectionTitle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 14,
     marginBottom: 2,
-    color: "#333",
+    color: '#333',
   },
   field: {
     fontSize: 13,
-    color: "#444",
+    color: '#444',
   },
   nav: {
     marginTop: 10,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#ddd",
+    borderTopColor: '#ddd',
   },
   navTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 6,
-    color: "#333",
+    color: '#333',
   },
   navLink: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: '#e0e0e0',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
@@ -171,6 +170,6 @@ const styles = StyleSheet.create({
   },
   navText: {
     fontSize: 14,
-    color: "#000",
+    color: '#000',
   },
 });

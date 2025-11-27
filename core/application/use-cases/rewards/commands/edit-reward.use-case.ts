@@ -1,15 +1,15 @@
-import { RewardDto, UpdateRewardDto } from "@/core/application/dtos/rewards";
-import { EditReward } from "@/core/application/interfaces/rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
+import { RewardDto, UpdateRewardDto } from '@/core/application/dtos/rewards';
+import { EditReward } from '@/core/application/interfaces/rewards';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
 
 export interface EditRewardDep {
-  rewardRepo: RewardRepository,
-  editRewardValidator: Validation<UpdateRewardDto>,
-  rewardToDtoMapper: Mapper<UpdateRewardDto, RewardDto>,
+  rewardRepo: RewardRepository;
+  editRewardValidator: Validation<UpdateRewardDto>;
+  rewardToDtoMapper: Mapper<UpdateRewardDto, RewardDto>;
 }
 
 export class EditRewardUseCase implements EditReward {
@@ -39,10 +39,10 @@ export class EditRewardUseCase implements EditReward {
       name: newName,
       pointsRequired: newPointsRequired,
       description: newDescription,
-    })
-    updateRewards.setId(existing.id!)
+    });
+    updateRewards.setId(existing.id!);
 
-    const reward = await this.rewardRepo.update(updateRewards)
+    const reward = await this.rewardRepo.update(updateRewards);
 
     return this.rewardToDtoMapper.map(reward);
   }

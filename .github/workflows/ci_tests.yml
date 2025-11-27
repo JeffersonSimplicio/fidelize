@@ -1,0 +1,55 @@
+name: CI - Testes e Cobertura
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  run-tests-and-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v6
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+          cache: "npm"
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Executar Testes e Cobertura
+        id: coverage
+        run: npm run test:coverage
+
+      - name: Publicar Lista Detalhada de Testes
+        uses: dorny/test-reporter@v2
+        if: always()
+        with:
+          name: Resultados Detalhados (Jest)
+          path: reports/jest-junit.xml
+          reporter: jest-junit
+
+      - name: Publicar Comentário de Cobertura e Resumo
+        uses: MishaKav/jest-coverage-comment@main
+        if: always()
+        with:
+          coverage-summary-path: ./coverage/coverage-summary.json
+          junitxml-path: ./reports/jest-junit.xml
+          title: "Relatório de Qualidade"
+          summary-title: "Cobertura de Código"
+          badge-title: "Cobertura"
+          junitxml-title: "Resumo dos Testes"
+          hide-summary: false
+          create-new-comment: false

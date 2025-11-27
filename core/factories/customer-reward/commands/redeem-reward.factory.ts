@@ -1,11 +1,11 @@
-import { RedeemReward } from "@/core/application/interfaces/customers-rewards";
-import { RedeemRewardUseCase } from "@/core/application/use-cases";
+import { RedeemReward } from '@/core/application/interfaces/customers-rewards';
+import { RedeemRewardUseCase } from '@/core/application/use-cases';
 import {
   makeCustomerRepositoryDrizzle,
   makeCustomerRewardRepositoryDrizzle,
-  makeRewardRepositoryDrizzle
-} from "@/core/factories/repositories";
-import { CustomerRewardEntityToDtoMapper } from "@/core/infrastructure/mappers";
+  makeRewardRepositoryDrizzle,
+} from '@/core/factories/repositories';
+import { CustomerRewardEntityToDtoMapper } from '@/core/infrastructure/mappers';
 
 export function makeRedeemReward(): RedeemReward {
   const rewardRepo = makeRewardRepositoryDrizzle();
@@ -16,6 +16,6 @@ export function makeRedeemReward(): RedeemReward {
     rewardRepo: rewardRepo,
     customerRepo: customerRepo,
     customerRewardRepo: customerRewardRepo,
-    customerRewardToDtoMapper: customerRewardEntityToDtoMapper
+    customerRewardToDtoMapper: customerRewardEntityToDtoMapper,
   });
 }

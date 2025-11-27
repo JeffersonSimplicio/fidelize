@@ -1,9 +1,12 @@
-import { CustomerQueryRepositoryDrizzle } from "@/core/infrastructure/repositories/drizzle";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { CustomerSelect, CustomerTable } from "@/core/infrastructure/database/drizzle/types";
+import { CustomerQueryRepositoryDrizzle } from '@/core/infrastructure/repositories/drizzle';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import {
+  CustomerSelect,
+  CustomerTable,
+} from '@/core/infrastructure/database/drizzle/types';
 
-describe("CustomerQueryRepositoryDrizzle", () => {
+describe('CustomerQueryRepositoryDrizzle', () => {
   let repository: CustomerQueryRepositoryDrizzle;
 
   let mockDb: any;
@@ -14,25 +17,25 @@ describe("CustomerQueryRepositoryDrizzle", () => {
   const sampleDbResult: CustomerSelect[] = [
     {
       id: 1,
-      name: "John Doe",
-      phone: "9999-9999",
+      name: 'John Doe',
+      phone: '9999-9999',
       points: 100,
-      createdAt: new Date("2024-01-01T10:00:00Z"),
-      lastVisitAt: new Date("2024-01-05T10:00:00Z"),
+      createdAt: new Date('2024-01-01T10:00:00Z'),
+      lastVisitAt: new Date('2024-01-05T10:00:00Z'),
     },
     {
       id: 2,
-      name: "Joana",
-      phone: "8888-8888",
+      name: 'Joana',
+      phone: '8888-8888',
       points: 200,
-      createdAt: new Date("2024-02-01T10:00:00Z"),
-      lastVisitAt: new Date("2024-02-05T10:00:00Z"),
+      createdAt: new Date('2024-02-01T10:00:00Z'),
+      lastVisitAt: new Date('2024-02-05T10:00:00Z'),
     },
   ];
 
   const sampleDomainMapped = [
-    new Customer({ name: "John Doe", phone: "9999-9999", points: 100 }),
-    new Customer({ name: "Joana", phone: "8888-8888", points: 200 }),
+    new Customer({ name: 'John Doe', phone: '9999-9999', points: 100 }),
+    new Customer({ name: 'Joana', phone: '8888-8888', points: 200 }),
   ];
 
   beforeEach(() => {
@@ -45,7 +48,7 @@ describe("CustomerQueryRepositoryDrizzle", () => {
       where: jest.fn().mockReturnThis(),
       orderBy: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),
-      then: jest.fn((resolve, reject) => resolve(sampleDbResult)),
+      then: jest.fn((resolve, _reject) => resolve(sampleDbResult)),
     };
 
     mockDb = {
@@ -61,13 +64,13 @@ describe("CustomerQueryRepositoryDrizzle", () => {
     });
   });
 
-  describe("findByName", () => {
-    it("should query by name using LIKE and map results to domain entities", async () => {
+  describe('findByName', () => {
+    it('should query by name using LIKE and map results to domain entities', async () => {
       mockMapper.map
         .mockReturnValueOnce(sampleDomainMapped[0])
         .mockReturnValueOnce(sampleDomainMapped[1]);
 
-      const result = await repository.findByName("Jo");
+      const result = await repository.findByName('Jo');
 
       expect(mockDb.select).toHaveBeenCalled();
       expect(mockChain.from).toHaveBeenCalledWith(mockTable);
@@ -75,26 +78,26 @@ describe("CustomerQueryRepositoryDrizzle", () => {
       expect(result).toEqual(sampleDomainMapped);
     });
 
-    it("should return an empty array when no records exist", async () => {
+    it('should return an empty array when no records exist', async () => {
       mockChain.then.mockImplementationOnce((resolve: any) => resolve([]));
 
-      const result = await repository.findByName("Nobody");
+      const result = await repository.findByName('Nobody');
 
       expect(result).toEqual([]);
       expect(mockMapper.map).not.toHaveBeenCalled();
     });
 
-    it("should propagate errors thrown by the DB client", async () => {
+    it('should propagate errors thrown by the DB client', async () => {
       mockChain.then.mockImplementationOnce((resolve: any, reject: any) =>
-        reject(new Error("DB ERROR"))
+        reject(new Error('DB ERROR')),
       );
 
-      await expect(repository.findByName("test")).rejects.toThrow("DB ERROR");
+      await expect(repository.findByName('test')).rejects.toThrow('DB ERROR');
     });
   });
 
-  describe("findAll", () => {
-    it("should retrieve all customers and map them", async () => {
+  describe('findAll', () => {
+    it('should retrieve all customers and map them', async () => {
       mockMapper.map
         .mockReturnValueOnce(sampleDomainMapped[0])
         .mockReturnValueOnce(sampleDomainMapped[1]);
@@ -106,17 +109,17 @@ describe("CustomerQueryRepositoryDrizzle", () => {
       expect(result).toEqual(sampleDomainMapped);
     });
 
-    it("should propagate DB errors", async () => {
+    it('should propagate DB errors', async () => {
       mockChain.then.mockImplementationOnce((_resolve: any, reject: any) =>
-        reject(new Error("DB FAIL"))
+        reject(new Error('DB FAIL')),
       );
 
-      await expect(repository.findAll()).rejects.toThrow("DB FAIL");
+      await expect(repository.findAll()).rejects.toThrow('DB FAIL');
     });
   });
 
-  describe("findTopCustomersByPoints", () => {
-    it("should order by points descending, limit, and map results", async () => {
+  describe('findTopCustomersByPoints', () => {
+    it('should order by points descending, limit, and map results', async () => {
       mockMapper.map
         .mockReturnValueOnce(sampleDomainMapped[0])
         .mockReturnValueOnce(sampleDomainMapped[1]);
@@ -130,12 +133,14 @@ describe("CustomerQueryRepositoryDrizzle", () => {
       expect(result).toEqual(sampleDomainMapped);
     });
 
-    it("should propagate DB errors", async () => {
+    it('should propagate DB errors', async () => {
       mockChain.then.mockImplementationOnce((_resolve: any, reject: any) =>
-        reject(new Error("DB ORDER FAIL"))
+        reject(new Error('DB ORDER FAIL')),
       );
 
-      await expect(repository.findTopCustomersByPoints(2)).rejects.toThrow("DB ORDER FAIL");
+      await expect(repository.findTopCustomersByPoints(2)).rejects.toThrow(
+        'DB ORDER FAIL',
+      );
     });
   });
 });

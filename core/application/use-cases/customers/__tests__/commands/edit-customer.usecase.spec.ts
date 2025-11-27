@@ -1,24 +1,27 @@
-import { EditCustomerUseCase } from "@/core/application/use-cases/customers";
-import { CustomerRepository } from "@/core/domain/customers/customer.repository.interface";
-import { Validation } from "@/core/domain/validation/validation.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
-import { UpdateCustomerDto, CustomerDto } from "@/core/application/dtos/customers";
-import { Customer } from "@/core/domain/customers/customer.entity";
-import { ValidationException } from "@/core/domain/shared/errors/validation-exception.error";
+import { EditCustomerUseCase } from '@/core/application/use-cases/customers';
+import { CustomerRepository } from '@/core/domain/customers/customer.repository.interface';
+import { Validation } from '@/core/domain/validation/validation.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
+import {
+  UpdateCustomerDto,
+  CustomerDto,
+} from '@/core/application/dtos/customers';
+import { Customer } from '@/core/domain/customers/customer.entity';
+import { ValidationException } from '@/core/domain/shared/errors/validation-exception.error';
 
-describe("EditCustomerUseCase", () => {
+describe('EditCustomerUseCase', () => {
   let useCase: EditCustomerUseCase;
 
   let customerRepo: jest.Mocked<CustomerRepository>;
   let editCustomerValidator: jest.Mocked<Validation<UpdateCustomerDto>>;
   let customerToDtoMapper: jest.Mocked<Mapper<Customer, CustomerDto>>;
 
-  const existingCreatedAt = new Date("2024-01-01T10:00:00.000Z");
-  const existingLastVisit = new Date("2024-06-01T12:00:00.000Z");
+  const existingCreatedAt = new Date('2024-01-01T10:00:00.000Z');
+  const existingLastVisit = new Date('2024-06-01T12:00:00.000Z');
 
   const existingCustomer = new Customer({
-    name: "Alice Original",
-    phone: "5511999999999",
+    name: 'Alice Original',
+    phone: '5511999999999',
     points: 10,
     createdAt: existingCreatedAt,
     lastVisitAt: existingLastVisit,
@@ -27,8 +30,8 @@ describe("EditCustomerUseCase", () => {
 
   const mappedDto: CustomerDto = {
     id: 123,
-    name: "Alice Updated",
-    phone: "5511988888888",
+    name: 'Alice Updated',
+    phone: '5511988888888',
     points: 15,
     createdAt: existingCreatedAt.toISOString(),
     lastVisitAt: new Date().toISOString(),
@@ -58,21 +61,23 @@ describe("EditCustomerUseCase", () => {
     });
   });
 
-  it("should throw ValidationException when validator returns errors", async () => {
+  it('should throw ValidationException when validator returns errors', async () => {
     editCustomerValidator.validate.mockReturnValue([
-      { field: "phone", message: "Phone is invalid" },
+      { field: 'phone', message: 'Phone is invalid' },
     ]);
 
-    const data: UpdateCustomerDto = { phone: "bad" };
+    const data: UpdateCustomerDto = { phone: 'bad' };
 
-    await expect(useCase.execute(123, data)).rejects.toBeInstanceOf(ValidationException);
+    await expect(useCase.execute(123, data)).rejects.toBeInstanceOf(
+      ValidationException,
+    );
 
     expect(editCustomerValidator.validate).toHaveBeenCalledWith(data);
     expect(customerRepo.getById).not.toHaveBeenCalled();
     expect(customerRepo.update).not.toHaveBeenCalled();
   });
 
-  it("should fetch existing customer, update nothing (no changes) and return mapped DTO", async () => {
+  it('should fetch existing customer, update nothing (no changes) and return mapped DTO', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
     customerRepo.update.mockImplementation(async (cust) => cust);
@@ -87,7 +92,7 @@ describe("EditCustomerUseCase", () => {
     expect(result).toEqual(mappedDto);
   });
 
-  it("should update name, phone and points when provided", async () => {
+  it('should update name, phone and points when provided', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
 
@@ -96,14 +101,14 @@ describe("EditCustomerUseCase", () => {
     customerToDtoMapper.map.mockReturnValue(mappedDto);
 
     const updateDto: UpdateCustomerDto = {
-      name: "Alice Updated",
-      phone: "5511988888888",
+      name: 'Alice Updated',
+      phone: '5511988888888',
       points: 15,
     };
 
     const result = await useCase.execute(existingCustomer.id!, updateDto);
 
-    const updatedArg = (customerRepo.update.mock.calls[0][0] as Customer);
+    const updatedArg = customerRepo.update.mock.calls[0][0] as Customer;
 
     expect(updatedArg.name).toBe(updateDto.name);
     expect(updatedArg.phone).toBe(updateDto.phone);
@@ -116,14 +121,14 @@ describe("EditCustomerUseCase", () => {
     expect(result).toEqual(mappedDto);
   });
 
-  it("should use provided lastVisitAt when data.lastVisitAt is provided", async () => {
+  it('should use provided lastVisitAt when data.lastVisitAt is provided', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
     customerRepo.update.mockImplementation(async (c) => c);
 
     customerToDtoMapper.map.mockReturnValue(mappedDto);
 
-    const providedLastVisit = new Date("2025-02-02T08:00:00.000Z");
+    const providedLastVisit = new Date('2025-02-02T08:00:00.000Z');
 
     const updateDto: UpdateCustomerDto = {
       lastVisitAt: providedLastVisit,
@@ -137,14 +142,14 @@ describe("EditCustomerUseCase", () => {
     expect(updatedArg.lastVisitAt.getTime()).toBe(providedLastVisit.getTime());
   });
 
-  it("should update lastVisitAt to now when points increased and no lastVisit provided", async () => {
+  it('should update lastVisitAt to now when points increased and no lastVisit provided', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
     customerRepo.update.mockImplementation(async (c) => c);
     customerToDtoMapper.map.mockReturnValue(mappedDto);
 
     jest.useFakeTimers();
-    const fakeNow = new Date("2025-03-03T09:30:00.000Z");
+    const fakeNow = new Date('2025-03-03T09:30:00.000Z');
     jest.setSystemTime(fakeNow);
 
     const updateDto: UpdateCustomerDto = {
@@ -156,12 +161,14 @@ describe("EditCustomerUseCase", () => {
     const updatedArg = customerRepo.update.mock.calls[0][0] as Customer;
 
     expect(updatedArg.lastVisitAt.getTime()).toBe(fakeNow.getTime());
-    expect(updatedArg.lastVisitAt.getTime()).toBeGreaterThan(existingLastVisit.getTime());
+    expect(updatedArg.lastVisitAt.getTime()).toBeGreaterThan(
+      existingLastVisit.getTime(),
+    );
 
     jest.useRealTimers();
   });
 
-  it("should keep lastVisitAt unchanged when points not increased and no lastVisit provided", async () => {
+  it('should keep lastVisitAt unchanged when points not increased and no lastVisit provided', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
     customerRepo.update.mockImplementation(async (c) => c);
@@ -178,24 +185,30 @@ describe("EditCustomerUseCase", () => {
     expect(updatedArg.lastVisitAt.getTime()).toBe(existingLastVisit.getTime());
   });
 
-  it("should propagate repository.update errors", async () => {
+  it('should propagate repository.update errors', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
-    customerRepo.update.mockRejectedValue(new Error("DB update failed"));
+    customerRepo.update.mockRejectedValue(new Error('DB update failed'));
 
-    const updateDto: UpdateCustomerDto = { name: "New Name" };
+    const updateDto: UpdateCustomerDto = { name: 'New Name' };
 
-    await expect(useCase.execute(existingCustomer.id!, updateDto)).rejects.toThrow("DB update failed");
+    await expect(
+      useCase.execute(existingCustomer.id!, updateDto),
+    ).rejects.toThrow('DB update failed');
   });
 
-  it("should propagate mapper.map errors", async () => {
+  it('should propagate mapper.map errors', async () => {
     editCustomerValidator.validate.mockReturnValue([]);
     customerRepo.getById.mockResolvedValue(existingCustomer);
     customerRepo.update.mockImplementation(async (c) => c);
-    customerToDtoMapper.map.mockImplementation(() => { throw new Error("Mapper broken"); });
+    customerToDtoMapper.map.mockImplementation(() => {
+      throw new Error('Mapper broken');
+    });
 
-    const updateDto: UpdateCustomerDto = { name: "New Name" };
+    const updateDto: UpdateCustomerDto = { name: 'New Name' };
 
-    await expect(useCase.execute(existingCustomer.id!, updateDto)).rejects.toThrow("Mapper broken");
+    await expect(
+      useCase.execute(existingCustomer.id!, updateDto),
+    ).rejects.toThrow('Mapper broken');
   });
 });

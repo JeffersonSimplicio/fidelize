@@ -5,4 +5,4 @@ export type CustomerDto = {
   points: number;
   createdAt: string;
   lastVisitAt: string;
-}
+};

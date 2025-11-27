@@ -1,12 +1,12 @@
-import { RewardDto } from "@/core/application/dtos/rewards";
-import { ListRewards } from "@/core/application/interfaces/rewards";
-import { Reward } from "@/core/domain/rewards/reward.entity";
-import { RewardQueryRepository } from "@/core/domain/rewards/reward.query.repository.interface";
-import { Mapper } from "@/core/domain/shared/mappers/mapper.interface";
+import { RewardDto } from '@/core/application/dtos/rewards';
+import { ListRewards } from '@/core/application/interfaces/rewards';
+import { Reward } from '@/core/domain/rewards/reward.entity';
+import { RewardQueryRepository } from '@/core/domain/rewards/reward.query.repository.interface';
+import { Mapper } from '@/core/domain/shared/mappers/mapper.interface';
 
 export interface ListRewardsDep {
-  rewardQueryRepo: RewardQueryRepository,
-  rewardToDtoMapper: Mapper<Reward, RewardDto>,
+  rewardQueryRepo: RewardQueryRepository;
+  rewardToDtoMapper: Mapper<Reward, RewardDto>;
 }
 
 export class ListRewardsUseCase implements ListRewards {
@@ -20,6 +20,6 @@ export class ListRewardsUseCase implements ListRewards {
 
   async execute(): Promise<RewardDto[]> {
     const allRewards = await this.rewardQueryRepo.findAll();
-    return allRewards.map(r => this.rewardToDtoMapper.map(r));
+    return allRewards.map((r) => this.rewardToDtoMapper.map(r));
   }
 }

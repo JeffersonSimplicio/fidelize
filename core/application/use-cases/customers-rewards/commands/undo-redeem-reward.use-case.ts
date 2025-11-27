@@ -1,13 +1,16 @@
-import { UndoRedeemReward } from "@/core/application/interfaces/customers-rewards";
-import { CustomerRewardRepository } from "@/core/domain/customer-rewards/customer-reward.repository.interface";
-import { RewardRepository } from "@/core/domain/rewards/reward.repository.interface";
-import { RewardStatus } from "@/core/domain/rewards/reward.status";
-import { DeleteCustomerRewardDto } from "@/core/application/dtos/customer-rewards"
-import { CustomerRewardNotFoundError, InactiveRewardRedemptionError } from "@/core/domain/customer-rewards/errors";
+import { UndoRedeemReward } from '@/core/application/interfaces/customers-rewards';
+import { CustomerRewardRepository } from '@/core/domain/customer-rewards/customer-reward.repository.interface';
+import { RewardRepository } from '@/core/domain/rewards/reward.repository.interface';
+import { RewardStatus } from '@/core/domain/rewards/reward.status';
+import { DeleteCustomerRewardDto } from '@/core/application/dtos/customer-rewards';
+import {
+  CustomerRewardNotFoundError,
+  InactiveRewardRedemptionError,
+} from '@/core/domain/customer-rewards/errors';
 
 export interface UndoRedeemRewardDep {
-  rewardRepo: RewardRepository,
-  customerRewardRepo: CustomerRewardRepository,
+  rewardRepo: RewardRepository;
+  customerRewardRepo: CustomerRewardRepository;
 }
 
 export class UndoRedeemRewardUseCase implements UndoRedeemReward {
@@ -19,10 +22,13 @@ export class UndoRedeemRewardUseCase implements UndoRedeemReward {
     this.customerRewardRepo = deps.customerRewardRepo;
   }
 
-  async execute({ customerId, rewardId }: DeleteCustomerRewardDto): Promise<void> {
+  async execute({
+    customerId,
+    rewardId,
+  }: DeleteCustomerRewardDto): Promise<void> {
     const hasAlreadyRedeemed = await this.customerRewardRepo.alreadyRedeemed(
       customerId,
-      rewardId
+      rewardId,
     );
 
     if (!hasAlreadyRedeemed) throw new CustomerRewardNotFoundError();
@@ -32,6 +38,6 @@ export class UndoRedeemRewardUseCase implements UndoRedeemReward {
       throw new InactiveRewardRedemptionError();
     }
 
-    await this.customerRewardRepo.delete(hasAlreadyRedeemed.id!)
+    await this.customerRewardRepo.delete(hasAlreadyRedeemed.id!);
   }
 }

@@ -1,10 +1,9 @@
-import { RegisterCustomer } from "@/core/application/interfaces";
-import { RegisterCustomerUseCase } from "@/core/application/use-cases";
-import { makeCustomerRepositoryDrizzle } from "@/core/factories/repositories";
-import { CustomerEntityToDtoMapper } from "@/core/infrastructure/mappers";
-import { registerCustomerSchema } from "@/core/infrastructure/validation/zod/schemas/customers";
-import { ZodValidation } from "@/core/infrastructure/validation/zod/zod.validation";
-
+import { RegisterCustomer } from '@/core/application/interfaces';
+import { RegisterCustomerUseCase } from '@/core/application/use-cases';
+import { makeCustomerRepositoryDrizzle } from '@/core/factories/repositories';
+import { CustomerEntityToDtoMapper } from '@/core/infrastructure/mappers';
+import { registerCustomerSchema } from '@/core/infrastructure/validation/zod/schemas/customers';
+import { ZodValidation } from '@/core/infrastructure/validation/zod/zod.validation';
 
 export function makeRegisterCustomer(): RegisterCustomer {
   const customerRepo = makeCustomerRepositoryDrizzle();
@@ -13,6 +12,6 @@ export function makeRegisterCustomer(): RegisterCustomer {
   return new RegisterCustomerUseCase({
     customerRepo: customerRepo,
     createCustomerValidator: zodValidator,
-    customerToDtoMapper: customerEntityToDtoMapper
+    customerToDtoMapper: customerEntityToDtoMapper,
   });
 }
