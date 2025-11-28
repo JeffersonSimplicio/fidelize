@@ -1,0 +1,56 @@
+name: Prettier
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.11.1
+          cache: "npm"
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Run Prettier Fix
+        run: npm run format:fix
+
+      - name: Commit changes (if any)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: apply prettier auto-fix"
+
+      - name: Run Prettier Check
+        id: prettier
+        run: |
+          npm run format || echo "has_issues=true" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const hasIssues = "${{ steps.prettier.outputs.has_issues }}" === "true";
+
+            let body = "";
+            if (hasIssues) {
+              body = "❌ **Prettier encontrou problemas de formatação.**\n\nEles foram listados nos logs da Action.";
+            } else {
+              body = "✅ **Prettier: tudo certo!** Nenhum problema encontrado 🎉";
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            })
