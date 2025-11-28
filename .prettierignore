@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Expo build folders
+.expo/
+dist/
+web-build/
+app-example/
+
+# Native build folders
+build/
+ios/
+android/
+
+# Coverage & reports
+coverage/
+reports/
+
+# Editor settings
+.vscode/
+
+# Generated or config files
+**/*.config.js
+**/*.config.ts
+**/*.d.ts
+
+# Ignore large or static data files
+**/*.json
+**/*.yml
+**/*.yaml
+
+# Ignore style files (handled by other tools)
+**/*.css
