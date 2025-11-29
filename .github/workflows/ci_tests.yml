@@ -1,4 +1,4 @@
-name: CI - Testes e Cobertura
+name: CI - Test and Coverage
 
 on:
   push:
