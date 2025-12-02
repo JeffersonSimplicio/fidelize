@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
   pull_request:
     branches:
       - main
@@ -20,6 +19,7 @@ jobs:
     steps:
       - name: Checkout do Código
         uses: actions/checkout@v6
+      
       - name: Configurar Node.js
         uses: actions/setup-node@v6
         with:
@@ -53,3 +53,4 @@ jobs:
           junitxml-title: "Resumo dos Testes"
           hide-summary: false
           create-new-comment: false
+          coverage-threshold-fail: 80
