@@ -27,6 +27,14 @@ module.exports = {
     '!core/**/reward.status.ts',
     '!core/**/usecase-result-handler.ts',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['text', 'lcov', 'cobertura', 'json-summary'],
   reporters: [
